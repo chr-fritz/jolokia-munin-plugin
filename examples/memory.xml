@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns="http://chrfritz.de/jolokiamunin/config.xsd">
+    <category name="ServletContainer" src="http://localhost:8080/jolokia">
+        <graph title="HeapMemoryUsage" vlabel="bytes">
+            <info>Heap Memory Usage of JVM</info>
+            <args>--base 1024</args>
+            <mbean>java.lang:type=Memory</mbean>
+            <attribute>HeapMemoryUsage</attribute>
+            <field name="max" label="Maximum" type="GAUGE" draw="LINE3">
+                <path>max</path>
+            </field>
+            <field name="committed" label="Committed" type="GAUGE" draw="AREA">
+                <path>committed</path>
+            </field>
+            <field name="init" label="Initial" type="GAUGE" draw="LINE1">
+                <path>init</path>
+            </field>
+            <field name="used" label="Used" type="GAUGE" draw="AREA">
+                <path>used</path>
+            </field>
+        </graph>
+
+        <graph title="NonHeapMemoryUsage" vlabel="bytes">
+            <info>Non Heap Memory Usage of JVM</info>
+            <args>--base 1024</args>
+            <mbean>java.lang:type=Memory</mbean>
+            <attribute>NonHeapMemoryUsage</attribute>
+            <field name="max" label="Maximum" type="GAUGE" draw="LINE3">
+                <path>max</path>
+            </field>
+            <field name="committed" label="Committed" type="GAUGE" draw="AREA">
+                <path>committed</path>
+            </field>
+            <field name="init" label="Initial" type="GAUGE" draw="LINE1">
+                <path>init</path>
+            </field>
+            <field name="used" label="Used" type="GAUGE" draw="AREA">
+                <path>used</path>
+            </field>
+        </graph>
+    </category>
+</config>
