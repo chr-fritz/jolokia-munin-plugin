@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="config" type="configType"/>
+    <xs:complexType name="configType">
+        <xs:sequence>
+            <xs:element type="categoryType" name="category" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="fieldType">
+        <xs:sequence>
+            <xs:element name="info" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="mbean" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="attribute" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="path" type="xs:string" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="name" use="required"/>
+        <xs:attribute type="xs:string" name="label" use="required"/>
+        <xs:attribute name="type" use="required">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="GAUGE"/>
+                    <xs:enumeration value="COUNTER"/>
+                    <xs:enumeration value="DERIVE"/>
+                    <xs:enumeration value="ABSOLUTE"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute type="xs:decimal" name="min" use="optional"/>
+        <xs:attribute type="xs:decimal" name="max" use="optional"/>
+        <xs:attribute type="WarnCritType" name="critical" use="optional"/>
+        <xs:attribute type="WarnCritType" name="warning" use="optional"/>
+        <xs:attribute name="draw" use="required">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="AREA"/>
+                    <xs:enumeration value="LINE1"/>
+                    <xs:enumeration value="LINE2"/>
+                    <xs:enumeration value="LINE3"/>
+                    <xs:enumeration value="STACK"/>
+                    <xs:enumeration value="LINESTACK1"/>
+                    <xs:enumeration value="LINESTACK2"/>
+                    <xs:enumeration value="LINESTACK3"/>
+                    <xs:enumeration value="AREASTACK"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="color" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="categoryType">
+        <xs:sequence>
+            <xs:element type="graphType" name="graph" maxOccurs="unbounded" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="name" use="required"/>
+        <xs:attribute type="xs:anyURI" name="src" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="graphType">
+        <xs:sequence>
+            <xs:element type="xs:string" name="info" minOccurs="0" maxOccurs="1"/>
+            <xs:element type="xs:string" name="args" minOccurs="0" maxOccurs="1"/>
+            <xs:element type="xs:string" name="mbean" minOccurs="0" maxOccurs="1"/>
+            <xs:element type="xs:string" name="attribute" minOccurs="0" maxOccurs="1"/>
+            <xs:element type="fieldType" name="field" maxOccurs="unbounded" minOccurs="1"/>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="title" use="required"/>
+        <xs:attribute type="xs:string" name="vlabel" use="required"/>
+        <xs:attribute name="scale" type="xs:boolean"/>
+
+    </xs:complexType>
+    <xs:simpleType name="WarnCritType">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="([0-9.-]*):([0-9.-]*)"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>
