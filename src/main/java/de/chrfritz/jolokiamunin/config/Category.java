@@ -14,12 +14,6 @@ public final class Category {
 
     private List<Graph> graphs;
 
-    public Category(String name, String sourceUrl, List<Graph> graphs) {
-        this.graphs = graphs;
-        this.name = name;
-        this.sourceUrl = sourceUrl;
-    }
-
     public List<Graph> getGraphs() {
         return graphs;
     }

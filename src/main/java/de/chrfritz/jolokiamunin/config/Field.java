@@ -22,12 +22,6 @@ public final class Field {
     private String draw;
     private String color;
 
-    public Field(String info, String name, String label) {
-        this.info = info;
-        this.name = name;
-        this.label = label;
-    }
-
     public String getAttribute() {
         return attribute;
     }

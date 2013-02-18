@@ -19,18 +19,6 @@ public final class Graph {
     private String attribute;
     private String mbean;
 
-    public Graph(String title, String vlabel, String info, String args, boolean scale, String attribute,
-            String mbean, List<Field> fields) {
-        this.args = args;
-        this.attribute = attribute;
-        this.fields = fields;
-        this.info = info;
-        this.mbean = mbean;
-        this.scale = scale;
-        this.title = title;
-        this.vlabel = vlabel;
-    }
-
     public String getArgs() {
         return args;
     }
