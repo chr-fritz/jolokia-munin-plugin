@@ -1,19 +1,3 @@
-// ______________________________________________________________________________
-//
-//           Project:
-//              File: $Id$
-//      last changed: $Rev$
-// ______________________________________________________________________________
-//
-//        created by: ${USER}
-//     creation date: ${DATE}
-//        changed by: $Author$
-//       change date: $LastChangedDate$
-//       description:
-// ______________________________________________________________________________
-//
-//         Copyright: (c) Christian Fritz, all rights reserved
-// ______________________________________________________________________________
 package de.chrfritz.jolokiamunin.config.impl;
 
 import de.chrfritz.jolokiamunin.config.Category;
@@ -36,7 +20,7 @@ import java.util.List;
 
 public class XMLConfiguration implements Configuration {
 
-    private static final Logger logger = LoggerFactory.getLogger(XMLConfiguration.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(XMLConfiguration.class);
     private URL configFile;
 
     private List<Category> categories;
@@ -61,7 +45,7 @@ public class XMLConfiguration implements Configuration {
             }
         }
         catch (JAXBException e) {
-            logger.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
             throw new RuntimeException(e);
         }
     }
