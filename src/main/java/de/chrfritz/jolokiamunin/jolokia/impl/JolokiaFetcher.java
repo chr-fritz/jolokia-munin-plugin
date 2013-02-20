@@ -36,19 +36,20 @@ import java.util.Map;
 public class JolokiaFetcher implements Fetcher {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JolokiaFetcher.class);
-    private URL url;
 
     private J4pClient client;
 
-    @Override
-    public void setUrl(URL url) {
-        this.url = url;
+
+    public JolokiaFetcher(URL url){
+        client = new J4pClient(url.toString());
+    }
+
+    public JolokiaFetcher(J4pClient client) {
+        this.client = client;
     }
 
     @Override
     public Map<Request, Number> fetchValues(List<Request> requests) throws FetcherException {
-
-        client = new J4pClient(url.toString());
 
         List<J4pReadRequest> readRequests = createReadRequests(requests);
         try {
