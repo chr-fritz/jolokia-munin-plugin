@@ -10,6 +10,12 @@ public final class Request {
     private final String attribute;
     private final String path;
 
+    public Request(String mbean) {
+        this.mbean = mbean;
+        this.attribute = null;
+        this.path = null;
+    }
+
     public Request(String mbean, String attribute) {
         this.attribute = attribute;
         this.mbean = mbean;
