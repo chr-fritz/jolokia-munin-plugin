@@ -1,19 +1,3 @@
-// ______________________________________________________________________________
-//
-//           Project:
-//              File: $Id$
-//      last changed: $Rev$
-// ______________________________________________________________________________
-//
-//        created by: ${USER}
-//     creation date: ${DATE}
-//        changed by: $Author$
-//       change date: $LastChangedDate$
-//       description:
-// ______________________________________________________________________________
-//
-//         Copyright: (c) Christian Fritz, all rights reserved
-// ______________________________________________________________________________
 package de.chrfritz.jolokiamunin.jolokia;
 
 public class FetcherException extends Exception {
