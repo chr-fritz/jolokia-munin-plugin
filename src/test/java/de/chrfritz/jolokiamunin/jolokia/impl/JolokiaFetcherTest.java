@@ -1,3 +1,17 @@
+// ______________________________________________________________________________
+//
+//           Project: jolokia-munin-plugin
+//            Module: jolokia-munin-plugin
+//             Class: JolokiaFetcherTest
+//              File: JolokiaFetcherTest.java
+//        changed by: christian
+//       change date: 23.02.13 19:37
+//       description: The jolokia fetcher test
+// ______________________________________________________________________________
+//
+//         Copyright: (c) Christian Fritz, all rights reserved
+// ______________________________________________________________________________
+
 package de.chrfritz.jolokiamunin.jolokia.impl;
 
 import de.chrfritz.jolokiamunin.jolokia.Fetcher;

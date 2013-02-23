@@ -1,3 +1,17 @@
+// ______________________________________________________________________________
+//
+//           Project: jolokia-munin-plugin
+//            Module: jolokia-munin-plugin
+//             Class: JolokiaFetcher
+//              File: JolokiaFetcher.java
+//        changed by: christian
+//       change date: 23.02.13 20:11
+//       description: The jolokia fetcher implementation
+// ______________________________________________________________________________
+//
+//         Copyright: (c) Christian Fritz, all rights reserved
+// ______________________________________________________________________________
+
 package de.chrfritz.jolokiamunin.jolokia.impl;
 
 import com.google.common.base.Strings;
@@ -17,21 +31,42 @@ import javax.management.MalformedObjectNameException;
 import java.net.URL;
 import java.util.*;
 
+/**
+ * Implementation of the fechter interface to fetch values from a jolokia agent.
+ */
 public class JolokiaFetcher implements Fetcher {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JolokiaFetcher.class);
 
     private J4pClient client;
 
-
+    /**
+     * Creates a new fetcher and connect to the given url.
+     *
+     * @param url The connection url
+     */
     public JolokiaFetcher(URL url) {
         client = new J4pClient(url.toString());
     }
 
+    /**
+     * Create a new fetcher and use the given joloka client
+     *
+     * @param client The jolokia client to use.
+     */
     public JolokiaFetcher(J4pClient client) {
         this.client = client;
     }
 
+    /**
+     * Fetch the values for the given requests. If a request is not specific all sub
+     * attributes are be fetched and returned.
+     * e.g. a request with only set mbean=java.lang:type=Memory will return 9 values
+     *
+     * @param requests The requested values.
+     * @return A map that maps the specific request to a value.
+     * @throws FetcherException
+     */
     @Override
     public Map<Request, Number> fetchValues(List<Request> requests) throws FetcherException {
 
@@ -43,7 +78,7 @@ public class JolokiaFetcher implements Fetcher {
             return handleResponses(requests, responses);
         }
         catch (J4pException e) {
-            LOGGER.error("", e);
+            LOGGER.error("Can not fetch values", e);
             throw new FetcherException(e);
         }
     }
@@ -58,6 +93,7 @@ public class JolokiaFetcher implements Fetcher {
     private Map<Request, Number> handleResponses(List<Request> requests, List<J4pReadResponse> responses) {
         Map<Request, Number> results = new HashMap<>();
         int i = 0;
+        LOGGER.info("Handle {} responses", responses.size());
         for (J4pReadResponse response : responses) {
             Object value = response.getValue();
             Request request = requests.get(i);
@@ -67,14 +103,14 @@ public class JolokiaFetcher implements Fetcher {
                     StringUtils.equals(request.getAttribute(), response.getRequest().getAttribute()) &&
                     StringUtils.equals(request.getPath(), response.getRequest().getPath());
 
+            // process only if request is equals to response
             if (!isValid) {
                 continue;
             }
-
             handleResponse(results, value, request);
-
             i++;
         }
+        LOGGER.info("Added {} values", responses.size());
         return results;
     }
 
@@ -86,13 +122,17 @@ public class JolokiaFetcher implements Fetcher {
      * @param request The original request
      */
     private void handleResponse(Map<Request, Number> results, Object value, Request request) {
-        if (!Strings.isNullOrEmpty(request.getMbean()) && !Strings.isNullOrEmpty(
-                request.getAttribute()) && !Strings.isNullOrEmpty(
-                request.getPath()) && value instanceof Number) {
+        if (!Strings.isNullOrEmpty(request.getAttribute())
+                && !Strings.isNullOrEmpty(request.getPath())
+                && value instanceof Number) {
+
             LOGGER.debug("Adding {}:{}", request, value);
             results.put(request, (Number) value);
-        } else if (!Strings.isNullOrEmpty(request.getMbean()) && !Strings.isNullOrEmpty(
-                request.getAttribute()) && Strings.isNullOrEmpty(request.getPath())) {
+
+        } else if (!Strings.isNullOrEmpty(request.getMbean())
+                && !Strings.isNullOrEmpty(request.getAttribute())
+                && Strings.isNullOrEmpty(request.getPath())) {
+
             handleAttributeResponse(results, (JSONObject) value, request);
         } else {
             handleMbeanResponse(results, (JSONObject) value, request);
@@ -120,7 +160,7 @@ public class JolokiaFetcher implements Fetcher {
     }
 
     /**
-     * Hanlde a response thats request contains a mbean and an attribute but no path.
+     * Handle a response thats request contains a mbean and an attribute but no path.
      *
      * @param results The results map to add the values
      * @param values  The json response value
@@ -139,6 +179,12 @@ public class JolokiaFetcher implements Fetcher {
         }
     }
 
+    /**
+     * Create the jolokia read requests for given requests.
+     *
+     * @param requests The requests
+     * @return A list with jolokia requests of the given requests.
+     */
     private List<J4pReadRequest> createReadRequests(List<Request> requests) {
         List<J4pReadRequest> readRequests = new ArrayList<>();
 
