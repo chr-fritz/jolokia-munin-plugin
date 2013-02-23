@@ -1,0 +1,17 @@
+[
+    {
+        "timestamp":1361638682,
+        "status":200,
+        "request":{
+            "mbean":"java.lang:type=Memory",
+            "attribute":"HeapMemoryUsage",
+            "type":"read"
+        },
+        "value":{
+            "max":129761280,
+            "committed":129761280,
+            "init":67108864,
+            "used":90741928
+        }
+    }
+]
