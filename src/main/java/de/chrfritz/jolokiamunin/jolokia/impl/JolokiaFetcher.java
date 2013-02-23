@@ -36,72 +36,111 @@ public class JolokiaFetcher implements Fetcher {
     public Map<Request, Number> fetchValues(List<Request> requests) throws FetcherException {
 
         List<J4pReadRequest> readRequests = createReadRequests(requests);
-        Map<Request, Number> results = new HashMap<>();
+
         try {
             List<J4pReadResponse> responses = client.execute(readRequests);
 
-            int i = 0;
-            for (J4pReadResponse response : responses) {
-                Object value = response.getValue();
-                LOGGER.debug("Response value ({}): {}", value.getClass(), value);
-                LOGGER.debug("Attributes {}", response.getAttributes());
-                Request request = requests.get(i);
-
-                boolean isValid = StringUtils.equals(request.getMbean(),
-                                                     response.getRequest().getObjectName().toString()) &&
-                        StringUtils.equals(request.getAttribute(), response.getRequest().getAttribute()) &&
-                        StringUtils.equals(request.getPath(), response.getRequest().getPath());
-
-                if (!isValid) {
-                    continue;
-                }
-
-                if (!Strings.isNullOrEmpty(request.getMbean()) && !Strings.isNullOrEmpty(
-                        request.getAttribute()) && !Strings.isNullOrEmpty(request.getPath())) {
-                    results.put(request, (Number) value);
-                } else if (!Strings.isNullOrEmpty(request.getMbean()) && !Strings.isNullOrEmpty(
-                        request.getAttribute()) && Strings.isNullOrEmpty(request.getPath())) {
-                    handleAttributeResponse(results, (JSONObject) value, request);
-                } else if (!Strings.isNullOrEmpty(request.getMbean()) && Strings.isNullOrEmpty(
-                        request.getAttribute())) {
-                    for (Map.Entry entry : (Set<Map.Entry>) ((JSONObject) value).entrySet()) {
-                        LOGGER.debug("{}", entry);
-                        if (entry.getValue() instanceof JSONObject) {
-                            handleAttributeResponse(results, (JSONObject) entry.getValue(),
-                                                    new Request(request.getMbean(), (String) entry.getKey()));
-                        } else if (entry.getValue() instanceof Number) {
-                            results.put(new Request(request.getMbean(), (String) entry.getKey()),
-                                        (Number) entry.getValue());
-                        }
-                    }
-                }
-
-                i++;
-            }
+            return handleResponses(requests, responses);
         }
         catch (J4pException e) {
             LOGGER.error("", e);
             throw new FetcherException(e);
         }
+    }
 
+    /**
+     * Handle all responses.
+     *
+     * @param requests  The original requests to fetch
+     * @param responses The returned responses
+     * @return A map with the extracted values and corresponding requests as keys
+     */
+    private Map<Request, Number> handleResponses(List<Request> requests, List<J4pReadResponse> responses) {
+        Map<Request, Number> results = new HashMap<>();
+        int i = 0;
+        for (J4pReadResponse response : responses) {
+            Object value = response.getValue();
+            Request request = requests.get(i);
+
+            boolean isValid = StringUtils.equals(request.getMbean(),
+                                                 response.getRequest().getObjectName().toString()) &&
+                    StringUtils.equals(request.getAttribute(), response.getRequest().getAttribute()) &&
+                    StringUtils.equals(request.getPath(), response.getRequest().getPath());
+
+            if (!isValid) {
+                continue;
+            }
+
+            handleResponse(results, value, request);
+
+            i++;
+        }
         return results;
     }
 
-    private void handleAttributeResponse(Map<Request, Number> results, JSONObject values, Request request) {
+    /**
+     * Handle a response.
+     *
+     * @param results The results map to add the values
+     * @param value   The json response value
+     * @param request The original request
+     */
+    private void handleResponse(Map<Request, Number> results, Object value, Request request) {
+        if (!Strings.isNullOrEmpty(request.getMbean()) && !Strings.isNullOrEmpty(
+                request.getAttribute()) && !Strings.isNullOrEmpty(
+                request.getPath()) && value instanceof Number) {
+            LOGGER.debug("Adding {}:{}", request, value);
+            results.put(request, (Number) value);
+        } else if (!Strings.isNullOrEmpty(request.getMbean()) && !Strings.isNullOrEmpty(
+                request.getAttribute()) && Strings.isNullOrEmpty(request.getPath())) {
+            handleAttributeResponse(results, (JSONObject) value, request);
+        } else {
+            handleMbeanResponse(results, (JSONObject) value, request);
+        }
+    }
+
+    /**
+     * Handle a response thats request has only contained a mbean and no attribute and path.
+     *
+     * @param results The results map to add the values
+     * @param value   The json response value
+     * @param request The original request
+     */
+    private void handleMbeanResponse(Map<Request, Number> results, Map value, Request request) {
+        for (Map.Entry entry : (Set<Map.Entry>) value.entrySet()) {
+            if (entry.getValue() instanceof JSONObject) {
+                handleAttributeResponse(results, (JSONObject) entry.getValue(),
+                                        new Request(request.getMbean(), (String) entry.getKey()));
+            } else if (entry.getValue() instanceof Number) {
+                Request key = new Request(request.getMbean(), (String) entry.getKey());
+                LOGGER.debug("Adding {}:{}", key, entry.getValue());
+                results.put(key, (Number) entry.getValue());
+            }
+        }
+    }
+
+    /**
+     * Hanlde a response thats request contains a mbean and an attribute but no path.
+     *
+     * @param results The results map to add the values
+     * @param values  The json response value
+     * @param request The original request
+     */
+    private void handleAttributeResponse(Map<Request, Number> results, Map values, Request request) {
 
         for (Map.Entry entry : (Set<Map.Entry>) values.entrySet()) {
 
             if (!(entry.getValue() instanceof Number)) {
                 continue;
             }
-            LOGGER.debug("{}:{}", entry.getKey(), entry.getValue());
-            results.put(new Request(request.getMbean(), request.getAttribute(), (String) entry.getKey()),
-                        (Number) entry.getValue());
+            Request key = new Request(request.getMbean(), request.getAttribute(), (String) entry.getKey());
+            LOGGER.debug("Adding {}:{}", key, entry.getValue());
+            results.put(key, (Number) entry.getValue());
         }
     }
 
     private List<J4pReadRequest> createReadRequests(List<Request> requests) {
-        List<J4pReadRequest> readRequests = new ArrayList<J4pReadRequest>();
+        List<J4pReadRequest> readRequests = new ArrayList<>();
 
         for (Request request : requests) {
 
