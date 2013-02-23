@@ -64,8 +64,8 @@ public class JolokiaFetcherTest {
 
         injectResponse(200, "de/chrfritz/jolokiamunin/jolokia/impl/fetchValuesFull.json");
         Map<Request, Number> expected = new HashMap<>();
-        expected.put(new Request("java.lang:type=Memory", "NonHeapMemoryUsage", "used"), 1000);
-        expected.put(new Request("java.lang:type=Memory", "NonHeapMemoryUsage", "committed"), 1000);
+        expected.put(new Request("java.lang:type=Memory", "NonHeapMemoryUsage", "used"), 139647584L);
+        expected.put(new Request("java.lang:type=Memory", "NonHeapMemoryUsage", "committed"), 279379968L);
 
         List<Request> requestList = new ArrayList<>();
         requestList.add(new Request("java.lang:type=Memory", "NonHeapMemoryUsage", "used"));
@@ -79,10 +79,10 @@ public class JolokiaFetcherTest {
     public void testFetchValuesWithoutPath() throws Exception {
         injectResponse(200, "de/chrfritz/jolokiamunin/jolokia/impl/fetchValuesWithoutPath.json");
         Map<Request, Number> expected = new HashMap<>();
-        expected.put(new Request("java.lang:type=Memory", "HeapMemoryUsage", "max"), 1000);
-        expected.put(new Request("java.lang:type=Memory", "HeapMemoryUsage", "committed"), 1000);
-        expected.put(new Request("java.lang:type=Memory", "HeapMemoryUsage", "init"), 1000);
-        expected.put(new Request("java.lang:type=Memory", "HeapMemoryUsage", "used"), 1000);
+        expected.put(new Request("java.lang:type=Memory", "HeapMemoryUsage", "max"), 129761280L);
+        expected.put(new Request("java.lang:type=Memory", "HeapMemoryUsage", "committed"), 129761280L);
+        expected.put(new Request("java.lang:type=Memory", "HeapMemoryUsage", "init"), 67108864L);
+        expected.put(new Request("java.lang:type=Memory", "HeapMemoryUsage", "used"), 90741928L);
 
         List<Request> requestList = new ArrayList<>();
         requestList.add(new Request("java.lang:type=Memory", "HeapMemoryUsage"));
@@ -95,14 +95,15 @@ public class JolokiaFetcherTest {
     public void testFetchValuesWithoutAttribute() throws Exception {
         injectResponse(200, "de/chrfritz/jolokiamunin/jolokia/impl/fetchValuesWithoutAttirbute.json");
         Map<Request, Number> expected = new HashMap<>();
-        expected.put(new Request("java.lang:type=Memory", "HeapMemoryUsage", "max"), 1000);
-        expected.put(new Request("java.lang:type=Memory", "HeapMemoryUsage", "committed"), 1000);
-        expected.put(new Request("java.lang:type=Memory", "HeapMemoryUsage", "init"), 1000);
-        expected.put(new Request("java.lang:type=Memory", "HeapMemoryUsage", "used"), 1000);
-        expected.put(new Request("java.lang:type=Memory", "NonHeapMemoryUsage", "max"), 1000);
-        expected.put(new Request("java.lang:type=Memory", "NonHeapMemoryUsage", "committed"), 1000);
-        expected.put(new Request("java.lang:type=Memory", "NonHeapMemoryUsage", "init"), 1000);
-        expected.put(new Request("java.lang:type=Memory", "NonHeapMemoryUsage", "used"), 1000);
+        expected.put(new Request("java.lang:type=Memory", "HeapMemoryUsage", "max"), 129761280L);
+        expected.put(new Request("java.lang:type=Memory", "HeapMemoryUsage", "committed"), 129761280L);
+        expected.put(new Request("java.lang:type=Memory", "HeapMemoryUsage", "init"), 67108864L);
+        expected.put(new Request("java.lang:type=Memory", "HeapMemoryUsage", "used"), 114814760L);
+        expected.put(new Request("java.lang:type=Memory", "NonHeapMemoryUsage", "max"), 587202560L);
+        expected.put(new Request("java.lang:type=Memory", "NonHeapMemoryUsage", "committed"), 279379968L);
+        expected.put(new Request("java.lang:type=Memory", "NonHeapMemoryUsage", "init"), 270991360L);
+        expected.put(new Request("java.lang:type=Memory", "NonHeapMemoryUsage", "used"), 139644112L);
+        expected.put(new Request("java.lang:type=Memory", "ObjectPendingFinalizationCount"), 0L);
 
         List<Request> requestList = new ArrayList<>();
         requestList.add(new Request("java.lang:type=Memory"));
@@ -115,12 +116,12 @@ public class JolokiaFetcherTest {
     public void testFetchValuesMixed() throws Exception {
         injectResponse(200, "de/chrfritz/jolokiamunin/jolokia/impl/fetchValuesMixed.json");
         Map<Request, Number> expected = new HashMap<>();
-        expected.put(new Request("java.lang:type=Memory", "HeapMemoryUsage", "max"), 1000);
-        expected.put(new Request("java.lang:type=Memory", "HeapMemoryUsage", "committed"), 1000);
-        expected.put(new Request("java.lang:type=Memory", "HeapMemoryUsage", "init"), 1000);
-        expected.put(new Request("java.lang:type=Memory", "HeapMemoryUsage", "used"), 1000);
-        expected.put(new Request("java.lang:type=Memory", "NonHeapMemoryUsage", "committed"), 1000);
-        expected.put(new Request("java.lang:type=Memory", "NonHeapMemoryUsage", "used"), 1000);
+        expected.put(new Request("java.lang:type=Memory", "HeapMemoryUsage", "max"), 129761280L);
+        expected.put(new Request("java.lang:type=Memory", "HeapMemoryUsage", "committed"), 129761280L);
+        expected.put(new Request("java.lang:type=Memory", "HeapMemoryUsage", "init"), 67108864L);
+        expected.put(new Request("java.lang:type=Memory", "HeapMemoryUsage", "used"), 120071160L);
+        expected.put(new Request("java.lang:type=Memory", "NonHeapMemoryUsage", "committed"), 279379968L);
+        expected.put(new Request("java.lang:type=Memory", "NonHeapMemoryUsage", "used"), 139712936L);
 
         List<Request> requestList = new ArrayList<>();
         requestList.add(new Request("java.lang:type=Memory", "HeapMemoryUsage"));
