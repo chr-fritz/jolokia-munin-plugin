@@ -65,7 +65,7 @@ public class JolokiaFetcher implements Fetcher {
      *
      * @param requests The requested values.
      * @return A map that maps the specific request to a value.
-     * @throws FetcherException
+     * @throws FetcherException In case of no values can be fetched
      */
     @Override
     public Map<Request, Number> fetchValues(List<Request> requests) throws FetcherException {
