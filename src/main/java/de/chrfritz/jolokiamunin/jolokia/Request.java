@@ -1,9 +1,26 @@
+// ______________________________________________________________________________
+//
+//           Project: jolokia-munin-plugin
+//            Module: jolokia-munin-plugin
+//             Class: Request
+//              File: Request.java
+//        changed by: christian
+//       change date: 23.02.13 19:37
+//       description: Request DTO
+// ______________________________________________________________________________
+//
+//         Copyright: (c) Christian Fritz, all rights reserved
+// ______________________________________________________________________________
+
 package de.chrfritz.jolokiamunin.jolokia;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+/**
+ * A data transfer object for requesting and responding jmx and jolokia.
+ */
 public final class Request {
 
     private final String mbean;

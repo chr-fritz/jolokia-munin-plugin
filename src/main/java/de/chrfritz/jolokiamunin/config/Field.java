@@ -1,3 +1,17 @@
+// ______________________________________________________________________________
+//
+//           Project: jolokia-munin-plugin
+//            Module: jolokia-munin-plugin
+//             Class: Field
+//              File: Field.java
+//        changed by: christian
+//       change date: 18.02.13 19:26
+//       description: Field DTO
+// ______________________________________________________________________________
+//
+//         Copyright: (c) Christian Fritz, all rights reserved
+// ______________________________________________________________________________
+
 package de.chrfritz.jolokiamunin.config;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -6,6 +20,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.math.BigDecimal;
 
+/**
+ * A data transfer object for configuration fields.
+ */
 public final class Field {
 
     private String info;

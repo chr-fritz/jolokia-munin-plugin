@@ -1,3 +1,17 @@
+// ______________________________________________________________________________
+//
+//           Project: jolokia-munin-plugin
+//            Module: jolokia-munin-plugin
+//             Class: Graph
+//              File: Graph.java
+//        changed by: christian
+//       change date: 18.02.13 19:26
+//       description: Graph DTO
+// ______________________________________________________________________________
+//
+//         Copyright: (c) Christian Fritz, all rights reserved
+// ______________________________________________________________________________
+
 package de.chrfritz.jolokiamunin.config;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -6,6 +20,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.List;
 
+/**
+ * A data transfer object for configuration graphs.
+ */
 public final class Graph {
 
     private List<Field> fields;

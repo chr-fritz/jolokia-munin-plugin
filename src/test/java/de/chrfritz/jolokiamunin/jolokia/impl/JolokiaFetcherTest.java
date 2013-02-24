@@ -42,6 +42,9 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
+/**
+ * Test for the jolokia fetcher.
+ */
 @RunWith(MockitoJUnitRunner.class)
 public class JolokiaFetcherTest {
     private Fetcher fetcher;
