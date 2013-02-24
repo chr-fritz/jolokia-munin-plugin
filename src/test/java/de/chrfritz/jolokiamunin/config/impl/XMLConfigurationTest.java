@@ -1,3 +1,17 @@
+// ______________________________________________________________________________
+//
+//           Project: jolokia-munin-plugin
+//            Module: jolokia-munin-plugin
+//             Class: XMLConfigurationTest
+//              File: XMLConfigurationTest.java
+//        changed by: christian
+//       change date: 18.02.13 19:46
+//       description: Test for xml configuration
+// ______________________________________________________________________________
+//
+//         Copyright: (c) Christian Fritz, all rights reserved
+// ______________________________________________________________________________
+
 package de.chrfritz.jolokiamunin.config.impl;
 
 import de.chrfritz.jolokiamunin.config.Category;
@@ -12,6 +26,9 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * Test the xml configuration system.
+ */
 public class XMLConfigurationTest {
 
     private Configuration config;

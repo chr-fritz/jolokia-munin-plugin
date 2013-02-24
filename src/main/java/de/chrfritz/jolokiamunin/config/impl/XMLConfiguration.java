@@ -1,7 +1,22 @@
+// ______________________________________________________________________________
+//
+//           Project: jolokia-munin-plugin
+//            Module: jolokia-munin-plugin
+//             Class: XMLConfiguration
+//              File: XMLConfiguration.java
+//        changed by: christian
+//       change date: 19.02.13 19:12
+//       description: Load a configuration form XML
+// ______________________________________________________________________________
+//
+//         Copyright: (c) Christian Fritz, all rights reserved
+// ______________________________________________________________________________
+
 package de.chrfritz.jolokiamunin.config.impl;
 
 import de.chrfritz.jolokiamunin.config.Category;
 import de.chrfritz.jolokiamunin.config.Configuration;
+import de.chrfritz.jolokiamunin.config.ConfigurationException;
 import de.chrfritz.jolokiamunin.config.xml.CategoryType;
 import de.chrfritz.jolokiamunin.config.xml.Config;
 import org.dozer.DozerBeanMapper;
@@ -18,6 +33,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * The xml configuration handler. It helps you to load a configuration form a xml file.
+ */
 public class XMLConfiguration implements Configuration {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(XMLConfiguration.class);
@@ -25,12 +43,20 @@ public class XMLConfiguration implements Configuration {
 
     private List<Category> categories;
 
+    /**
+     * Load configuration form the given url.
+     *
+     * @param configFile The url of the configuration file.
+     */
     public XMLConfiguration(URL configFile) {
         this.configFile = configFile;
     }
 
+    /**
+     * Load the configuration.
+     */
     @Override
-    public void load() {
+    public void load() throws ConfigurationException {
 
         try {
             JAXBContext jc = JAXBContext.newInstance(Config.class);
@@ -45,11 +71,16 @@ public class XMLConfiguration implements Configuration {
             }
         }
         catch (JAXBException e) {
-            LOGGER.error(e.getMessage(), e);
-            throw new RuntimeException(e);
+            LOGGER.error("Can not load configuration", e);
+            throw new ConfigurationException(e);
         }
     }
 
+    /**
+     * Get the bean mapper to map the internal xml structure to external dto.
+     *
+     * @return The bean mapper
+     */
     protected Mapper getMapper() {
 
         InputStream mapping = Thread.currentThread()
@@ -61,6 +92,11 @@ public class XMLConfiguration implements Configuration {
         return mapper;
     }
 
+    /**
+     * Get the loaded configuration.
+     *
+     * @return The loaded configuration
+     */
     @Override
     public List<Category> getConfiguration() {
         return Collections.unmodifiableList(categories);
