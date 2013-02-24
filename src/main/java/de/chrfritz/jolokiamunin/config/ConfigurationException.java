@@ -2,29 +2,28 @@
 //
 //           Project: jolokia-munin-plugin
 //            Module: jolokia-munin-plugin
-//             Class: FetcherException
-//              File: FetcherException.java
+//             Class: ConfigurationException
+//              File: ConfigurationException.java
 //        changed by: christian
-//       change date: 20.02.13 21:59
-//       description: Fetcher Exception
+//       change date: 24.02.13 01:03
+//       description: The configuration exception
 // ______________________________________________________________________________
 //
 //         Copyright: (c) Christian Fritz, all rights reserved
 // ______________________________________________________________________________
-
-package de.chrfritz.jolokiamunin.jolokia;
+package de.chrfritz.jolokiamunin.config;
 
 /**
- * The FetcherException will be thrown in cases of no or some values can't be fetched.
+ * The FetcherException will be thrown in cases of the configuration can not be loaded.
  */
-public class FetcherException extends Exception {
+public class ConfigurationException extends Exception {
 
     /**
      * Constructs a new exception with {@code null} as its detail message.
      * The cause is not initialized, and may subsequently be initialized by a
      * call to {@link #initCause}.
      */
-    public FetcherException() {
+    public ConfigurationException() {
     }
 
     /**
@@ -41,7 +40,7 @@ public class FetcherException extends Exception {
      *              unknown.)
      * @since 1.4
      */
-    public FetcherException(Throwable cause) {
+    public ConfigurationException(Throwable cause) {
         super(cause);
     }
 
@@ -53,7 +52,7 @@ public class FetcherException extends Exception {
      * @param message the detail message. The detail message is saved for
      *                later retrieval by the {@link #getMessage()} method.
      */
-    public FetcherException(String message) {
+    public ConfigurationException(String message) {
         super(message);
     }
 
@@ -71,7 +70,7 @@ public class FetcherException extends Exception {
      *                unknown.)
      * @since 1.4
      */
-    public FetcherException(String message, Throwable cause) {
+    public ConfigurationException(String message, Throwable cause) {
         super(message, cause);
     }
 
@@ -89,7 +88,8 @@ public class FetcherException extends Exception {
      *                           be writable
      * @since 1.7
      */
-    public FetcherException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    public ConfigurationException(String message, Throwable cause, boolean enableSuppression,
+            boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 }
