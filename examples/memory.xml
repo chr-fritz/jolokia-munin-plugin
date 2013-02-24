@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config xmlns="http://chrfritz.de/jolokiamunin/config.xsd">
     <category name="ServletContainer" src="http://localhost:8080/jolokia">
-        <graph title="HeapMemoryUsage" vlabel="bytes">
+        <graph name="heapMemUsage" title="HeapMemoryUsage" vlabel="bytes">
             <info>Heap Memory Usage of JVM</info>
             <args>--base 1024</args>
             <mbean>java.lang:type=Memory</mbean>
@@ -20,7 +20,7 @@
             </field>
         </graph>
 
-        <graph title="NonHeapMemoryUsage" vlabel="bytes">
+        <graph name="nonHeapMemUsage" title="NonHeapMemoryUsage" vlabel="bytes">
             <info>Non Heap Memory Usage of JVM</info>
             <args>--base 1024</args>
             <mbean>java.lang:type=Memory</mbean>

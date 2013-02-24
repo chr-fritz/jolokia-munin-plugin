@@ -27,6 +27,7 @@ public final class Graph {
 
     private List<Field> fields;
 
+    private String name;
     private String title;
     private String vlabel;
     private String args;
@@ -54,6 +55,10 @@ public final class Graph {
 
     public String getMbean() {
         return mbean;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public boolean isScale() {
@@ -84,6 +89,10 @@ public final class Graph {
         this.info = info;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public void setMbean(String mbean) {
         this.mbean = mbean;
     }
@@ -110,6 +119,7 @@ public final class Graph {
                 .append(this.scale)
                 .append(this.attribute)
                 .append(this.mbean)
+                .append(this.name)
                 .toHashCode();
     }
 
@@ -130,6 +140,7 @@ public final class Graph {
                 .append(this.scale, other.scale)
                 .append(this.attribute, other.attribute)
                 .append(this.mbean, other.mbean)
+                .append(this.name, other.name)
                 .isEquals();
     }
 
@@ -137,13 +148,14 @@ public final class Graph {
     public String toString() {
         return new ToStringBuilder(this)
                 .append("args", args)
+                .append("attribute", attribute)
                 .append("fields", fields)
+                .append("info", info)
+                .append("mbean", mbean)
+                .append("name", name)
+                .append("scale", scale)
                 .append("title", title)
                 .append("vlabel", vlabel)
-                .append("info", info)
-                .append("scale", scale)
-                .append("attribute", attribute)
-                .append("mbean", mbean)
                 .toString();
     }
 }

@@ -14,7 +14,7 @@
             <xs:element name="info" type="xs:string" minOccurs="0" maxOccurs="1"/>
             <xs:element name="mbean" type="xs:string" minOccurs="0" maxOccurs="1"/>
             <xs:element name="attribute" type="xs:string" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="path" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="path" type="xs:string" minOccurs="0" maxOccurs="1"/>
         </xs:sequence>
         <xs:attribute type="xs:string" name="name" use="required"/>
         <xs:attribute type="xs:string" name="label" use="required"/>
@@ -66,6 +66,7 @@
             <xs:element type="xs:string" name="attribute" minOccurs="0" maxOccurs="1"/>
             <xs:element type="fieldType" name="field" maxOccurs="unbounded" minOccurs="1"/>
         </xs:sequence>
+        <xs:attribute type="xs:string" name="name" use="required"/>
         <xs:attribute type="xs:string" name="title" use="required"/>
         <xs:attribute type="xs:string" name="vlabel" use="required"/>
         <xs:attribute name="scale" type="xs:boolean"/>
