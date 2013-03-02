@@ -110,8 +110,15 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
                             <mainClass>de.chrfritz.jolokiamunin.App</mainClass>
                         </manifest>
+                        <manifestEntries>
+                            <Build-Number>${env.BUILD_NUMBER}</Build-Number>
+                            <Git-Commit>${env.GIT_COMMIT}</Git-Commit>
+                            <Git-Branch>${env.GIT_BRANCH}</Git-Branch>
+                        </manifestEntries>
                     </archive>
                 </configuration>
                 <executions>
