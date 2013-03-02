@@ -6,9 +6,10 @@
     <artifactId>jolokia-munin-plugin</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
+    <description>The Jolokia Munin Plugin can be used to fetch any numeric value from a jolokia agent.</description>
 
     <name>jolokia-munin-plugin</name>
-    <url>http://chrfritz.de</url>
+    <url>http://chrfritz.de/jolokia-munin-plugin/</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -39,7 +40,7 @@
         <url>https://travis-ci.org/chr-fritz/jolokia-munin-plugin</url>
     </ciManagement>
     <scm>
-        <url>git@github.com:chr-fritz/jolokia-munin-plugin.git</url>
+        <url>http://github.com/chr-fritz/jolokia-munin-plugin</url>
         <connection>scm:git:git@github.com:chr-fritz/jolokia-munin-plugin.git</connection>
         <developerConnection>scm:git:git@github.com:chr-fritz/jolokia-munin-plugin.git</developerConnection>
     </scm>
@@ -148,6 +149,44 @@
                     <packageName>de.chrfritz.jolokiamunin.config.xml</packageName>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.2</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.maven.doxia</groupId>
+                        <artifactId>doxia-module-markdown</artifactId>
+                        <version>1.3</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
         </plugins>
     </build>
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.9</version>
+                <reportSets>
+                    <reportSet><!-- by default, id = "default" -->
+                        <reports><!-- select non-aggregate reports -->
+                            <report>javadoc</report>
+                            <report>test-javadoc</report>
+                        </reports>
+                    </reportSet>
+                    <reportSet>
+                        <id>aggregate</id>
+                        <!-- aggregate reportSet, for pom with modules -->
+                        <inherited>false</inherited>
+                        <!-- don't run aggregate in child modules -->
+                        <reports>
+                            <report>aggregate</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+        </plugins>
+    </reporting>
 </project>
