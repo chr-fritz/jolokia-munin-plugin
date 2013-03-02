@@ -6,7 +6,7 @@
 //              File: JolokiaFetcherFactory.java
 //        changed by: christian
 //       change date: 02.03.13 13:49
-//       description:
+//       description: Factory for Jolokia Fetcher
 // ______________________________________________________________________________
 //
 //         Copyright: (c) Christian Fritz, all rights reserved
@@ -19,6 +19,9 @@ import de.chrfritz.jolokiamunin.jolokia.FetcherFactory;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+/**
+ * Handles the creation of jolokia fetcher.
+ */
 public class JolokiaFetcherFactory implements FetcherFactory {
 
     @Override

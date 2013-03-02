@@ -27,18 +27,36 @@ public final class Request {
     private final String attribute;
     private final String path;
 
+    /**
+     * Create a new request that only contains the mbean name.
+     *
+     * @param mbean The name of the mbean.
+     */
     public Request(String mbean) {
         this.mbean = mbean;
         this.attribute = null;
         this.path = null;
     }
 
+    /**
+     * Creates a new request with the mbean name and attribute name.
+     *
+     * @param mbean     The name of the mbean.
+     * @param attribute The attribute name
+     */
     public Request(String mbean, String attribute) {
         this.attribute = attribute;
         this.mbean = mbean;
         this.path = null;
     }
 
+    /**
+     * Creats a new request with the full address (mbean, attribute and path).
+     *
+     * @param mbean     The name of the mbean.
+     * @param attribute The attribute name
+     * @param path      The specific path
+     */
     public Request(String mbean, String attribute, String path) {
         this.mbean = mbean;
         this.attribute = attribute;

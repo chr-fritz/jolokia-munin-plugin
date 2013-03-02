@@ -18,7 +18,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * A handler thats fetches a list of values from an external source. This might be for example a jolokia agent or other jmx sources.
+ * A handler thats fetches a list of values from an external source. This might be for
+ * example a jolokia agent or other jmx sources.
  */
 public interface Fetcher {
 
