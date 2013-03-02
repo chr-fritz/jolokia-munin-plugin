@@ -1,0 +1,29 @@
+multigraph ServletContainerheapMem
+graph_title HeapMemoryUsage
+graph_args --base 1024
+graph_category ServletContainer
+graph_info Heap Memory Usage of JVM
+graph_vlabel bytes
+graph_order heapMem_max heapMem_committed heapMem_init heapMem_used
+heapMem_max.label Maximum
+heapMem_max.draw LINE3
+heapMem_max.type GAUGE
+heapMem_committed.label Committed
+heapMem_committed.draw AREA
+heapMem_committed.type GAUGE
+heapMem_init.label Initial
+heapMem_init.draw LINE1
+heapMem_init.type GAUGE
+heapMem_used.label Used
+heapMem_used.draw AREA
+heapMem_used.type GAUGE
+multigraph ServletContainernoneHeapMem
+graph_title NonHeapMemoryUsage
+graph_args --base 1024
+graph_category ServletContainer
+graph_info Non Heap Memory Usage of JVM
+graph_vlabel bytes
+graph_order noneHeapMem_max
+noneHeapMem_max.label Maximum
+noneHeapMem_max.draw LINE3
+noneHeapMem_max.type GAUGE

@@ -13,23 +13,27 @@
 // ______________________________________________________________________________
 package de.chrfritz.jolokiamunin.munin.impl;
 
+import com.google.common.io.Files;
 import de.chrfritz.jolokiamunin.config.Category;
-import de.chrfritz.jolokiamunin.config.Field;
-import de.chrfritz.jolokiamunin.config.Graph;
+import de.chrfritz.jolokiamunin.config.Configuration;
+import de.chrfritz.jolokiamunin.config.ConfigurationException;
+import de.chrfritz.jolokiamunin.config.impl.XMLConfiguration;
 import de.chrfritz.jolokiamunin.jolokia.Fetcher;
 import de.chrfritz.jolokiamunin.jolokia.FetcherFactory;
 import de.chrfritz.jolokiamunin.jolokia.Request;
 import de.chrfritz.jolokiamunin.munin.MuninProvider;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.ArrayList;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,6 +53,7 @@ public class MuninProviderImplTest {
 
     private MuninProvider provider;
 
+
     @Before
     public void setUp() throws Exception {
         when(factory.getInstance((URL) any())).thenReturn(fetcher);
@@ -63,15 +68,20 @@ public class MuninProviderImplTest {
     }
 
     @Test
-    @Ignore
     public void testGetConfig() throws Exception {
 
+        Category category = loadConfig("de/chrfritz/jolokiamunin/munin/singleCategory.xml").getConfiguration().get(0);
+        String expected = loadFromClasspath("de/chrfritz/jolokiamunin/munin/singleCategoryConfig.txt");
+        String actual = provider.getConfig(category);
+        assertEquals(expected, actual);
     }
 
     @Test
-    @Ignore
-    public void testGetConfig1() throws Exception {
-
+    public void testGetConfigsList() throws Exception {
+        List<Category> categories = loadConfig("de/chrfritz/jolokiamunin/munin/multiCategory.xml").getConfiguration();
+        String expected = loadFromClasspath("de/chrfritz/jolokiamunin/munin/multiCategoryConfig.txt");
+        String actual = provider.getConfig(categories);
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -79,24 +89,17 @@ public class MuninProviderImplTest {
 
         Map<Request, Number> fetcherResult = new HashMap<>();
         when(fetcher.fetchValues(anyList())).thenReturn(fetcherResult);
-        Category category = new Category();
-        category.setName("jetty");
-        category.setGraphs(new ArrayList<Graph>());
-        addHeapMemUsage(fetcherResult, category);
-        addNonHeapMemUsage(fetcherResult, category);
+        Category category = loadConfig("de/chrfritz/jolokiamunin/munin/singleCategory.xml").getConfiguration().get(0);
+
+        fetcherResult.put(new Request("java.lang:type=Memory", "HeapMemoryUsage", "max"), 1000);
+        fetcherResult.put(new Request("java.lang:type=Memory", "HeapMemoryUsage", "used"), 1000);
+        fetcherResult.put(new Request("java.lang:type=Memory", "HeapMemoryUsage", "committed"), 1000);
+        fetcherResult.put(new Request("java.lang:type=Memory", "HeapMemoryUsage", "init"), 1000);
+        fetcherResult.put(new Request("java.lang:type=Memory", "NonHeapMemoryUsage", "max"), 1000);
 
         String actual = provider.getValues(category);
 
-        String expected = "multigraph jettyHeapMemoryUsage\n" +
-                "HeapMemoryUsage_max.value 1000\n" +
-                "HeapMemoryUsage_used.value 1000\n" +
-                "HeapMemoryUsage_committed.value 1000\n" +
-                "HeapMemoryUsage_init.value 1000\n" +
-                "multigraph jettyNonHeapMemoryUsage\n" +
-                "NonHeapMemoryUsage_max.value 1000\n" +
-                "NonHeapMemoryUsage_used.value 1000\n" +
-                "NonHeapMemoryUsage_committed.value 1000\n" +
-                "NonHeapMemoryUsage_init.value 1000\n";
+        String expected = loadFromClasspath("de/chrfritz/jolokiamunin/munin/singleCategoryValues.txt");
 
         assertEquals(expected, actual);
     }
@@ -106,93 +109,33 @@ public class MuninProviderImplTest {
 
         Map<Request, Number> fetcherResult = new HashMap<>();
         when(fetcher.fetchValues(anyList())).thenReturn(fetcherResult);
-        List<Category> categories = new ArrayList<>();
-
-        Category category = new Category();
-        category.setName("jetty");
-        category.setGraphs(new ArrayList<Graph>());
-        addHeapMemUsage(fetcherResult, category);
-        categories.add(category);
-
-        category = new Category();
-        category.setName("tomcat");
-        category.setGraphs(new ArrayList<Graph>());
-        addNonHeapMemUsage(fetcherResult, category);
-        categories.add(category);
-
-        String actual = provider.getValues(categories);
-
-        String expected = "multigraph jettyHeapMemoryUsage\n" +
-                "HeapMemoryUsage_max.value 1000\n" +
-                "HeapMemoryUsage_used.value 1000\n" +
-                "HeapMemoryUsage_committed.value 1000\n" +
-                "HeapMemoryUsage_init.value 1000\n" +
-                "multigraph tomcatNonHeapMemoryUsage\n" +
-                "NonHeapMemoryUsage_max.value 1000\n" +
-                "NonHeapMemoryUsage_used.value 1000\n" +
-                "NonHeapMemoryUsage_committed.value 1000\n" +
-                "NonHeapMemoryUsage_init.value 1000\n";
-
-        assertEquals(expected, actual);
-    }
-
-    private void addHeapMemUsage(Map<Request, Number> fetcherResult, Category category) {
-        Graph graph = createGraph("HeapMemoryUsage", "java.lang:type=Memory", "HeapMemoryUsage");
-        addField(graph, "max", "max");
-        addField(graph, "used", "used");
-        addField(graph, "committed", "committed");
-        addField(graph, "init", "init");
-        category.getGraphs().add(graph);
+        List<Category> categories = loadConfig("de/chrfritz/jolokiamunin/munin/multiCategory.xml").getConfiguration();
 
         fetcherResult.put(new Request("java.lang:type=Memory", "HeapMemoryUsage", "max"), 1000);
-        fetcherResult.put(new Request("java.lang:type=Memory", "HeapMemoryUsage", "used"), 1000);
-        fetcherResult.put(new Request("java.lang:type=Memory", "HeapMemoryUsage", "committed"), 1000);
-        fetcherResult.put(new Request("java.lang:type=Memory", "HeapMemoryUsage", "init"), 1000);
-    }
-
-    private void addNonHeapMemUsage(Map<Request, Number> fetcherResult, Category category) {
-        Graph graph;
-        graph = createGraph("NonHeapMemoryUsage", "java.lang:type=Memory", "NonHeapMemoryUsage");
-        addField(graph, "max", "max");
-        addField(graph, "used", "used");
-        addField(graph, "committed", "committed");
-        addField(graph, "init", "init");
-        category.getGraphs().add(graph);
-
         fetcherResult.put(new Request("java.lang:type=Memory", "NonHeapMemoryUsage", "max"), 1000);
         fetcherResult.put(new Request("java.lang:type=Memory", "NonHeapMemoryUsage", "used"), 1000);
         fetcherResult.put(new Request("java.lang:type=Memory", "NonHeapMemoryUsage", "committed"), 1000);
         fetcherResult.put(new Request("java.lang:type=Memory", "NonHeapMemoryUsage", "init"), 1000);
+
+        String actual = provider.getValues(categories);
+
+        String expected = loadFromClasspath("de/chrfritz/jolokiamunin/munin/multiCategoryValues.txt");
+
+        assertEquals(expected, actual);
     }
 
-    private Graph createGraph(String name, String mbean) {
-        return createGraph(name, mbean);
+    private static Configuration loadConfig(String configFile) throws ConfigurationException {
+        URL configUrl = Thread.currentThread()
+                .getContextClassLoader()
+                .getResource(configFile);
+
+        Configuration config = new XMLConfiguration(configUrl);
+        config.load();
+        return config;
     }
 
-    private Graph createGraph(String name, String mbean, String attribute) {
-        Graph graph = new Graph();
-        graph.setName(name);
-        graph.setMbean(mbean);
-        graph.setAttribute(attribute);
-        graph.setFields(new ArrayList<Field>());
-        return graph;
+    private String loadFromClasspath(String filename) throws IOException, URISyntaxException {
+        URL url = Thread.currentThread().getContextClassLoader().getResource(filename);
+        return Files.toString(new File(url.toURI()), Charset.forName("UTF-8"));
     }
-
-    private void addField(Graph graph, String name, String path) {
-        addField(graph, name, path, null, null);
-    }
-
-    private void addField(Graph graph, String name, String path, String attribute) {
-        addField(graph, name, path, attribute, null);
-    }
-
-    private void addField(Graph graph, String name, String path, String attribute, String mbean) {
-        Field field = new Field();
-        field.setName(name);
-        field.setPath(path);
-        field.setAttribute(attribute);
-        field.setMbean(mbean);
-        graph.getFields().add(field);
-    }
-
 }

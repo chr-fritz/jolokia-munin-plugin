@@ -14,6 +14,7 @@
 package de.chrfritz.jolokiamunin.munin.impl;
 
 import com.google.common.base.Objects;
+import com.google.common.base.Strings;
 import de.chrfritz.jolokiamunin.config.Category;
 import de.chrfritz.jolokiamunin.config.Field;
 import de.chrfritz.jolokiamunin.config.Graph;
@@ -43,14 +44,50 @@ public class MuninProviderImpl implements MuninProvider {
 
         StringBuffer buffer = new StringBuffer();
         for (Category category : categories) {
-            buffer.append(getConfig(category)).append("\n");
+            buffer.append(getConfig(category));
         }
         return buffer.toString();
     }
 
     @Override
     public String getConfig(Category category) {
-        return null;
+
+        StringBuffer buffer = new StringBuffer();
+        for (Graph graph : category.getGraphs()) {
+
+            buffer.append("multigraph ").append(category.getName()).append(graph.getName()).append("\n");
+            addAttribute(buffer, "graph_title", graph.getTitle());
+            addAttribute(buffer, "graph_args", graph.getArgs());
+            addAttribute(buffer, "graph_category", category.getName());
+            addAttribute(buffer, "graph_info", graph.getInfo());
+            addAttribute(buffer, "graph_vlabel", graph.getVlabel());
+
+            StringBuffer fields = new StringBuffer();
+            StringBuffer fieldOrder = new StringBuffer();
+
+            getFieldDefinitions(graph, fields, fieldOrder);
+
+            addAttribute(buffer, "graph_order", fieldOrder.toString());
+            buffer.append(fields);
+        }
+
+        return buffer.toString();
+    }
+
+    private void getFieldDefinitions(Graph graph, StringBuffer fields, StringBuffer fieldOrder) {
+        for (Field field : graph.getFields()) {
+            String fieldName = graph.getName() + "_" + field.getName();
+            fieldOrder.append(fieldName).append(" ");
+            addFieldAttribute(fields, fieldName, "label", field.getLabel());
+            addFieldAttribute(fields, fieldName, "draw", field.getDraw());
+            addFieldAttribute(fields, fieldName, "info", field.getInfo());
+            //addFieldAttribute(fields, fieldName, "max", field.getMax());
+            //addFieldAttribute(fields, fieldName, "min", field.getMin());
+            addFieldAttribute(fields, fieldName, "type", field.getType());
+            addFieldAttribute(fields, fieldName, "warning", field.getWarning());
+            addFieldAttribute(fields, fieldName, "critical", field.getCritical());
+            addFieldAttribute(fields, fieldName, "colour", field.getColor());
+        }
     }
 
     @Override
@@ -77,7 +114,8 @@ public class MuninProviderImpl implements MuninProvider {
                 buffer.append("multigraph ").append(category.getName()).append(graph.getName()).append("\n");
                 for (Field field : graph.getFields()) {
                     String fieldName = graph.getName() + "_" + field.getName();
-                    buffer.append(fieldName).append(".value ").append(values.get(requests.get(fieldName))).append("\n");
+
+                    addFieldAttribute(buffer, fieldName, "value", values.get(requests.get(fieldName)));
                 }
             }
 
@@ -103,5 +141,19 @@ public class MuninProviderImpl implements MuninProvider {
             }
         }
         return requests;
+    }
+
+    private static void addAttribute(StringBuffer buffer, String name, String value) {
+        if (!Strings.isNullOrEmpty(name) && !Strings.isNullOrEmpty(value)) {
+            buffer.append(name).append(" ").append(value.trim()).append("\n");
+        }
+    }
+
+    private static void addFieldAttribute(StringBuffer buffer, String fieldName, String attribute, String value) {
+        addAttribute(buffer, fieldName + "." + attribute, value);
+    }
+
+    private static void addFieldAttribute(StringBuffer buffer, String fieldName, String attribute, Number number) {
+        buffer.append(fieldName).append(".").append(attribute).append(" ").append(number).append("\n");
     }
 }
