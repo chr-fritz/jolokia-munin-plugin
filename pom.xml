@@ -13,6 +13,36 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+    <licenses>
+        <license>
+            <name>GNU Lesser General Public License (LGPL)</name>
+            <url>http://www.gnu.org/licenses/lgpl.html</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>chr-fritz</id>
+            <name>chr-fritz</name>
+            <email>mail at chr-fritz dot de</email>
+            <url>http://chr-fritz.de</url>
+            <roles>
+                <role>architect</role>
+                <role>developer</role>
+            </roles>
+            <timezone>+1</timezone>
+        </developer>
+    </developers>
+
+    <ciManagement>
+        <system>Travis CI</system>
+        <url>https://travis-ci.org/chr-fritz/jolokia-munin-plugin</url>
+    </ciManagement>
+    <scm>
+        <url>git@github.com:chr-fritz/jolokia-munin-plugin.git</url>
+        <connection>scm:git:git@github.com:chr-fritz/jolokia-munin-plugin.git</connection>
+        <developerConnection>scm:git:git@github.com:chr-fritz/jolokia-munin-plugin.git</developerConnection>
+    </scm>
 
     <dependencies>
         <dependency>
@@ -41,6 +71,12 @@
             <version>5.4.0</version>
         </dependency>
         <dependency>
+            <groupId>com.googlecode.json-simple</groupId>
+            <artifactId>json-simple</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.11</version>
@@ -51,11 +87,6 @@
             <artifactId>mockito-all</artifactId>
             <version>1.9.5</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.googlecode.json-simple</groupId>
-            <artifactId>json-simple</artifactId>
-            <version>1.1.1</version>
         </dependency>
     </dependencies>
 
