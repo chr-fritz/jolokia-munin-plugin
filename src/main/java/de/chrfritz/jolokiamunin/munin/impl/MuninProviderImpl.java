@@ -6,7 +6,7 @@
 //              File: MuninProviderImpl.java
 //        changed by: christian
 //       change date: 24.02.13 18:28
-//       description:
+//       description: Provides the munin config and values
 // ______________________________________________________________________________
 //
 //         Copyright: (c) Christian Fritz, all rights reserved
@@ -30,29 +30,51 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * A handler that thats get a configuration and produces either the configuration for munin or fetches the values and
+ * generate the munin value string.
+ */
 public class MuninProviderImpl implements MuninProvider {
 
     private FetcherFactory fetcherFactory;
 
+    /**
+     * Create a new instance with the given fetcher factory.
+     *
+     * @param fetcherFactory The fetcher factory.
+     */
     public MuninProviderImpl(FetcherFactory fetcherFactory) {
 
         this.fetcherFactory = fetcherFactory;
     }
 
+    /**
+     * /**
+     * Get the munin compatible configuration for a list of categories.
+     *
+     * @param categories The list of configurations
+     * @return The produced munin configuration.
+     */
     @Override
     public String getConfig(List<Category> categories) {
 
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         for (Category category : categories) {
             buffer.append(getConfig(category));
         }
         return buffer.toString();
     }
 
+    /**
+     * Get the munin compatible configuration for a single category.
+     *
+     * @param category The category.
+     * @return The produced munin configuration.
+     */
     @Override
     public String getConfig(Category category) {
 
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         for (Graph graph : category.getGraphs()) {
 
             buffer.append("multigraph ").append(category.getName()).append(graph.getName()).append("\n");
@@ -62,8 +84,8 @@ public class MuninProviderImpl implements MuninProvider {
             addAttribute(buffer, "graph_info", graph.getInfo());
             addAttribute(buffer, "graph_vlabel", graph.getVlabel());
 
-            StringBuffer fields = new StringBuffer();
-            StringBuffer fieldOrder = new StringBuffer();
+            StringBuilder fields = new StringBuilder();
+            StringBuilder fieldOrder = new StringBuilder();
 
             getFieldDefinitions(graph, fields, fieldOrder);
 
@@ -74,15 +96,22 @@ public class MuninProviderImpl implements MuninProvider {
         return buffer.toString();
     }
 
-    private void getFieldDefinitions(Graph graph, StringBuffer fields, StringBuffer fieldOrder) {
+    /**
+     * Added the the field configuration to a buffer.
+     *
+     * @param graph      The graph for the field definitions
+     * @param fields     The fields buffer.
+     *                   This buffer is filled with the field configuration.
+     * @param fieldOrder The field order buffer.
+     *                   This buffer is filled with the field names to add this to a order field.
+     */
+    private void getFieldDefinitions(Graph graph, StringBuilder fields, StringBuilder fieldOrder) {
         for (Field field : graph.getFields()) {
             String fieldName = graph.getName() + "_" + field.getName();
             fieldOrder.append(fieldName).append(" ");
             addFieldAttribute(fields, fieldName, "label", field.getLabel());
             addFieldAttribute(fields, fieldName, "draw", field.getDraw());
             addFieldAttribute(fields, fieldName, "info", field.getInfo());
-            //addFieldAttribute(fields, fieldName, "max", field.getMax());
-            //addFieldAttribute(fields, fieldName, "min", field.getMin());
             addFieldAttribute(fields, fieldName, "type", field.getType());
             addFieldAttribute(fields, fieldName, "warning", field.getWarning());
             addFieldAttribute(fields, fieldName, "critical", field.getCritical());
@@ -90,21 +119,35 @@ public class MuninProviderImpl implements MuninProvider {
         }
     }
 
+    /**
+     * Fetches all the values of a list of categories and generates the munin values string.
+     *
+     * @param categories The list of categories.
+     * @return The fetched values as munin compatible string.
+     * @throws FetcherException In case of all errors when try to fetching the values.
+     */
     @Override
     public String getValues(List<Category> categories) throws FetcherException {
 
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         for (Category category : categories) {
             buffer.append(getValues(category));
         }
         return buffer.toString();
     }
 
+    /**
+     * Fetch all values within a single category and generates the munin value string.
+     *
+     * @param category The category
+     * @return The fetched values as munin compatible string.
+     * @throws FetcherException In case of all errors when try to fetching the values.
+     */
     @Override
     public String getValues(Category category) throws FetcherException {
 
         try {
-            StringBuffer buffer = new StringBuffer();
+            StringBuilder buffer = new StringBuilder();
             Map<String, Request> requests = buildRequests(category);
 
             Fetcher fetcher = fetcherFactory.getInstance(category.getSourceUrl());
@@ -126,6 +169,14 @@ public class MuninProviderImpl implements MuninProvider {
         }
     }
 
+    /**
+     * Build the unique requests for a single category which should be executed when the values should be realy fetched.
+     * <p/>
+     * It returns a map which maps the munin field name to the created request must not have all values filled.
+     *
+     * @param category The category they values should be fetched.
+     * @return A map which maps the munin field name to the created request.
+     */
     private Map<String, Request> buildRequests(Category category) {
         Map<String, Request> requests = new HashMap<>();
 
@@ -143,17 +194,40 @@ public class MuninProviderImpl implements MuninProvider {
         return requests;
     }
 
-    private static void addAttribute(StringBuffer buffer, String name, String value) {
+    /**
+     * Add a new attribute to the given buffer.
+     *
+     * @param buffer The buffer.
+     * @param name   The attributes name.
+     * @param value  The value of the attribute.
+     */
+    private static void addAttribute(StringBuilder buffer, String name, String value) {
         if (!Strings.isNullOrEmpty(name) && !Strings.isNullOrEmpty(value)) {
             buffer.append(name).append(" ").append(value.trim()).append("\n");
         }
     }
 
-    private static void addFieldAttribute(StringBuffer buffer, String fieldName, String attribute, String value) {
+    /**
+     * Add a new field attribute to the given buffer.
+     *
+     * @param buffer    The buffer.
+     * @param fieldName The field name for the attribute.
+     * @param attribute The attributes name.
+     * @param value     The value of the attribute.
+     */
+    private static void addFieldAttribute(StringBuilder buffer, String fieldName, String attribute, String value) {
         addAttribute(buffer, fieldName + "." + attribute, value);
     }
 
-    private static void addFieldAttribute(StringBuffer buffer, String fieldName, String attribute, Number number) {
-        buffer.append(fieldName).append(".").append(attribute).append(" ").append(number).append("\n");
+    /**
+     * Add a new field attribute to the given buffer.
+     *
+     * @param buffer    The buffer.
+     * @param fieldName The field name for the attribute.
+     * @param attribute The attributes name.
+     * @param value     The value of the attribute.
+     */
+    private static void addFieldAttribute(StringBuilder buffer, String fieldName, String attribute, Number value) {
+        buffer.append(fieldName).append(".").append(attribute).append(" ").append(value).append("\n");
     }
 }
