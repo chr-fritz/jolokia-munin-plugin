@@ -17,22 +17,25 @@ import de.chrfritz.jolokiamunin.config.Category;
 import de.chrfritz.jolokiamunin.config.Field;
 import de.chrfritz.jolokiamunin.config.Graph;
 import de.chrfritz.jolokiamunin.jolokia.Fetcher;
+import de.chrfritz.jolokiamunin.jolokia.FetcherFactory;
 import de.chrfritz.jolokiamunin.jolokia.Request;
 import de.chrfritz.jolokiamunin.munin.MuninProvider;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyList;
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -41,11 +44,17 @@ public class MuninProviderImplTest {
     @Mock
     private Fetcher fetcher;
 
+    @Mock
+    private FetcherFactory factory;
+
     private MuninProvider provider;
 
     @Before
     public void setUp() throws Exception {
-        provider = new MuninProviderImpl(fetcher);
+        when(factory.getInstance((URL) any())).thenReturn(fetcher);
+        when(factory.getInstance(anyString())).thenReturn(fetcher);
+
+        provider = new MuninProviderImpl(factory);
     }
 
     @After
@@ -54,11 +63,13 @@ public class MuninProviderImplTest {
     }
 
     @Test
+    @Ignore
     public void testGetConfig() throws Exception {
 
     }
 
     @Test
+    @Ignore
     public void testGetConfig1() throws Exception {
 
     }
