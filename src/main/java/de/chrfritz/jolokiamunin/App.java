@@ -44,7 +44,7 @@ public class App {
      * @param args The commandline arguments
      * @throws Exception
      */
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws IOException, FetcherException, ConfigurationException {
 
         MuninProvider provider = new MuninProviderImpl(new JolokiaFetcherFactory());
         new App(provider).run(args);
@@ -151,7 +151,7 @@ public class App {
             // Class not from JAR
             throw new IllegalStateException("Class is not from jar");
         }
-        String manifestPath = classPath.substring(0, classPath.lastIndexOf("!") + 1) + "/META-INF/MANIFEST.MF";
+        String manifestPath = classPath.substring(0, classPath.lastIndexOf('!') + 1) + "/META-INF/MANIFEST.MF";
         return new Manifest(new URL(manifestPath).openStream());
     }
 
