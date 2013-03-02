@@ -19,9 +19,11 @@ import de.chrfritz.jolokiamunin.config.Field;
 import de.chrfritz.jolokiamunin.config.Graph;
 import de.chrfritz.jolokiamunin.jolokia.Fetcher;
 import de.chrfritz.jolokiamunin.jolokia.FetcherException;
+import de.chrfritz.jolokiamunin.jolokia.FetcherFactory;
 import de.chrfritz.jolokiamunin.jolokia.Request;
 import de.chrfritz.jolokiamunin.munin.MuninProvider;
 
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,11 +31,11 @@ import java.util.Map;
 
 public class MuninProviderImpl implements MuninProvider {
 
-    private Fetcher fetcher;
+    private FetcherFactory fetcherFactory;
 
-    public MuninProviderImpl(Fetcher fetcher) {
+    public MuninProviderImpl(FetcherFactory fetcherFactory) {
 
-        this.fetcher = fetcher;
+        this.fetcherFactory = fetcherFactory;
     }
 
     @Override
@@ -64,19 +66,26 @@ public class MuninProviderImpl implements MuninProvider {
     @Override
     public String getValues(Category category) throws FetcherException {
 
-        StringBuffer buffer = new StringBuffer();
-        Map<String, Request> requests = buildRequests(category);
+        try {
+            StringBuffer buffer = new StringBuffer();
+            Map<String, Request> requests = buildRequests(category);
 
-        Map<Request, Number> values = fetcher.fetchValues(new ArrayList<Request>(requests.values()));
-        for (Graph graph : category.getGraphs()) {
-            buffer.append("multigraph ").append(category.getName()).append(graph.getName()).append("\n");
-            for (Field field : graph.getFields()) {
-                String fieldName = graph.getName() + "_" + field.getName();
-                buffer.append(fieldName).append(".value ").append(values.get(requests.get(fieldName))).append("\n");
+            Fetcher fetcher = fetcherFactory.getInstance(category.getSourceUrl());
+
+            Map<Request, Number> values = fetcher.fetchValues(new ArrayList<>(requests.values()));
+            for (Graph graph : category.getGraphs()) {
+                buffer.append("multigraph ").append(category.getName()).append(graph.getName()).append("\n");
+                for (Field field : graph.getFields()) {
+                    String fieldName = graph.getName() + "_" + field.getName();
+                    buffer.append(fieldName).append(".value ").append(values.get(requests.get(fieldName))).append("\n");
+                }
             }
-        }
 
-        return buffer.toString();
+            return buffer.toString();
+        }
+        catch (MalformedURLException e) {
+            throw new FetcherException("Malformed source url for category.", e);
+        }
     }
 
     private Map<String, Request> buildRequests(Category category) {
