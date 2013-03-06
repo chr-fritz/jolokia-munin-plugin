@@ -123,7 +123,6 @@ public class JolokiaFetcher implements Fetcher {
      */
     private void handleResponse(Map<Request, Number> results, Object value, Request request) {
         if (!Strings.isNullOrEmpty(request.getAttribute())
-                && !Strings.isNullOrEmpty(request.getPath())
                 && value instanceof Number) {
 
             LOGGER.debug("Adding {}:{}", request, value);

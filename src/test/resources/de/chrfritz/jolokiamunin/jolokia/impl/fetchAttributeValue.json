@@ -1,0 +1,12 @@
+[
+    {
+        "timestamp":1362602186,
+        "status":200,
+        "request":{
+            "mbean":"java.lang:type=Threading",
+            "attribute":"ThreadCount",
+            "type":"read"
+        },
+        "value":55
+    }
+]

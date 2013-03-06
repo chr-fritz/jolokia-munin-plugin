@@ -148,4 +148,17 @@ public class JolokiaFetcherTest {
 
         assertEquals(expected, responses);
     }
+
+    @Test
+    public void testFetchAttributeValue() throws Exception {
+        injectResponse(200, "de/chrfritz/jolokiamunin/jolokia/impl/fetchAttributeValue.json");
+        Map<Request, Number> expected = new HashMap<>();
+        expected.put(new Request("java.lang:type=Threading", "ThreadCount"), 55L);
+        List<Request> requestList = new ArrayList<>();
+        requestList.add(new Request("java.lang:type=Threading", "ThreadCount"));
+
+        Map<Request, Number> responses = fetcher.fetchValues(requestList);
+
+        assertEquals(expected, responses);
+    }
 }
