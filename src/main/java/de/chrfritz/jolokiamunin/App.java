@@ -47,7 +47,7 @@ public class App {
     public static void main(String[] args) throws IOException, FetcherException, ConfigurationException {
 
         MuninProvider provider = new MuninProviderImpl(new JolokiaFetcherFactory());
-        new App(provider).run(args);
+        System.out.print(new App(provider).run(args));
     }
 
     /**
@@ -64,21 +64,21 @@ public class App {
      *
      * @param args The commandline arguments.
      */
-    private void run(String[] args) throws IOException, FetcherException, ConfigurationException {
+    protected String run(String[] args) throws IOException, FetcherException, ConfigurationException {
 
         // Fetch the values
         if (args.length == 0) {
-            fetch();
+            return fetch();
         } else {
             String command = args[0];
             if (StringUtils.equals(command, "config")) {
-                config();
+                return config();
             } else if (StringUtils.equals(command, "fetch")) {
-                fetch();
+                return fetch();
             } else if (StringUtils.equals(command, "version")) {
-                version();
+                return version();
             } else {
-                help();
+                return help();
             }
         }
     }
@@ -89,9 +89,9 @@ public class App {
      * @throws MalformedURLException
      * @throws ConfigurationException
      */
-    protected void config() throws MalformedURLException, ConfigurationException {
+    private String config() throws MalformedURLException, ConfigurationException {
         Configuration config = getConfiguration();
-        System.out.print(muninProvider.getConfig(config.getConfiguration()));
+        return muninProvider.getConfig(config.getConfiguration());
     }
 
     /**
@@ -101,9 +101,9 @@ public class App {
      * @throws ConfigurationException
      * @throws FetcherException
      */
-    protected void fetch() throws MalformedURLException, ConfigurationException, FetcherException {
+    private String fetch() throws MalformedURLException, ConfigurationException, FetcherException {
         Configuration config = getConfiguration();
-        System.out.print(muninProvider.getValues(config.getConfiguration()));
+        return muninProvider.getValues(config.getConfiguration());
     }
 
     /**
@@ -111,10 +111,10 @@ public class App {
      *
      * @throws IOException In case of there are some io errors.
      */
-    protected void version() throws IOException {
+    private String version() throws IOException {
         Attributes attributes = loadManifest().getMainAttributes();
         StringBuilder buffer = new StringBuilder();
-        buffer.append("Jolokia-Munin Plugin by Christian Fritz 2012 \n")
+        buffer.append("Jolokia-Munin Plugin by Christian Fritz 2013 \n")
                 .append("Version: ")
                 .append(attributes.getValue("Implementation-Version"))
                 .append("\n")
@@ -126,14 +126,14 @@ public class App {
                 .append(attributes.getValue("Git-Branch"))
                 .append("\n");
 
-        System.out.print(buffer);
+        return buffer.toString();
     }
 
     /**
      * Prints the help.
      */
-    private void help() throws IOException {
-        version();
+    private String help() throws IOException {
+        return version();
     }
 
     /**
