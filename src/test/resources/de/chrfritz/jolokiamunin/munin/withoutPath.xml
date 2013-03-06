@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ ______________________________________________________________________________
+  ~
+  ~           Project: jolokia-munin-plugin
+  ~            Module: jolokia-munin-plugin
+  ~             Class: withoutPath.xml
+  ~              File: withoutPath.xml
+  ~        changed by: christian
+  ~       change date: 06.03.13 21:46
+  ~       description:
+  ~ ______________________________________________________________________________
+  ~
+  ~         Copyright: (c) Christian Fritz, all rights reserved
+  ~ ______________________________________________________________________________
+  -->
+
+<config xmlns="http://chrfritz.de/jolokia-munin-plugin/config">
+    <category name="ServletContainer" src="http://localhost:8080/jolokia/">
+        <graph name="threads" title="Threads" vlabel="bytes">
+            <info>Number of Threads</info>
+            <mbean>java.lang:type=Threading</mbean>
+            <field name="ThreadCount" label="Count" type="GAUGE" draw="LINE1">
+                <attribute>ThreadCount</attribute>
+            </field>
+            <field name="PeakThreadCount" label="PeakThreadCount" type="GAUGE" draw="LINE1">
+                <attribute>PeakThreadCount</attribute>
+            </field>
+            <field name="DaemonThreadCount" label="DaemonThreadCount" type="GAUGE" draw="LINE1">
+                <attribute>DaemonThreadCount</attribute>
+            </field>
+        </graph>
+    </category>
+</config>

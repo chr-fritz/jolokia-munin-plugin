@@ -1,0 +1,15 @@
+multigraph ServletContainerthreads
+graph_title Threads
+graph_category ServletContainer
+graph_info Number of Threads
+graph_vlabel bytes
+graph_order threads_ThreadCount threads_PeakThreadCount threads_DaemonThreadCount
+threads_ThreadCount.label Count
+threads_ThreadCount.draw LINE1
+threads_ThreadCount.type GAUGE
+threads_PeakThreadCount.label PeakThreadCount
+threads_PeakThreadCount.draw LINE1
+threads_PeakThreadCount.type GAUGE
+threads_DaemonThreadCount.label DaemonThreadCount
+threads_DaemonThreadCount.draw LINE1
+threads_DaemonThreadCount.type GAUGE

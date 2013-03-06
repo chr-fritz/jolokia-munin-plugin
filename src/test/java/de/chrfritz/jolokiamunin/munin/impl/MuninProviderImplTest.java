@@ -77,6 +77,15 @@ public class MuninProviderImplTest {
     }
 
     @Test
+    public void testGetConfigWithoutPath() throws Exception {
+
+        Category category = loadConfig("de/chrfritz/jolokiamunin/munin/withoutPath.xml").getConfiguration().get(0);
+        String expected = loadFromClasspath("de/chrfritz/jolokiamunin/munin/withoutPathConfig.txt");
+        String actual = provider.getConfig(category);
+        assertEquals(expected, actual);
+    }
+
+    @Test
     public void testGetConfigsList() throws Exception {
         List<Category> categories = loadConfig("de/chrfritz/jolokiamunin/munin/multiCategory.xml").getConfiguration();
         String expected = loadFromClasspath("de/chrfritz/jolokiamunin/munin/multiCategoryConfig.txt");
