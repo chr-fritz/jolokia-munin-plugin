@@ -15,7 +15,7 @@
   ~ ______________________________________________________________________________
   -->
 
-<config>
+<config xmlns="http://chrfritz.de/jolokia-munin-plugin/config">
     <category name="ServletContainer" src="http://localhost:8080/jolokia">
         <graph name="heapMem" title="HeapMemoryUsage" vlabel="bytes">
             <info>Heap Memory Usage of JVM</info>

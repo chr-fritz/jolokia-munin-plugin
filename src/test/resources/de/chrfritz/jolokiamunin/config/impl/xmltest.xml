@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<config>
+<config xmlns="http://chrfritz.de/jolokia-munin-plugin/config">
     <category name="ServletContainer" src="http://localhost:8080/jolokia">
         <graph title="HeapMemoryUsage" vlabel="bytes">
             <info>Heap Memory Usage of JVM</info>
