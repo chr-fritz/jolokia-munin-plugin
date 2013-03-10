@@ -27,9 +27,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.jar.Attributes;
-import java.util.jar.Manifest;
+import java.util.Properties;
 
 /**
  * The Main Application Class
@@ -112,18 +110,20 @@ public class App {
      * @throws IOException In case of there are some io errors.
      */
     private String version() throws IOException {
-        Attributes attributes = loadManifest().getMainAttributes();
+        Properties props = new Properties();
+        props.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("version.properties"));
+
         StringBuilder buffer = new StringBuilder();
         buffer.append("Jolokia-Munin Plugin by Christian Fritz 2013 \n")
                 .append("Version: ")
-                .append(attributes.getValue("Implementation-Version"))
+                .append(props.getProperty("jmp.version"))
                 .append("\n")
                 .append("Build #")
-                .append(attributes.getValue("Build-Number"))
+                .append(props.getProperty("jmp.buildNumber"))
                 .append(" from git commit ")
-                .append(attributes.getValue("Git-Commit"))
+                .append(props.getProperty("jmp.buildCommit"))
                 .append(" on git branch ")
-                .append(attributes.getValue("Git-Branch"))
+                .append(props.getProperty("jmp.buildBranch"))
                 .append("\n");
 
         return buffer.toString();
@@ -134,25 +134,6 @@ public class App {
      */
     private String help() throws IOException {
         return version();
-    }
-
-    /**
-     * Load the manifest from jar in which this class is.
-     *
-     * @return The manifest from current jar.
-     * @throws IOException           In case of there are some io errors.
-     * @throws IllegalStateException In case of this class is not in jar.
-     */
-    private Manifest loadManifest() throws IOException {
-        Class clazz = getClass();
-        String className = clazz.getSimpleName() + ".class";
-        String classPath = clazz.getResource(className).toString();
-        if (!classPath.startsWith("jar")) {
-            // Class not from JAR
-            throw new IllegalStateException("Class is not from jar");
-        }
-        String manifestPath = classPath.substring(0, classPath.lastIndexOf('!') + 1) + "/META-INF/MANIFEST.MF";
-        return new Manifest(new URL(manifestPath).openStream());
     }
 
     /**
