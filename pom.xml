@@ -167,8 +167,8 @@
                     </dependency>
                     <dependency>
                         <groupId>org.apache.maven.wagon</groupId>
-                        <artifactId>wagon-providers</artifactId>
-                        <version>1.0</version>
+                        <artifactId>wagon-webdav-jackrabbit</artifactId>
+                        <version>2.4</version>
                     </dependency>
                 </dependencies>
             </plugin>
