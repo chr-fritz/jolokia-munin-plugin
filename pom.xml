@@ -204,7 +204,7 @@
     <distributionManagement>
         <site>
             <id>chr-fritz.de_docs</id>
-            <url>https://chr-fritz.de/docs/jolokia-munin-plugin/</url>
+            <url>webdavs://chr-fritz.de/docs/jolokia-munin-plugin/</url>
         </site>
     </distributionManagement>
 </project>
