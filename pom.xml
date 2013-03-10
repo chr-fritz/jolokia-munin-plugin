@@ -165,46 +165,35 @@
                         <artifactId>doxia-module-markdown</artifactId>
                         <version>1.3</version>
                     </dependency>
-                    <dependency>
-                        <groupId>org.apache.maven.wagon</groupId>
-                        <artifactId>wagon-webdav-jackrabbit</artifactId>
-                        <version>2.4</version>
-                    </dependency>
                 </dependencies>
             </plugin>
         </plugins>
     </build>
-    <reporting>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.9</version>
-                <reportSets>
-                    <reportSet><!-- by default, id = "default" -->
-                        <reports><!-- select non-aggregate reports -->
-                            <report>javadoc</report>
-                            <report>test-javadoc</report>
-                        </reports>
-                    </reportSet>
-                    <reportSet>
-                        <id>aggregate</id>
-                        <!-- aggregate reportSet, for pom with modules -->
-                        <inherited>false</inherited>
-                        <!-- don't run aggregate in child modules -->
-                        <reports>
-                            <report>aggregate</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
-            </plugin>
-        </plugins>
-    </reporting>
+    <!--<reporting>-->
+        <!--<plugins>-->
+            <!--<plugin>-->
+                <!--<groupId>org.apache.maven.plugins</groupId>-->
+                <!--<artifactId>maven-javadoc-plugin</artifactId>-->
+                <!--<version>2.9</version>-->
+                <!--<reportSets>-->
+                    <!--<reportSet>&lt;!&ndash; by default, id = "default" &ndash;&gt;-->
+                        <!--<reports>&lt;!&ndash; select non-aggregate reports &ndash;&gt;-->
+                            <!--<report>javadoc</report>-->
+                            <!--<report>test-javadoc</report>-->
+                        <!--</reports>-->
+                    <!--</reportSet>-->
+                    <!--<reportSet>-->
+                        <!--<id>aggregate</id>-->
+                        <!--&lt;!&ndash; aggregate reportSet, for pom with modules &ndash;&gt;-->
+                        <!--<inherited>false</inherited>-->
+                        <!--&lt;!&ndash; don't run aggregate in child modules &ndash;&gt;-->
+                        <!--<reports>-->
+                            <!--<report>aggregate</report>-->
+                        <!--</reports>-->
+                    <!--</reportSet>-->
+                <!--</reportSets>-->
+            <!--</plugin>-->
+        <!--</plugins>-->
+    <!--</reporting>-->
 
-    <distributionManagement>
-        <site>
-            <id>chr-fritz.de_docs</id>
-            <url>davs://chr-fritz.de/docs/jolokia-munin-plugin/</url>
-        </site>
-    </distributionManagement>
 </project>
