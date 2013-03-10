@@ -195,4 +195,11 @@
             </plugin>
         </plugins>
     </reporting>
+
+    <distributionManagement>
+        <site>
+            <id>chr-fritz.de_docs</id>
+            <url>https://chr-fritz.de/docs/jolokia-munin-plugin/</url>
+        </site>
+    </distributionManagement>
 </project>
