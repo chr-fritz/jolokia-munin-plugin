@@ -13,6 +13,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.build.jdkVersion>1.7</project.build.jdkVersion>
     </properties>
     <licenses>
         <license>
@@ -111,8 +112,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.0</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>${project.build.jdkVersion}</source>
+                    <target>${project.build.jdkVersion}</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -169,31 +170,4 @@
             </plugin>
         </plugins>
     </build>
-    <!--<reporting>-->
-        <!--<plugins>-->
-            <!--<plugin>-->
-                <!--<groupId>org.apache.maven.plugins</groupId>-->
-                <!--<artifactId>maven-javadoc-plugin</artifactId>-->
-                <!--<version>2.9</version>-->
-                <!--<reportSets>-->
-                    <!--<reportSet>&lt;!&ndash; by default, id = "default" &ndash;&gt;-->
-                        <!--<reports>&lt;!&ndash; select non-aggregate reports &ndash;&gt;-->
-                            <!--<report>javadoc</report>-->
-                            <!--<report>test-javadoc</report>-->
-                        <!--</reports>-->
-                    <!--</reportSet>-->
-                    <!--<reportSet>-->
-                        <!--<id>aggregate</id>-->
-                        <!--&lt;!&ndash; aggregate reportSet, for pom with modules &ndash;&gt;-->
-                        <!--<inherited>false</inherited>-->
-                        <!--&lt;!&ndash; don't run aggregate in child modules &ndash;&gt;-->
-                        <!--<reports>-->
-                            <!--<report>aggregate</report>-->
-                        <!--</reports>-->
-                    <!--</reportSet>-->
-                <!--</reportSets>-->
-            <!--</plugin>-->
-        <!--</plugins>-->
-    <!--</reporting>-->
-
 </project>
