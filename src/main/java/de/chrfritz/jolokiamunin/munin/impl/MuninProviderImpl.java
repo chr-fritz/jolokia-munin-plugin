@@ -38,6 +38,8 @@ public class MuninProviderImpl implements MuninProvider {
 
     private FetcherFactory fetcherFactory;
 
+    private static final String LINE_SEPARATOR = System.lineSeparator();
+
     /**
      * Create a new instance with the given fetcher factory.
      *
@@ -77,7 +79,7 @@ public class MuninProviderImpl implements MuninProvider {
         StringBuilder buffer = new StringBuilder();
         for (Graph graph : category.getGraphs()) {
 
-            buffer.append("multigraph ").append(category.getName()).append(graph.getName()).append("\n");
+            buffer.append("multigraph ").append(category.getName()).append(graph.getName()).append(LINE_SEPARATOR);
             addAttribute(buffer, "graph_title", graph.getTitle());
             addAttribute(buffer, "graph_args", graph.getArgs());
             addAttribute(buffer, "graph_category", category.getName());
@@ -106,6 +108,7 @@ public class MuninProviderImpl implements MuninProvider {
      *                   This buffer is filled with the field names to add this to a order field.
      */
     private void getFieldDefinitions(Graph graph, StringBuilder fields, StringBuilder fieldOrder) {
+
         for (Field field : graph.getFields()) {
             String fieldName = graph.getName() + "_" + field.getName();
             fieldOrder.append(fieldName).append(" ");
@@ -154,7 +157,7 @@ public class MuninProviderImpl implements MuninProvider {
 
             Map<Request, Number> values = fetcher.fetchValues(new ArrayList<>(requests.values()));
             for (Graph graph : category.getGraphs()) {
-                buffer.append("multigraph ").append(category.getName()).append(graph.getName()).append("\n");
+                buffer.append("multigraph ").append(category.getName()).append(graph.getName()).append(LINE_SEPARATOR);
                 for (Field field : graph.getFields()) {
                     String fieldName = graph.getName() + "_" + field.getName();
 
@@ -163,8 +166,7 @@ public class MuninProviderImpl implements MuninProvider {
             }
 
             return buffer.toString();
-        }
-        catch (MalformedURLException e) {
+        } catch (MalformedURLException e) {
             throw new FetcherException("Malformed source url for category.", e);
         }
     }
@@ -178,6 +180,7 @@ public class MuninProviderImpl implements MuninProvider {
      * @return A map which maps the munin field name to the created request.
      */
     private Map<String, Request> buildRequests(Category category) {
+
         Map<String, Request> requests = new HashMap<>();
 
         for (Graph graph : category.getGraphs()) {
@@ -202,8 +205,9 @@ public class MuninProviderImpl implements MuninProvider {
      * @param value  The value of the attribute.
      */
     private static void addAttribute(StringBuilder buffer, String name, String value) {
+
         if (!Strings.isNullOrEmpty(name) && !Strings.isNullOrEmpty(value)) {
-            buffer.append(name).append(" ").append(value.trim()).append("\n");
+            buffer.append(name).append(" ").append(value.trim()).append(LINE_SEPARATOR);
         }
     }
 
@@ -216,6 +220,7 @@ public class MuninProviderImpl implements MuninProvider {
      * @param value     The value of the attribute.
      */
     private static void addFieldAttribute(StringBuilder buffer, String fieldName, String attribute, String value) {
+
         addAttribute(buffer, fieldName + "." + attribute, value);
     }
 
@@ -228,6 +233,7 @@ public class MuninProviderImpl implements MuninProvider {
      * @param value     The value of the attribute.
      */
     private static void addFieldAttribute(StringBuilder buffer, String fieldName, String attribute, Number value) {
-        buffer.append(fieldName).append(".").append(attribute).append(" ").append(value).append("\n");
+
+        buffer.append(fieldName).append(".").append(attribute).append(" ").append(value).append(LINE_SEPARATOR);
     }
 }
