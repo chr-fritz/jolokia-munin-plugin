@@ -38,6 +38,7 @@
             <xs:simpleType>
                 <xs:restriction base="xs:string">
                     <xs:enumeration value="AREA"/>
+                    <xs:enumeration value="LINE0"/>
                     <xs:enumeration value="LINE1"/>
                     <xs:enumeration value="LINE2"/>
                     <xs:enumeration value="LINE3"/>
