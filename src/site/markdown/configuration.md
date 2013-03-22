@@ -36,13 +36,13 @@ Defines the label for the vertical scale.
 TODO: please refer the munin documentation for further details.
 ### Subtags
 The `<graph>` tag can contain the following tags:
-* Never or exactly once
- * `<info>`
- * `<args>`
- * `<mbean>`
- * `<attribute>`
-* At least once
- * `<field>`
+- Never or exactly once
+ -  info
+ -  args
+ -  mbean
+ -  attribute
+- At least once
+ - field
 
 # Example Configuration
 This example configuration shows all memory based values and the number of threads of the jvm.
