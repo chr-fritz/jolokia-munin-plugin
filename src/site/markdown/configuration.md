@@ -23,6 +23,27 @@ The 'src' attribute defines the source url of the jolokia agent. This is in most
 ### Subtags
 The `<category>` tag must contain at least one `<graph>` tag.
 
+## Tag: graph
+The tag `<graph>` defines a graph which is shown in munin.
+### Attributes
+#### name
+Defines the name for this graph. It should not contain any whitespaces.
+#### title
+Defines the shown name for this graph.
+#### vlabel
+Defines the label for the vertical scale.
+#### scale
+TODO: please refer the munin documentation for further details.
+### Subtags
+The `<graph>` tag can contain the following tags:
+* Never or exactly once
+ * `<info>`
+ * `<args>`
+ * `<mbean>`
+ * `<attribute>`
+* At least once
+ * `<field>`
+
 # Example Configuration
 This example configuration shows all memory based values and the number of threads of the jvm.
 
