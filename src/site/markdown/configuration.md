@@ -2,6 +2,27 @@
 The Jolokia Munin Plugin is easy to configure through a XML configuration file. It supports
 to configure the categories, the graphs and the fields thats a graph contains.
 
+# Meaning of the Configuration tags
+This chapter will explain the meaning of all tags which are can used within the configuration file.
+
+For more technical details please take a view into the `src/main/xsd/config.xsd`-file.
+## Tag: config
+The `<config>`-Tag is the root container object for a configuration.
+### Attributes
+The `<config>` tag do not define any attributes.
+### Subtags
+Every `<config>` tag must contain at least one `<category>` tag.
+## Tag: category
+The `<category>`-tag describes the general information about the category in which are the containing graphs be placed
+by munin.
+### Attributes
+#### name
+The attribute 'name' specifies the name of the category viewed in munin.
+#### src
+The 'src' attribute defines the source url of the jolokia agent. This is in most cases simply a http or https url.
+### Subtags
+The `<category>` tag must contain at least one `<graph>` tag.
+
 # Example Configuration
 This example configuration shows all memory based values and the number of threads of the jvm.
 
