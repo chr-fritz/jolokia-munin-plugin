@@ -36,13 +36,42 @@ Defines the label for the vertical scale.
 TODO: please refer the munin documentation for further details.
 ### Subtags
 The `<graph>` tag can contain the following tags:
+
 - Never or exactly once
- -  info
- -  args
- -  mbean
- -  attribute
+    -  info
+    -  args
+    -  mbean
+    -  attribute
 - At least once
- - field
+    - field
+
+## Tag: info
+The tag `<info>` defines the viewed information in munin for this graph. It has no attributes and no subtags.
+
+## Tag: args
+The tag `<args>` is used to define additional rdd-tool arguments. It do not define any attributes or subtags. Please refer
+the documentation of rdd-tool for more information about this tag.
+
+## Tag: mbean
+The `<mbean>` defines the java bean that should be fetched by jolokia. It can be defined for the whole graph or for a
+single field. If it is defined on both, the graph and field, the field value will override the graph value. There are no
+subtags or attributes.
+
+## Tag: attribute
+The `<attribute>` tag defines the jolokia attribute. It can be defined for the whole graph or a single field.
+If it is defined on both, the graph and field, the field value will override the graph value. There are no subtags or attributes.
+
+## Tag: field
+The tag `<field>` defines a field that is shown within a graph. It is the equivalent to the munin field.
+### Subtags
+A field can have the following attributes. Every subtag expect is optional. They can maximum occur once.
+
+- info
+- mbean
+- attribute
+- path
+### Attributes
+
 
 # Example Configuration
 This example configuration shows all memory based values and the number of threads of the jvm.
