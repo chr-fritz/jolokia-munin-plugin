@@ -16,6 +16,7 @@ package de.chrfritz.jolokiamunin.config.impl;
 
 import de.chrfritz.jolokiamunin.config.Category;
 import de.chrfritz.jolokiamunin.config.Configuration;
+import de.chrfritz.jolokiamunin.config.ConfigurationException;
 import de.chrfritz.jolokiamunin.config.Graph;
 import org.junit.After;
 import org.junit.Before;
@@ -63,5 +64,16 @@ public class XMLConfigurationTest {
         assertEquals("bytes", graph.getVlabel());
         assertEquals("java.lang:type=Memory", graph.getMbean());
         assertEquals(4, graph.getFields().size());
+    }
+
+    @Test(expected = ConfigurationException.class)
+    public void testLoadInvalidFile() throws Exception {
+        URL configFile = Thread.currentThread()
+                .getContextClassLoader()
+                .getResource("de/chrfritz/jolokiamunin/config/impl/xmltestInvalid.xml");
+
+        config = new XMLConfiguration(configFile);
+        config.load();
+
     }
 }
