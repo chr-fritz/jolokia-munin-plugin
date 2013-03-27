@@ -18,6 +18,7 @@ import de.chrfritz.jolokiamunin.config.Configuration;
 import de.chrfritz.jolokiamunin.config.ConfigurationFactory;
 import de.chrfritz.jolokiamunin.munin.MuninProvider;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -25,8 +26,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyCollectionOf;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
@@ -72,6 +72,19 @@ public class AppTest {
 
         actual = application.run(new String[]{"fetch"});
         assertEquals(valuesReturn, actual);
+    }
+
+    @Test
+    @Ignore
+    public void testHelp() throws Exception {
+        String actual = application.run(new String[]{"Help"});
+        assertTrue(actual.contains("Usage:"));
+    }
+
+    @Test
+    public void testVersion() throws Exception {
+        String actual = application.run(new String[]{"version"});
+        assertTrue(actual.contains("Jolokia-Munin Plugin by Christian Fritz"));
     }
 
     @Test
