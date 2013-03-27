@@ -6,13 +6,14 @@
 //              File: AppTest.java
 //        changed by: christian
 //       change date: 27.03.13 10:35
-//       description:
+//       description: Test for the main application class
 // ______________________________________________________________________________
 //
 //         Copyright: (c) Christian Fritz, all rights reserved
 // ______________________________________________________________________________
 package de.chrfritz.jolokiamunin;
 
+import de.chrfritz.jolokiamunin.config.Category;
 import de.chrfritz.jolokiamunin.config.Configuration;
 import de.chrfritz.jolokiamunin.config.ConfigurationFactory;
 import de.chrfritz.jolokiamunin.munin.MuninProvider;
@@ -22,14 +23,21 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
+import static org.mockito.Matchers.anyCollectionOf;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+/**
+ * Tests the main application class.
+ */
 @RunWith(MockitoJUnitRunner.class)
-
 public class AppTest {
+
     @Mock
     private MuninProvider provider;
 
@@ -45,6 +53,25 @@ public class AppTest {
     public void setUp() throws Exception {
         application = new App(provider, configFactory);
         when(configFactory.getInstance(anyString())).thenReturn(configuration);
+    }
+
+    @Test
+    public void testConfig() throws Exception {
+        String configReturn = "Munin Config";
+        when(provider.getConfig((List<Category>) anyCollectionOf(Category.class))).thenReturn(configReturn);
+        String actual = application.run(new String[]{"config"});
+        assertEquals(configReturn, actual);
+    }
+
+    @Test
+    public void testFetch() throws Exception {
+        String valuesReturn = "Munin Values";
+        when(provider.getValues((List<Category>) anyCollectionOf(Category.class))).thenReturn(valuesReturn);
+        String actual = application.run(new String[]{});
+        assertEquals(valuesReturn, actual);
+
+        actual = application.run(new String[]{"fetch"});
+        assertEquals(valuesReturn, actual);
     }
 
     @Test
