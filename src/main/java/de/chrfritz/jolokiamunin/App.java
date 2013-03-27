@@ -17,14 +17,14 @@ package de.chrfritz.jolokiamunin;
 import com.google.common.base.Strings;
 import de.chrfritz.jolokiamunin.config.Configuration;
 import de.chrfritz.jolokiamunin.config.ConfigurationException;
-import de.chrfritz.jolokiamunin.config.impl.XMLConfiguration;
+import de.chrfritz.jolokiamunin.config.ConfigurationFactory;
+import de.chrfritz.jolokiamunin.config.impl.XMLConfigurationFactory;
 import de.chrfritz.jolokiamunin.jolokia.FetcherException;
 import de.chrfritz.jolokiamunin.jolokia.impl.JolokiaFetcherFactory;
 import de.chrfritz.jolokiamunin.munin.MuninProvider;
 import de.chrfritz.jolokiamunin.munin.impl.MuninProviderImpl;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Properties;
@@ -35,17 +35,21 @@ import java.util.Properties;
 public class App {
 
     private MuninProvider muninProvider;
+    private ConfigurationFactory configFactory;
 
     /**
      * Main Entry Point to run the application.
      *
      * @param args The commandline arguments
-     * @throws Exception
+     * @throws IOException
+     * @throws FetcherException
+     * @throws ConfigurationException
      */
     public static void main(String[] args) throws IOException, FetcherException, ConfigurationException {
 
         MuninProvider provider = new MuninProviderImpl(new JolokiaFetcherFactory());
-        System.out.print(new App(provider).run(args));
+        ConfigurationFactory configurationFactory = new XMLConfigurationFactory();
+        System.out.print(new App(provider, configurationFactory).run(args));
     }
 
     /**
@@ -53,8 +57,9 @@ public class App {
      *
      * @param muninProvider The MuninProvider for fetching and configuring the application.
      */
-    public App(MuninProvider muninProvider) {
+    public App(MuninProvider muninProvider, ConfigurationFactory configFactory) {
         this.muninProvider = muninProvider;
+        this.configFactory = configFactory;
     }
 
     /**
@@ -145,18 +150,18 @@ public class App {
      * <li>In the current working directory a file named "jolokiamunin.xml"</li>
      * </ul>
      *
-     * @return
+     * @return The loaded configuration.
      * @throws MalformedURLException
      * @throws ConfigurationException
      */
     protected Configuration getConfiguration() throws MalformedURLException, ConfigurationException {
+
         String configName;
         configName = System.getProperty("configFile", System.getenv("JOLOKIAMUNIN_CONFIG"));
         if (Strings.isNullOrEmpty(configName)) {
             configName = System.getenv("PWD") + "jolokiamunin.xml";
         }
-        File file = new File(configName);
-        Configuration config = new XMLConfiguration(file.toURI().toURL());
+        Configuration config = configFactory.getInstance(configName);
         config.load();
         return config;
     }
