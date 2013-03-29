@@ -1,9 +1,10 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>de.chrfritz</groupId>
     <artifactId>jolokia-munin-plugin</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <description>The Jolokia Munin Plugin can be used to fetch any numeric value from a jolokia agent.</description>
 
@@ -169,4 +170,15 @@
             </plugin>
         </plugins>
     </build>
+
+    <distributionManagement>
+        <repository>
+            <id>chr-fritz-srv.de/nexus/releases_public</id>
+            <url>https://chr-fritz-srv.de/nexus/content/repositories/releases_public</url>
+        </repository>
+        <snapshotRepository>
+            <id>chr-fritz-srv.de/nexus/snapshots_public</id>
+            <url>https://chr-fritz-srv.de/nexus/content/repositories/snapshots_public</url>
+        </snapshotRepository>
+    </distributionManagement>
 </project>
