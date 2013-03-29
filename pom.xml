@@ -173,11 +173,11 @@
 
     <distributionManagement>
         <repository>
-            <id>chr-fritz-srv.de/nexus/releases_public</id>
+            <id>chr-fritz-srv.de_releases_public</id>
             <url>https://chr-fritz-srv.de/nexus/content/repositories/releases_public</url>
         </repository>
         <snapshotRepository>
-            <id>chr-fritz-srv.de/nexus/snapshots_public</id>
+            <id>chr-fritz-srv.de_snapshots_public</id>
             <url>https://chr-fritz-srv.de/nexus/content/repositories/snapshots_public</url>
         </snapshotRepository>
     </distributionManagement>
