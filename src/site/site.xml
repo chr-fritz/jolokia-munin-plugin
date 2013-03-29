@@ -15,7 +15,7 @@
 
         <menu name="Jolokia Munin Plugin">
             <item name="Home" href="/index.html"/>
-            <item name="Quick Start" href="/quickstart.html"/>
+            <!--<item name="Quick Start" href="/quickstart.html"/>-->
             <item name="Configuration" href="/configuration.html"/>
             <item name="Jolokia" href="http://www.jolokia.org/"/>
             <item name="Munin" href="http://www.munin-monitoring.org/"/>
