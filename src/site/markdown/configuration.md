@@ -14,7 +14,7 @@ The `<config>` tag do not define any attributes.
 Every `<config>` tag must contain at least one `<category>` tag.
 ## Tag: category
 The `<category>`-tag describes the general information about the category in which are the containing graphs be placed
-by munin.
+by munin. See [Munin Doc](http://munin-monitoring.org/wiki/graph_category)
 ### Attributes
 #### name
 The attribute 'name' specifies the name of the category viewed in munin.
@@ -29,11 +29,11 @@ The tag `<graph>` defines a graph which is shown in munin.
 #### name
 Defines the name for this graph. It should not contain any whitespaces.
 #### title
-Defines the shown name for this graph.
+Defines the shown name for this graph. See [Munin Doc](http://munin-monitoring.org/wiki/graph_title)
 #### vlabel
 Defines the label for the vertical scale.
 #### scale
-TODO: please refer the munin documentation for further details.
+Default on/yes. If set, disables automatic unit scaling of values. See [Munin-Doc](http://munin-monitoring.org/wiki/graph_scale)
 ### Subtags
 The `<graph>` tag can contain the following tags:
 
@@ -50,7 +50,8 @@ The tag `<info>` defines the viewed information in munin for this graph. It has 
 
 ## Tag: args
 The tag `<args>` is used to define additional rdd-tool arguments. It do not define any attributes or subtags. Please refer
-the documentation of rdd-tool for more information about this tag.
+the documentation of [munin](http://munin-monitoring.org/wiki/graph_args) and
+[rdd-tool](http://oss.oetiker.ch/rrdtool/doc/rrdgraph.en.html) for more information about this tag.
 
 ## Tag: mbean
 The `<mbean>` defines the java bean that should be fetched by jolokia. It can be defined for the whole graph or for a
@@ -71,7 +72,24 @@ A field can have the following attributes. Every subtag expect is optional. They
 - attribute
 - path
 ### Attributes
-
+#### name
+The Name of this field
+#### label
+The field label. See [Munin-Doc](http://munin-monitoring.org/wiki/fieldname.label)
+#### type
+The field type. See [Munin-Doc](http://munin-monitoring.org/wiki/fieldname.type)
+#### min
+Minimum value. If the fetched value is below "min", it will be discarded.
+#### max
+Maximum value. If the fetched value is above "max", it will be discarded.
+#### critical
+Which value interval is critical? See [Munin-Doc](http://munin-monitoring.org/wiki/fieldname.critical)
+#### warning
+Which value interval is warning? See [Munin-Doc](http://munin-monitoring.org/wiki/fieldname.warning)
+#### draw
+How should munin draw this field? See [Munin-Doc](http://munin-monitoring.org/wiki/fieldname.draw)
+#### color
+The field color. See [Munin-Doc](http://munin-monitoring.org/wiki/fieldname.colour)
 
 # Example Configuration
 This example configuration shows all memory based values and the number of threads of the jvm.
