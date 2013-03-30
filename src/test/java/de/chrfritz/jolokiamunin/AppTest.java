@@ -18,7 +18,6 @@ import de.chrfritz.jolokiamunin.config.Configuration;
 import de.chrfritz.jolokiamunin.config.ConfigurationFactory;
 import de.chrfritz.jolokiamunin.munin.MuninProvider;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -75,10 +74,9 @@ public class AppTest {
     }
 
     @Test
-    @Ignore
     public void testHelp() throws Exception {
         String actual = application.run(new String[]{"Help"});
-        assertTrue(actual.contains("Usage:"));
+        assertTrue(actual.contains("Usage: jolokia [command]\nAvailable Commands:"));
     }
 
     @Test

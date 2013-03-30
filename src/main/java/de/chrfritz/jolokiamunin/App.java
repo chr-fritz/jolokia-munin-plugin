@@ -138,7 +138,18 @@ public class App {
      * Prints the help.
      */
     private String help() throws IOException {
-        return version();
+        StringBuilder builder = new StringBuilder();
+
+        builder.append("Usage: jolokia [command]\n")
+                .append("Available Commands:\n")
+                .append("    config:    Get the configuration for munin\n")
+                .append("    fetch:     Fetch all values\n")
+                .append("    version:   Print the version string\n")
+                .append("    help:      Print this help\n")
+                .append("------------------------------------------------------------\n")
+                .append(version())
+                .append('\n');
+        return builder.toString();
     }
 
     /**
