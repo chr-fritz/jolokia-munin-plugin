@@ -29,7 +29,10 @@ import org.slf4j.LoggerFactory;
 
 import javax.management.MalformedObjectNameException;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Implementation of the fechter interface to fetch values from a jolokia agent.
@@ -146,7 +149,11 @@ public class JolokiaFetcher implements Fetcher {
      * @param request The original request
      */
     private void handleMbeanResponse(Map<Request, Number> results, Map value, Request request) {
-        for (Map.Entry entry : (Set<Map.Entry>) value.entrySet()) {
+        for (Object entryObject : value.entrySet()) {
+            if (!(entryObject instanceof Map.Entry)) {
+                continue;
+            }
+            Map.Entry entry = (Map.Entry) entryObject;
             if (entry.getValue() instanceof JSONObject) {
                 handleAttributeResponse(results, (JSONObject) entry.getValue(),
                                         new Request(request.getMbean(), (String) entry.getKey()));
@@ -166,8 +173,11 @@ public class JolokiaFetcher implements Fetcher {
      * @param request The original request
      */
     private void handleAttributeResponse(Map<Request, Number> results, Map values, Request request) {
-
-        for (Map.Entry entry : (Set<Map.Entry>) values.entrySet()) {
+        for (Object entryObject : values.entrySet()) {
+            if (!(entryObject instanceof Map.Entry)) {
+                continue;
+            }
+            Map.Entry entry = (Map.Entry) entryObject;
 
             if (!(entry.getValue() instanceof Number)) {
                 continue;

@@ -30,8 +30,6 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.HashMap;
@@ -97,7 +95,7 @@ public class MuninProviderImplTest {
     public void testGetValues() throws Exception {
 
         Map<Request, Number> fetcherResult = new HashMap<>();
-        when(fetcher.fetchValues(anyList())).thenReturn(fetcherResult);
+        when(fetcher.fetchValues(anyListOf(Request.class))).thenReturn(fetcherResult);
         Category category = loadConfig("de/chrfritz/jolokiamunin/munin/singleCategory.xml").getConfiguration().get(0);
 
         fetcherResult.put(new Request("java.lang:type=Memory", "HeapMemoryUsage", "max"), 1000);
@@ -117,7 +115,7 @@ public class MuninProviderImplTest {
     public void testGetValuesList() throws Exception {
 
         Map<Request, Number> fetcherResult = new HashMap<>();
-        when(fetcher.fetchValues(anyList())).thenReturn(fetcherResult);
+        when(fetcher.fetchValues(anyListOf(Request.class))).thenReturn(fetcherResult);
         List<Category> categories = loadConfig("de/chrfritz/jolokiamunin/munin/multiCategory.xml").getConfiguration();
 
         fetcherResult.put(new Request("java.lang:type=Memory", "HeapMemoryUsage", "max"), 1000);
@@ -143,7 +141,7 @@ public class MuninProviderImplTest {
         return config;
     }
 
-    private String loadFromClasspath(String filename) throws IOException, URISyntaxException {
+    private String loadFromClasspath(String filename) throws Exception {
         URL url = Thread.currentThread().getContextClassLoader().getResource(filename);
         return Files.toString(new File(url.toURI()), Charset.forName("UTF-8"));
     }
