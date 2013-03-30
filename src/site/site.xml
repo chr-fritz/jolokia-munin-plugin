@@ -12,7 +12,10 @@
     </skin>
 
     <body>
-
+        <breadcrumbs>
+            <item name="chr-fritz.de" href="http://chr-fritz.de/"/>
+            <item name="Jolokia Munin Plugin" href="/index.html" />
+        </breadcrumbs>
         <menu name="Jolokia Munin Plugin">
             <item name="Home" href="/index.html"/>
             <!--<item name="Quick Start" href="/quickstart.html"/>-->
