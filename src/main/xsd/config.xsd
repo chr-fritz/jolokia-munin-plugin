@@ -65,6 +65,7 @@
         <xs:sequence>
             <xs:element type="xs:string" name="info" minOccurs="0" maxOccurs="1"/>
             <xs:element type="xs:string" name="args" minOccurs="0" maxOccurs="1"/>
+            <xs:element type="xs:string" name="hostname" minOccurs="0" maxOccurs="1"/>
             <xs:element type="xs:string" name="mbean" minOccurs="0" maxOccurs="1"/>
             <xs:element type="xs:string" name="attribute" minOccurs="0" maxOccurs="1"/>
             <xs:element type="fieldType" name="field" maxOccurs="unbounded" minOccurs="1"/>

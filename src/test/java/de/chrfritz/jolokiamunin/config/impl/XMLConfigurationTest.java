@@ -63,6 +63,7 @@ public class XMLConfigurationTest {
         assertEquals("HeapMemoryUsage", graph.getTitle());
         assertEquals("bytes", graph.getVlabel());
         assertEquals("java.lang:type=Memory", graph.getMbean());
+        assertEquals("localhost.localdomain", graph.getHostname());
         assertEquals(4, graph.getFields().size());
     }
 
