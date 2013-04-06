@@ -52,7 +52,9 @@ The tag `<info>` defines the viewed information in munin for this graph. It has 
 The tag `<args>` is used to define additional rdd-tool arguments. It do not define any attributes or subtags. Please refer
 the documentation of [munin](http://munin-monitoring.org/wiki/graph_args) and
 [rdd-tool](http://oss.oetiker.ch/rrdtool/doc/rrdgraph.en.html) for more information about this tag.
-
+## Tag: hostname
+Show this graph as graph of the given hostname.
+Please see the [Munin-Documentation](http://munin-monitoring.org/wiki/host_name) for more information.
 ## Tag: mbean
 The `<mbean>` defines the java bean that should be fetched by jolokia. It can be defined for the whole graph or for a
 single field. If it is defined on both, the graph and field, the field value will override the graph value. There are no

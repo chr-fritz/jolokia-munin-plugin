@@ -31,6 +31,7 @@
         <graph name="noneHeapMem" title="NonHeapMemoryUsage" vlabel="bytes">
             <info>Non Heap Memory Usage of JVM</info>
             <args>--base 1024</args>
+            <hostname>localhost</hostname>
             <mbean>java.lang:type=Memory</mbean>
             <attribute>NonHeapMemoryUsage</attribute>
             <field name="max" label="Maximum" type="GAUGE" draw="LINE3">

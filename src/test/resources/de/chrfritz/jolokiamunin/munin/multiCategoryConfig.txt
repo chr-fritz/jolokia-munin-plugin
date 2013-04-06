@@ -14,6 +14,7 @@ graph_args --base 1024
 graph_category Tomcat
 graph_info Non Heap Memory Usage of JVM
 graph_vlabel bytes
+host_name localhost
 graph_order noneHeapMem_max noneHeapMem_committed noneHeapMem_init noneHeapMem_used
 noneHeapMem_max.label Maximum
 noneHeapMem_max.draw LINE3

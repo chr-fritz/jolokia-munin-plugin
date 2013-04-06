@@ -85,6 +85,7 @@ public class MuninProviderImpl implements MuninProvider {
             addAttribute(buffer, "graph_category", category.getName());
             addAttribute(buffer, "graph_info", graph.getInfo());
             addAttribute(buffer, "graph_vlabel", graph.getVlabel());
+            addAttribute(buffer, "host_name", graph.getHostname());
 
             StringBuilder fields = new StringBuilder();
             StringBuilder fieldOrder = new StringBuilder();
@@ -166,7 +167,8 @@ public class MuninProviderImpl implements MuninProvider {
             }
 
             return buffer.toString();
-        } catch (MalformedURLException e) {
+        }
+        catch (MalformedURLException e) {
             throw new FetcherException("Malformed source url for category.", e);
         }
     }
