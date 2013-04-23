@@ -19,11 +19,11 @@ import de.chrfritz.jolokiamunin.config.Configuration;
 import de.chrfritz.jolokiamunin.config.ConfigurationException;
 import de.chrfritz.jolokiamunin.config.ConfigurationFactory;
 import de.chrfritz.jolokiamunin.config.impl.XMLConfigurationFactory;
+import de.chrfritz.jolokiamunin.daemon.Server;
 import de.chrfritz.jolokiamunin.jolokia.FetcherException;
 import de.chrfritz.jolokiamunin.jolokia.impl.JolokiaFetcherFactory;
 import de.chrfritz.jolokiamunin.munin.MuninProvider;
 import de.chrfritz.jolokiamunin.munin.impl.MuninProviderImpl;
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -74,16 +74,28 @@ public class App {
             return fetch();
         } else {
             String command = args[0];
-            if (StringUtils.equals(command, "config")) {
-                return config();
-            } else if (StringUtils.equals(command, "fetch")) {
-                return fetch();
-            } else if (StringUtils.equals(command, "version")) {
-                return version();
-            } else {
-                return help();
+            switch (command) {
+                case "daemon":
+                    return daemon();
+                case "config":
+                    return config();
+                case "fetch":
+                    return fetch();
+                case "version":
+                    return version();
+                case "help":
+                default:
+                    return help();
             }
         }
+    }
+
+    /**
+     * Run the Jolokia Munin Plugin as Munin-Deamon.
+     */
+    private String daemon() {
+        new Thread(new Server()).start();
+        return "Daemon successfully started";
     }
 
     /**
