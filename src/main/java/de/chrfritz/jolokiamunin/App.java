@@ -126,7 +126,7 @@ public class App {
      *
      * @throws IOException In case of there are some io errors.
      */
-    private String version() throws IOException {
+    public static String version() throws IOException {
         Properties props = new Properties();
         props.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("version.properties"));
 
