@@ -93,8 +93,8 @@ public class App {
     /**
      * Run the Jolokia Munin Plugin as Munin-Deamon.
      */
-    private String daemon() {
-        new Thread(new Server()).start();
+    private String daemon() throws MalformedURLException, ConfigurationException {
+        new Thread(new Server(muninProvider, getConfiguration())).start();
         return "Daemon successfully started";
     }
 

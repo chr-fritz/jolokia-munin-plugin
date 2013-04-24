@@ -17,14 +17,15 @@
 package de.chrfritz.jolokiamunin.daemon;
 
 
+import de.chrfritz.jolokiamunin.config.Configuration;
+import de.chrfritz.jolokiamunin.munin.MuninProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketAddress;
 
 public class Server implements Runnable, AutoCloseable {
 
@@ -34,8 +35,13 @@ public class Server implements Runnable, AutoCloseable {
 
     private Thread serverThread;
 
-    public Server() {
+    private Configuration configuration;
 
+    private MuninProvider muninProvider;
+
+    public Server(MuninProvider muninProvider, Configuration configuration) {
+        this.configuration = configuration;
+        this.muninProvider = muninProvider;
         try {
             server = new ServerSocket(4949);
         }
@@ -45,11 +51,12 @@ public class Server implements Runnable, AutoCloseable {
         }
     }
 
-    public Server(InetAddress bindTo, int port) {
-
+    public Server(MuninProvider muninProvider, Configuration configuration, SocketAddress socketAddress) {
+        this.configuration = configuration;
+        this.muninProvider = muninProvider;
         try {
             server = new ServerSocket();
-            server.bind(new InetSocketAddress(bindTo, port));
+            server.bind(socketAddress);
         }
         catch (IOException e) {
             LOGGER.error("Can not bind to address", e);
@@ -62,19 +69,32 @@ public class Server implements Runnable, AutoCloseable {
      */
     @Override
     public void run() {
+        if (configuration == null) {
+            LOGGER.error("Can not start daemon becuase there is no valid configuration");
+            return;
+        }
+
         serverThread = Thread.currentThread();
         serverThread.setName("Munin-Node-Server-Thread");
         LOGGER.info("Server successfully started at {}", server.getLocalSocketAddress());
         while (!Thread.interrupted()) {
             try {
                 Socket clientSocket = server.accept();
-                new Thread(new Client(clientSocket)).start();
+                new Thread(new Client(clientSocket, muninProvider, configuration)).start();
             }
             catch (IOException e) {
                 LOGGER.error("Can not handle client connection", e);
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    public Configuration getConfiguration() {
+        return configuration;
+    }
+
+    public void setConfiguration(Configuration configuration) {
+        this.configuration = configuration;
     }
 
     @Override
