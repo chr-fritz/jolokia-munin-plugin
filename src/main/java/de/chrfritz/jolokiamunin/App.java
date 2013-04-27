@@ -128,7 +128,8 @@ public class App {
                 .append(" on git branch ")
                 .append(props.getProperty("jmp.buildBranch"))
                 .append("\nBuild date: ")
-                .append(props.getProperty("jmp.buildDate"));
+                .append(props.getProperty("jmp.buildDate"))
+                .append("\n");
 
         return buffer.toString();
     }
