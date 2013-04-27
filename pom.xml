@@ -181,8 +181,6 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <doCheck>false</doCheck>
-                    <doUpdate>true</doUpdate>
                     <timestampFormat>{0,date,yyyy-MM-dd HH:mm:ss}</timestampFormat>
                     <shortRevisionLength>6</shortRevisionLength>
                 </configuration>

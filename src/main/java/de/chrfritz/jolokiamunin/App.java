@@ -23,7 +23,6 @@ import de.chrfritz.jolokiamunin.jolokia.FetcherException;
 import de.chrfritz.jolokiamunin.jolokia.impl.JolokiaFetcherFactory;
 import de.chrfritz.jolokiamunin.munin.MuninProvider;
 import de.chrfritz.jolokiamunin.munin.impl.MuninProviderImpl;
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -74,14 +73,16 @@ public class App {
             return fetch();
         } else {
             String command = args[0];
-            if (StringUtils.equals(command, "config")) {
-                return config();
-            } else if (StringUtils.equals(command, "fetch")) {
-                return fetch();
-            } else if (StringUtils.equals(command, "version")) {
-                return version();
-            } else {
-                return help();
+            switch (command) {
+                case "config":
+                    return config();
+                case "fetch":
+                    return fetch();
+                case "version":
+                    return version();
+                case "help":
+                default:
+                    return help();
             }
         }
     }
@@ -122,14 +123,12 @@ public class App {
         buffer.append("Jolokia-Munin Plugin by Christian Fritz 2013 \n")
                 .append("Version: ")
                 .append(props.getProperty("jmp.version"))
-                .append("\n")
-                .append("Build #")
+                .append("\nBuild from git commit ")
                 .append(props.getProperty("jmp.buildNumber"))
-                .append(" from git commit ")
-                .append(props.getProperty("jmp.buildCommit"))
                 .append(" on git branch ")
                 .append(props.getProperty("jmp.buildBranch"))
-                .append("\n");
+                .append("\nBuild date: ")
+                .append(props.getProperty("jmp.buildDate"));
 
         return buffer.toString();
     }
