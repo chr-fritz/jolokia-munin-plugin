@@ -6,10 +6,19 @@
     <xs:element name="config">
         <xs:complexType>
             <xs:sequence>
+                <xs:element type="daemonType" name="daemon" minOccurs="0" maxOccurs="1"/>
                 <xs:element type="categoryType" name="category" minOccurs="1" maxOccurs="unbounded"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
+
+    <xs:complexType name="daemonType">
+        <xs:sequence>
+            <xs:element name="address" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="port" type="xs:int" minOccurs="0" maxOccurs="1" default="4949"/>
+            <xs:element name="allowSingleFetch" type="xs:boolean" minOccurs="0" maxOccurs="1" default="1"/>
+        </xs:sequence>
+    </xs:complexType>
 
     <xs:complexType name="fieldType">
         <xs:sequence>

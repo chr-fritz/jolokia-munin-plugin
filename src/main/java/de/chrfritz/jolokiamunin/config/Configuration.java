@@ -34,4 +34,29 @@ public interface Configuration {
      * @return The loaded configuration.
      */
     List<Category> getConfiguration();
+
+    /**
+     * Get the ip address for that interface where the daemon should be bind.
+     * <p/>
+     * Default is 0.0.0.0 (also known as all interfaces)
+     *
+     * @return The bind ip address.
+     */
+    String getBindAddress();
+
+    /**
+     * Get the port to listen for incomming connections when run in daemon mode.
+     * <p/>
+     * Default is 4949.
+     *
+     * @return The listen port for daemon mode.
+     */
+    int getPort();
+
+    /**
+     * Is it allowed to fetch a single graph when the daemon mode is used?
+     *
+     * @return Is the single fetch mode allowed.
+     */
+    boolean isSingleFetchAllowed();
 }

@@ -43,6 +43,10 @@ public class XMLConfiguration implements Configuration {
 
     private List<Category> categories;
 
+    private String address;
+    private int port;
+    private boolean singleFetchAllowed;
+
     /**
      * Load configuration form the given url.
      *
@@ -62,6 +66,10 @@ public class XMLConfiguration implements Configuration {
             JAXBContext jc = JAXBContext.newInstance(Config.class);
             Unmarshaller unmarshaller = jc.createUnmarshaller();
             Config config = (Config) unmarshaller.unmarshal(configFile);
+
+            address = config.getDaemon().getAddress();
+            port = config.getDaemon().getPort();
+            singleFetchAllowed = config.getDaemon().isAllowSingleFetch();
 
             Mapper mapper = getMapper();
             categories = new ArrayList<Category>();
@@ -100,5 +108,39 @@ public class XMLConfiguration implements Configuration {
     @Override
     public List<Category> getConfiguration() {
         return Collections.unmodifiableList(categories);
+    }
+
+    /**
+     * Get the ip address for that interface where the daemon should be bind.
+     * <p/>
+     * Default is 0.0.0.0 (also known as all interfaces)
+     *
+     * @return The bind ip address.
+     */
+    @Override
+    public String getBindAddress() {
+        return address;
+    }
+
+    /**
+     * Get the port to listen for incomming connections when run in daemon mode.
+     * <p/>
+     * Default is 4949.
+     *
+     * @return The listen port for daemon mode.
+     */
+    @Override
+    public int getPort() {
+        return port;
+    }
+
+    /**
+     * Is it allowed to fetch a single graph when the daemon mode is used?
+     *
+     * @return Is the single fetch mode allowed.
+     */
+    @Override
+    public boolean isSingleFetchAllowed() {
+        return singleFetchAllowed;
     }
 }
