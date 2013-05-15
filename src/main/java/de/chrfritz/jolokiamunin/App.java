@@ -134,13 +134,12 @@ public class App {
         buffer.append("Jolokia-Munin Plugin by Christian Fritz 2013 \n")
                 .append("Version: ")
                 .append(props.getProperty("jmp.version"))
-                .append("\n")
-                .append("Build #")
+                .append("\nBuild from git commit ")
                 .append(props.getProperty("jmp.buildNumber"))
-                .append(" from git commit ")
-                .append(props.getProperty("jmp.buildCommit"))
                 .append(" on git branch ")
                 .append(props.getProperty("jmp.buildBranch"))
+                .append("\nBuild date: ")
+                .append(props.getProperty("jmp.buildDate"))
                 .append("\n");
 
         return buffer.toString();
