@@ -31,6 +31,8 @@ public class Server implements Runnable, AutoCloseable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Server.class);
 
+    public static final int DEFAULT_PORT = 4949;
+
     private final ServerSocket server;
 
     private Thread serverThread;
@@ -39,29 +41,18 @@ public class Server implements Runnable, AutoCloseable {
 
     private MuninProvider muninProvider;
 
-    public Server(MuninProvider muninProvider, Configuration configuration) {
+    public Server(MuninProvider muninProvider, Configuration configuration) throws IOException {
         this.configuration = configuration;
         this.muninProvider = muninProvider;
-        try {
-            server = new ServerSocket(4949);
-        }
-        catch (IOException e) {
-            LOGGER.error("Can not bind to address", e);
-            throw new RuntimeException(e);
-        }
+        server = new ServerSocket(DEFAULT_PORT);
     }
 
-    public Server(MuninProvider muninProvider, Configuration configuration, SocketAddress socketAddress) {
+    public Server(MuninProvider muninProvider, Configuration configuration, SocketAddress socketAddress) throws
+            IOException {
         this.configuration = configuration;
         this.muninProvider = muninProvider;
-        try {
-            server = new ServerSocket();
-            server.bind(socketAddress);
-        }
-        catch (IOException e) {
-            LOGGER.error("Can not bind to address", e);
-            throw new RuntimeException(e);
-        }
+        server = new ServerSocket();
+        server.bind(socketAddress);
     }
 
     /**
@@ -77,15 +68,15 @@ public class Server implements Runnable, AutoCloseable {
         serverThread = Thread.currentThread();
         serverThread.setName("Munin-Node-Server-Thread");
         LOGGER.info("Server successfully started at {}", server.getLocalSocketAddress());
-        while (!Thread.interrupted()) {
-            try {
+        try {
+            while (!Thread.interrupted()) {
+
                 Socket clientSocket = server.accept();
                 new Thread(new Client(clientSocket, muninProvider, configuration)).start();
             }
-            catch (IOException e) {
-                LOGGER.error("Can not handle client connection", e);
-                throw new RuntimeException(e);
-            }
+        }
+        catch (IOException e) {
+            LOGGER.error("Can not handle client connection", e);
         }
     }
 
@@ -98,7 +89,7 @@ public class Server implements Runnable, AutoCloseable {
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() throws IOException {
         serverThread.interrupt();
         synchronized (server) {
             server.close();

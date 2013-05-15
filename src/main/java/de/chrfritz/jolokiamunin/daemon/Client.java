@@ -72,17 +72,17 @@ public class Client implements Runnable {
     protected String handleCommands(String commandLine) {
         String[] parts = commandLine.split("[\n ]+", 2);
         String command = parts[0];
-        String arg;
+        String arg = null;
         if (parts.length == 2) {
             arg = parts[1];
         }
-        switch (parts[0].toLowerCase()) {
+        switch (command) {
             case "list":
                 return handleList();
             case "fetch":
-                return handleFetch();
+                return handleFetch(arg);
             case "config":
-                return handleConfig();
+                return handleConfig(arg);
             case "version":
                 return handleVersion();
             case "quit":
@@ -104,11 +104,11 @@ public class Client implements Runnable {
         }
     }
 
-    protected String handleConfig() {
+    protected String handleConfig(String graph) {
         return muninProvider.getConfig(configuration.getConfiguration());
     }
 
-    protected String handleFetch() {
+    protected String handleFetch(String graph) {
         try {
             return muninProvider.getValues(configuration.getConfiguration());
         }
