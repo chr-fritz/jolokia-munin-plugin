@@ -69,8 +69,8 @@ public class ClientTest {
         clientMock.handleCommands("quit");
 
         verify(clientMock).handleList();
-        verify(clientMock, times(2)).handleConfig();
-        verify(clientMock, times(2)).handleFetch();
+        verify(clientMock, times(2)).handleConfig(anyString());
+        verify(clientMock, times(2)).handleFetch(anyString());
         verify(clientMock).handleVersion();
 
         assertTrue(Thread.currentThread().isInterrupted());
@@ -88,14 +88,14 @@ public class ClientTest {
     public void testHandleConfig() throws Exception {
         String expected = "expected config";
         when(provider.getConfig(anyListOf(Category.class))).thenReturn(expected);
-        assertEquals(expected, client.handleConfig());
+        assertEquals(expected, client.handleConfig(null));
     }
 
     @Test
     public void testHandleFetch() throws Exception {
         String expected = "expected values";
         when(provider.getValues(anyListOf(Category.class))).thenReturn(expected);
-        assertEquals(expected, client.handleFetch());
+        assertEquals(expected, client.handleFetch(null));
     }
 
     @Test
