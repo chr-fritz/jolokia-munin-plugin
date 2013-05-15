@@ -69,7 +69,7 @@ public class Client implements Runnable {
         }
     }
 
-    private String handleCommands(String commandLine) {
+    protected String handleCommands(String commandLine) {
         String[] parts = commandLine.split("[\n ]+", 2);
         String command = parts[0];
         String arg;
@@ -94,7 +94,7 @@ public class Client implements Runnable {
         }
     }
 
-    private String handleVersion() {
+    protected String handleVersion() {
         try {
             return App.version();
         }
@@ -104,11 +104,11 @@ public class Client implements Runnable {
         }
     }
 
-    private String handleConfig() {
+    protected String handleConfig() {
         return muninProvider.getConfig(configuration.getConfiguration());
     }
 
-    private String handleFetch() {
+    protected String handleFetch() {
         try {
             return muninProvider.getValues(configuration.getConfiguration());
         }
@@ -118,7 +118,7 @@ public class Client implements Runnable {
         }
     }
 
-    private String handleList() {
+    protected String handleList() {
         if (configuration.isSingleFetchAllowed()) {
             List<String> graphNames = muninProvider.getGraphNames(configuration.getConfiguration());
             StringBuilder sb = new StringBuilder();
