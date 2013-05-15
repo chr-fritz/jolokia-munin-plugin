@@ -66,11 +66,11 @@ public class XMLConfiguration implements Configuration {
             JAXBContext jc = JAXBContext.newInstance(Config.class);
             Unmarshaller unmarshaller = jc.createUnmarshaller();
             Config config = (Config) unmarshaller.unmarshal(configFile);
-
-            address = config.getDaemon().getAddress();
-            port = config.getDaemon().getPort();
-            singleFetchAllowed = config.getDaemon().isAllowSingleFetch();
-
+            if (config.getDaemon() != null) {
+                address = config.getDaemon().getAddress();
+                port = config.getDaemon().getPort();
+                singleFetchAllowed = config.getDaemon().isAllowSingleFetch();
+            }
             Mapper mapper = getMapper();
             categories = new ArrayList<Category>();
 
