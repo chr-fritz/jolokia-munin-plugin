@@ -22,10 +22,14 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
+import java.util.List;
 
 public class Client implements Runnable {
 
-    private final Logger LOGGER = LoggerFactory.getLogger(Client.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Client.class);
+
+    private static final int SOCKET_TIMEOUT = 1000 * 15;
 
     private final Socket clientSocket;
 
@@ -49,12 +53,16 @@ public class Client implements Runnable {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))
         ) {
+            socket.setSoTimeout(SOCKET_TIMEOUT);
             while (!Thread.interrupted()) {
                 String command = reader.readLine().trim();
                 String response = handleCommands(command);
                 writer.write(response);
                 writer.flush();
             }
+        }
+        catch (SocketTimeoutException e) {
+            LOGGER.info("Closing connection because of read timeout");
         }
         catch (IOException e) {
             LOGGER.error("Can not open streams", e);
@@ -70,31 +78,57 @@ public class Client implements Runnable {
         }
         switch (parts[0].toLowerCase()) {
             case "list":
-                return "jolokia";
+                return handleList();
             case "fetch":
-                try {
-                    return muninProvider.getValues(configuration.getConfiguration());
-                }
-                catch (FetcherException e) {
-                    LOGGER.error("Can not fetch values.", e);
-                    return "ERROR: Can not fetch values";
-                }
+                return handleFetch();
             case "config":
-                return muninProvider.getConfig(configuration.getConfiguration());
+                return handleConfig();
             case "version":
-                try {
-                    return App.version();
-                }
-                catch (IOException e) {
-                    LOGGER.error("Can not fetch version information", e);
-                    return "ERROR: Unknown to get version info\n";
-                }
+                return handleVersion();
             case "quit":
             case "exit":
                 Thread.currentThread().interrupt();
                 return "";
             default:
                 return "ERROR: Invalid Command\n";
+        }
+    }
+
+    private String handleVersion() {
+        try {
+            return App.version();
+        }
+        catch (IOException e) {
+            LOGGER.error("Can not fetch version information", e);
+            return "ERROR: Unknown to get version info\n";
+        }
+    }
+
+    private String handleConfig() {
+        return muninProvider.getConfig(configuration.getConfiguration());
+    }
+
+    private String handleFetch() {
+        try {
+            return muninProvider.getValues(configuration.getConfiguration());
+        }
+        catch (FetcherException e) {
+            LOGGER.error("Can not fetch values.", e);
+            return "ERROR: Can not fetch values";
+        }
+    }
+
+    private String handleList() {
+        if (configuration.isSingleFetchAllowed()) {
+            List<String> graphNames = muninProvider.getGraphNames(configuration.getConfiguration());
+            StringBuilder sb = new StringBuilder();
+            for (String name : graphNames) {
+                sb.append(name).append(",");
+            }
+            sb.deleteCharAt(sb.lastIndexOf(","));
+            return sb.toString();
+        } else {
+            return "jolokia";
         }
     }
 }
