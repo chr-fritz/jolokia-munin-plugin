@@ -47,6 +47,7 @@ import static org.mockito.Mockito.when;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class JolokiaFetcherTest {
+    public static final int HTTP_STATUS_OK = 200;
     private Fetcher fetcher;
     @Mock
     private HttpClient client;
@@ -65,8 +66,7 @@ public class JolokiaFetcherTest {
     private void injectResponse(int expectedResponseStatus, String responseFile) throws
             IOException {
 
-        InputStream stream = Thread.currentThread().getContextClassLoader()
-                .getResourceAsStream(responseFile);
+        InputStream stream = getClass().getResourceAsStream(responseFile);
 
         HttpResponse response = new BasicHttpResponse(
                 new BasicStatusLine(new ProtocolVersion("HTTP", 1, 1), expectedResponseStatus, ""));
@@ -79,7 +79,7 @@ public class JolokiaFetcherTest {
     @Test
     public void testFetchValuesFull() throws Exception {
 
-        injectResponse(200, "de/chrfritz/jolokiamunin/jolokia/impl/fetchValuesFull.json");
+        injectResponse(HTTP_STATUS_OK, "/de/chrfritz/jolokiamunin/jolokia/impl/fetchValuesFull.json");
         Map<Request, Number> expected = new HashMap<>();
         expected.put(new Request("java.lang:type=Memory", "NonHeapMemoryUsage", "used"), 139647584L);
         expected.put(new Request("java.lang:type=Memory", "NonHeapMemoryUsage", "committed"), 279379968L);
@@ -94,7 +94,7 @@ public class JolokiaFetcherTest {
 
     @Test
     public void testFetchValuesWithoutPath() throws Exception {
-        injectResponse(200, "de/chrfritz/jolokiamunin/jolokia/impl/fetchValuesWithoutPath.json");
+        injectResponse(HTTP_STATUS_OK, "/de/chrfritz/jolokiamunin/jolokia/impl/fetchValuesWithoutPath.json");
         Map<Request, Number> expected = new HashMap<>();
         expected.put(new Request("java.lang:type=Memory", "HeapMemoryUsage", "max"), 129761280L);
         expected.put(new Request("java.lang:type=Memory", "HeapMemoryUsage", "committed"), 129761280L);
@@ -110,7 +110,7 @@ public class JolokiaFetcherTest {
 
     @Test
     public void testFetchValuesWithoutAttribute() throws Exception {
-        injectResponse(200, "de/chrfritz/jolokiamunin/jolokia/impl/fetchValuesWithoutAttirbute.json");
+        injectResponse(HTTP_STATUS_OK, "/de/chrfritz/jolokiamunin/jolokia/impl/fetchValuesWithoutAttirbute.json");
         Map<Request, Number> expected = new HashMap<>();
         expected.put(new Request("java.lang:type=Memory", "HeapMemoryUsage", "max"), 129761280L);
         expected.put(new Request("java.lang:type=Memory", "HeapMemoryUsage", "committed"), 129761280L);
@@ -131,7 +131,7 @@ public class JolokiaFetcherTest {
 
     @Test
     public void testFetchValuesMixed() throws Exception {
-        injectResponse(200, "de/chrfritz/jolokiamunin/jolokia/impl/fetchValuesMixed.json");
+        injectResponse(HTTP_STATUS_OK, "/de/chrfritz/jolokiamunin/jolokia/impl/fetchValuesMixed.json");
         Map<Request, Number> expected = new HashMap<>();
         expected.put(new Request("java.lang:type=Memory", "HeapMemoryUsage", "max"), 129761280L);
         expected.put(new Request("java.lang:type=Memory", "HeapMemoryUsage", "committed"), 129761280L);
@@ -151,7 +151,7 @@ public class JolokiaFetcherTest {
 
     @Test
     public void testFetchAttributeValue() throws Exception {
-        injectResponse(200, "de/chrfritz/jolokiamunin/jolokia/impl/fetchAttributeValue.json");
+        injectResponse(HTTP_STATUS_OK, "/de/chrfritz/jolokiamunin/jolokia/impl/fetchAttributeValue.json");
         Map<Request, Number> expected = new HashMap<>();
         expected.put(new Request("java.lang:type=Threading", "ThreadCount"), 55L);
         List<Request> requestList = new ArrayList<>();

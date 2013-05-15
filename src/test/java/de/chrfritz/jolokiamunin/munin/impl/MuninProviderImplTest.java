@@ -68,8 +68,8 @@ public class MuninProviderImplTest {
     @Test
     public void testGetConfig() throws Exception {
 
-        Category category = loadConfig("de/chrfritz/jolokiamunin/munin/singleCategory.xml").getConfiguration().get(0);
-        String expected = loadFromClasspath("de/chrfritz/jolokiamunin/munin/singleCategoryConfig.txt");
+        Category category = loadConfig("/de/chrfritz/jolokiamunin/munin/singleCategory.xml").getConfiguration().get(0);
+        String expected = loadFromClasspath("/de/chrfritz/jolokiamunin/munin/singleCategoryConfig.txt");
         String actual = provider.getConfig(category);
         assertEquals(expected, actual);
     }
@@ -77,16 +77,16 @@ public class MuninProviderImplTest {
     @Test
     public void testGetConfigWithoutPath() throws Exception {
 
-        Category category = loadConfig("de/chrfritz/jolokiamunin/munin/withoutPath.xml").getConfiguration().get(0);
-        String expected = loadFromClasspath("de/chrfritz/jolokiamunin/munin/withoutPathConfig.txt");
+        Category category = loadConfig("/de/chrfritz/jolokiamunin/munin/withoutPath.xml").getConfiguration().get(0);
+        String expected = loadFromClasspath("/de/chrfritz/jolokiamunin/munin/withoutPathConfig.txt");
         String actual = provider.getConfig(category);
         assertEquals(expected, actual);
     }
 
     @Test
     public void testGetConfigsList() throws Exception {
-        List<Category> categories = loadConfig("de/chrfritz/jolokiamunin/munin/multiCategory.xml").getConfiguration();
-        String expected = loadFromClasspath("de/chrfritz/jolokiamunin/munin/multiCategoryConfig.txt");
+        List<Category> categories = loadConfig("/de/chrfritz/jolokiamunin/munin/multiCategory.xml").getConfiguration();
+        String expected = loadFromClasspath("/de/chrfritz/jolokiamunin/munin/multiCategoryConfig.txt");
         String actual = provider.getConfig(categories);
         assertEquals(expected, actual);
     }
@@ -96,7 +96,7 @@ public class MuninProviderImplTest {
 
         Map<Request, Number> fetcherResult = new HashMap<>();
         when(fetcher.fetchValues(anyListOf(Request.class))).thenReturn(fetcherResult);
-        Category category = loadConfig("de/chrfritz/jolokiamunin/munin/singleCategory.xml").getConfiguration().get(0);
+        Category category = loadConfig("/de/chrfritz/jolokiamunin/munin/singleCategory.xml").getConfiguration().get(0);
 
         fetcherResult.put(new Request("java.lang:type=Memory", "HeapMemoryUsage", "max"), 1000);
         fetcherResult.put(new Request("java.lang:type=Memory", "HeapMemoryUsage", "used"), 1000);
@@ -106,7 +106,7 @@ public class MuninProviderImplTest {
 
         String actual = provider.getValues(category);
 
-        String expected = loadFromClasspath("de/chrfritz/jolokiamunin/munin/singleCategoryValues.txt");
+        String expected = loadFromClasspath("/de/chrfritz/jolokiamunin/munin/singleCategoryValues.txt");
 
         assertEquals(expected, actual);
     }
@@ -116,7 +116,7 @@ public class MuninProviderImplTest {
 
         Map<Request, Number> fetcherResult = new HashMap<>();
         when(fetcher.fetchValues(anyListOf(Request.class))).thenReturn(fetcherResult);
-        List<Category> categories = loadConfig("de/chrfritz/jolokiamunin/munin/multiCategory.xml").getConfiguration();
+        List<Category> categories = loadConfig("/de/chrfritz/jolokiamunin/munin/multiCategory.xml").getConfiguration();
 
         fetcherResult.put(new Request("java.lang:type=Memory", "HeapMemoryUsage", "max"), 1000);
         fetcherResult.put(new Request("java.lang:type=Memory", "NonHeapMemoryUsage", "max"), 1000);
@@ -126,15 +126,13 @@ public class MuninProviderImplTest {
 
         String actual = provider.getValues(categories);
 
-        String expected = loadFromClasspath("de/chrfritz/jolokiamunin/munin/multiCategoryValues.txt");
+        String expected = loadFromClasspath("/de/chrfritz/jolokiamunin/munin/multiCategoryValues.txt");
 
         assertEquals(expected, actual);
     }
 
     private static Configuration loadConfig(String configFile) throws ConfigurationException {
-        URL configUrl = Thread.currentThread()
-                .getContextClassLoader()
-                .getResource(configFile);
+        URL configUrl = MuninProviderImpl.class.getResource(configFile);
 
         Configuration config = new XMLConfiguration(configUrl);
         config.load();
@@ -142,7 +140,7 @@ public class MuninProviderImplTest {
     }
 
     private String loadFromClasspath(String filename) throws Exception {
-        URL url = Thread.currentThread().getContextClassLoader().getResource(filename);
+        URL url = getClass().getResource(filename);
         return Files.toString(new File(url.toURI()), Charset.forName("UTF-8"));
     }
 }

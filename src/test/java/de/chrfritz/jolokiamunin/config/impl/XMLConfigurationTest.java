@@ -36,9 +36,7 @@ public class XMLConfigurationTest {
 
     @Before
     public void setUp() throws Exception {
-        URL configFile = Thread.currentThread()
-                .getContextClassLoader()
-                .getResource("de/chrfritz/jolokiamunin/config/impl/xmltest.xml");
+        URL configFile = getClass().getResource("/de/chrfritz/jolokiamunin/config/impl/xmltest.xml");
 
         config = new XMLConfiguration(configFile);
     }
@@ -69,9 +67,8 @@ public class XMLConfigurationTest {
 
     @Test(expected = ConfigurationException.class)
     public void testLoadInvalidFile() throws Exception {
-        URL configFile = Thread.currentThread()
-                .getContextClassLoader()
-                .getResource("de/chrfritz/jolokiamunin/config/impl/xmltestInvalid.xml");
+        URL configFile =
+                getClass().getResource("/de/chrfritz/jolokiamunin/config/impl/xmltestInvalid.xml");
 
         config = new XMLConfiguration(configFile);
         config.load();
