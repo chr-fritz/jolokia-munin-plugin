@@ -123,10 +123,9 @@ public class Client implements Runnable {
             List<String> graphNames = muninProvider.getGraphNames(configuration.getConfiguration());
             StringBuilder sb = new StringBuilder();
             for (String name : graphNames) {
-                sb.append(name).append(",");
+                sb.append(name).append(" ");
             }
-            sb.deleteCharAt(sb.lastIndexOf(","));
-            return sb.toString();
+            return sb.toString().trim();
         } else {
             return "jolokia";
         }

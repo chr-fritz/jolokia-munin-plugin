@@ -13,20 +13,21 @@
 // ______________________________________________________________________________
 package de.chrfritz.jolokiamunin.daemon;
 
+import de.chrfritz.jolokiamunin.config.Category;
 import de.chrfritz.jolokiamunin.config.Configuration;
 import de.chrfritz.jolokiamunin.munin.MuninProvider;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -42,7 +43,6 @@ public class ClientTest {
 
     @Mock
     private Socket clientSocket;
-
 
     @Before
     public void setUp() throws Exception {
@@ -85,20 +85,34 @@ public class ClientTest {
     }
 
     @Test
-    @Ignore
     public void testHandleConfig() throws Exception {
-
+        String expected = "expected config";
+        when(provider.getConfig(anyListOf(Category.class))).thenReturn(expected);
+        assertEquals(expected, client.handleConfig());
     }
 
     @Test
-    @Ignore
     public void testHandleFetch() throws Exception {
-
+        String expected = "expected values";
+        when(provider.getValues(anyListOf(Category.class))).thenReturn(expected);
+        assertEquals(expected, client.handleFetch());
     }
 
     @Test
-    @Ignore
-    public void testHandleList() throws Exception {
+    public void testHandleListSingle() throws Exception {
+        when(config.isSingleFetchAllowed()).thenReturn(true);
+        List<String> graphs = new ArrayList<>();
+        graphs.add("graph1");
+        graphs.add("graph2");
+        when(provider.getGraphNames(anyListOf(Category.class))).thenReturn(graphs);
+        String expected = "graph1 graph2";
+        String actual = client.handleList();
+        assertEquals(expected, actual);
+    }
 
+    @Test
+    public void testHandleListNoSingle() throws Exception {
+        when(config.isSingleFetchAllowed()).thenReturn(false);
+        assertEquals("jolokia", client.handleList());
     }
 }
