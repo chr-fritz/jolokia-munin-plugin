@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config xmlns="http://chrfritz.de/jolokia-munin-plugin/config">
+    <daemon>
+        <address>0.0.0.0</address>
+        <port>4949</port>
+        <allowSingleFetch>1</allowSingleFetch>
+    </daemon>
+
     <category name="ServletContainer" src="http://localhost:8080/jolokia">
         <graph name="heapMemUsage" title="HeapMemoryUsage" vlabel="bytes">
             <info>Heap Memory Usage of JVM</info>

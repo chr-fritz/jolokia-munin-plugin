@@ -1,7 +1,7 @@
-multigraph ServletContainerheapMem
+multigraph ServletContainer::heapMem
 heapMem_max.value 1000
 heapMem_committed.value 1000
 heapMem_init.value 1000
 heapMem_used.value 1000
-multigraph ServletContainernoneHeapMem
+multigraph ServletContainer::noneHeapMem
 noneHeapMem_max.value 1000

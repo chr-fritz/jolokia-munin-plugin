@@ -1,4 +1,4 @@
-multigraph ServletContainerthreads
+multigraph ServletContainer::threads
 graph_title Threads
 graph_category ServletContainer
 graph_info Number of Threads

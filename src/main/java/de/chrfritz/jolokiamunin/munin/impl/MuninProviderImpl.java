@@ -51,6 +51,36 @@ public class MuninProviderImpl implements MuninProvider {
     }
 
     /**
+     * Get a list with all graph names which are contained in the given categories.
+     *
+     * @param categories The category list.
+     * @return A list with all graph names
+     */
+    @Override
+    public List<String> getGraphNames(List<Category> categories) {
+        List<String> ret = new ArrayList<>();
+        for (Category category : categories) {
+            ret.addAll(getGraphNames(category));
+        }
+        return ret;
+    }
+
+    /**
+     * Get a list with all names of the graphs contained in the given {@param category}.
+     *
+     * @param category The requested category.
+     * @return A list with all graph names contained in {@param category}.
+     */
+    @Override
+    public List<String> getGraphNames(Category category) {
+        List<String> ret = new ArrayList<>();
+        for (Graph graph : category.getGraphs()) {
+            ret.add(getGraphName(category, graph));
+        }
+        return ret;
+    }
+
+    /**
      * /**
      * Get the munin compatible configuration for a list of categories.
      *
@@ -79,7 +109,7 @@ public class MuninProviderImpl implements MuninProvider {
         StringBuilder buffer = new StringBuilder();
         for (Graph graph : category.getGraphs()) {
 
-            buffer.append("multigraph ").append(category.getName()).append(graph.getName()).append(LINE_SEPARATOR);
+            buffer.append("multigraph ").append(getGraphName(category, graph)).append(LINE_SEPARATOR);
             addAttribute(buffer, "graph_title", graph.getTitle());
             addAttribute(buffer, "graph_args", graph.getArgs());
             addAttribute(buffer, "graph_category", category.getName());
@@ -158,7 +188,7 @@ public class MuninProviderImpl implements MuninProvider {
 
             Map<Request, Number> values = fetcher.fetchValues(new ArrayList<>(requests.values()));
             for (Graph graph : category.getGraphs()) {
-                buffer.append("multigraph ").append(category.getName()).append(graph.getName()).append(LINE_SEPARATOR);
+                buffer.append("multigraph ").append(getGraphName(category, graph)).append(LINE_SEPARATOR);
                 for (Field field : graph.getFields()) {
                     String fieldName = graph.getName() + "_" + field.getName();
 
@@ -197,6 +227,10 @@ public class MuninProviderImpl implements MuninProvider {
             }
         }
         return requests;
+    }
+
+    private String getGraphName(Category category, Graph graph) {
+        return category.getName() + "::" + graph.getName();
     }
 
     /**

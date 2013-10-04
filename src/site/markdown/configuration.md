@@ -53,8 +53,7 @@ The tag `<args>` is used to define additional rdd-tool arguments. It do not defi
 the documentation of [munin](http://munin-monitoring.org/wiki/graph_args) and
 [rdd-tool](http://oss.oetiker.ch/rrdtool/doc/rrdgraph.en.html) for more information about this tag.
 ## Tag: hostname
-Show this graph as graph of the given hostname.
-Please see the [Munin-Documentation](http://munin-monitoring.org/wiki/host_name) for more information.
+Show this graph as graph of the given hostname. Please see the [Munin-Documentation](http://munin-monitoring.org/wiki/host_name) for more information.
 ## Tag: mbean
 The `<mbean>` defines the java bean that should be fetched by jolokia. It can be defined for the whole graph or for a
 single field. If it is defined on both, the graph and field, the field value will override the graph value. There are no
@@ -62,6 +61,7 @@ subtags or attributes.
 
 ## Tag: attribute
 The `<attribute>` tag defines the jolokia attribute. It can be defined for the whole graph or a single field.
+
 If it is defined on both, the graph and field, the field value will override the graph value. There are no subtags or attributes.
 
 ## Tag: field
@@ -73,6 +73,7 @@ A field can have the following attributes. Every subtag expect is optional. They
 - mbean
 - attribute
 - path
+
 ### Attributes
 #### name
 The Name of this field

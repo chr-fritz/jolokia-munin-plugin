@@ -19,6 +19,7 @@ import de.chrfritz.jolokiamunin.config.Configuration;
 import de.chrfritz.jolokiamunin.config.ConfigurationException;
 import de.chrfritz.jolokiamunin.config.ConfigurationFactory;
 import de.chrfritz.jolokiamunin.config.impl.XMLConfigurationFactory;
+import de.chrfritz.jolokiamunin.daemon.Server;
 import de.chrfritz.jolokiamunin.jolokia.FetcherException;
 import de.chrfritz.jolokiamunin.jolokia.impl.JolokiaFetcherFactory;
 import de.chrfritz.jolokiamunin.munin.MuninProvider;
@@ -74,6 +75,8 @@ public class App {
         } else {
             String command = args[0];
             switch (command) {
+                case "daemon":
+                    return daemon();
                 case "config":
                     return config();
                 case "fetch":
@@ -85,6 +88,14 @@ public class App {
                     return help();
             }
         }
+    }
+
+    /**
+     * Run the Jolokia Munin Plugin as Munin-Deamon.
+     */
+    private String daemon() throws IOException, ConfigurationException {
+        new Thread(new Server(muninProvider, getConfiguration())).start();
+        return "Daemon successfully started";
     }
 
     /**
@@ -115,7 +126,7 @@ public class App {
      *
      * @throws IOException In case of there are some io errors.
      */
-    private String version() throws IOException {
+    public static String version() throws IOException {
         Properties props = new Properties();
         props.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("version.properties"));
 

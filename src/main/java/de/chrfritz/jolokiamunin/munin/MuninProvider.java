@@ -25,6 +25,22 @@ import java.util.List;
 public interface MuninProvider {
 
     /**
+     * Get a list with all graph names which are contained in the given categories.
+     *
+     * @param categories The category list.
+     * @return A list with all graph names
+     */
+    List<String> getGraphNames(List<Category> categories);
+
+    /**
+     * Get a list with all names of the graphs contained in the given {@param category}.
+     *
+     * @param category The requested category.
+     * @return A list with all graph names contained in {@param category}.
+     */
+    List<String> getGraphNames(Category category);
+
+    /**
      * Get the munin compatible configuration for a list of categories.
      *
      * @param categories The list of configurations
