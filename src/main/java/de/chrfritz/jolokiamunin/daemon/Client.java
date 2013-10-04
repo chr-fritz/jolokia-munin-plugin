@@ -41,6 +41,7 @@ public class Client implements Runnable {
         this.muninProvider = muninProvider;
         this.configuration = configuration;
         this.clientSocket = clientSocket;
+        LOGGER.info("Connection accepted from {}", clientSocket.getRemoteSocketAddress());
     }
 
     /**
