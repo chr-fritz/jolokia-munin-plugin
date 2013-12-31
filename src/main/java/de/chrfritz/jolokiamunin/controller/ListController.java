@@ -24,7 +24,7 @@ import java.util.List;
 public class ListController extends AbstractController {
 
     @Override
-    protected String handle() throws Exception {
+    protected String handle() {
         Configuration configuration = getConfiguration();
 
         if (configuration.isSingleFetchAllowed()) {

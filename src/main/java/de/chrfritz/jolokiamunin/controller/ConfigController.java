@@ -4,7 +4,7 @@ import de.chrfritz.jolokiamunin.config.Configuration;
 
 public class ConfigController extends AbstractController {
     @Override
-    protected String handle() throws Exception {
+    protected String handle() {
         Configuration config = getConfiguration();
         return getMuninProvider().getConfig(config.getConfiguration());
     }
