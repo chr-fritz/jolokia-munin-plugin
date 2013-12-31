@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
+import java.nio.charset.Charset;
 
 public class Client implements Runnable {
 
@@ -34,6 +35,7 @@ public class Client implements Runnable {
     private final Configuration configuration;
 
     private final MuninProvider muninProvider;
+    private final Charset charset = Charset.forName("UTF-8");
 
     public Client(Socket clientSocket, MuninProvider muninProvider, Configuration configuration) {
         this.muninProvider = muninProvider;
@@ -49,8 +51,8 @@ public class Client implements Runnable {
     public void run() {
         try (
                 Socket socket = clientSocket;
-                BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))
+                BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), charset));
+                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), charset))
         ) {
             socket.setSoTimeout(SOCKET_TIMEOUT);
             while (!Thread.interrupted()) {
