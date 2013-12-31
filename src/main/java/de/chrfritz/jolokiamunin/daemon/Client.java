@@ -13,9 +13,8 @@
 // ______________________________________________________________________________
 package de.chrfritz.jolokiamunin.daemon;
 
-import de.chrfritz.jolokiamunin.App;
 import de.chrfritz.jolokiamunin.config.Configuration;
-import de.chrfritz.jolokiamunin.jolokia.FetcherException;
+import de.chrfritz.jolokiamunin.controller.Dispatcher;
 import de.chrfritz.jolokiamunin.munin.MuninProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +22,6 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
-import java.util.List;
 
 public class Client implements Runnable {
 
@@ -73,62 +71,14 @@ public class Client implements Runnable {
     protected String handleCommands(String commandLine) {
         String[] parts = commandLine.split("[\n ]+", 2);
         String command = parts[0];
-        String arg = null;
-        if (parts.length == 2) {
-            arg = parts[1];
-        }
         switch (command) {
-            case "list":
-                return handleList();
-            case "fetch":
-                return handleFetch(arg);
-            case "config":
-                return handleConfig(arg);
-            case "version":
-                return handleVersion();
             case "quit":
             case "exit":
                 Thread.currentThread().interrupt();
                 return "";
             default:
-                return "ERROR: Invalid Command\n";
-        }
-    }
-
-    protected String handleVersion() {
-        try {
-            return App.version();
-        }
-        catch (IOException e) {
-            LOGGER.error("Can not fetch version information", e);
-            return "ERROR: Unknown to get version info\n";
-        }
-    }
-
-    protected String handleConfig(String graph) {
-        return muninProvider.getConfig(configuration.getConfiguration());
-    }
-
-    protected String handleFetch(String graph) {
-        try {
-            return muninProvider.getValues(configuration.getConfiguration());
-        }
-        catch (FetcherException e) {
-            LOGGER.error("Can not fetch values.", e);
-            return "ERROR: Can not fetch values";
-        }
-    }
-
-    protected String handleList() {
-        if (configuration.isSingleFetchAllowed()) {
-            List<String> graphNames = muninProvider.getGraphNames(configuration.getConfiguration());
-            StringBuilder sb = new StringBuilder();
-            for (String name : graphNames) {
-                sb.append(name).append(" ");
-            }
-            return sb.toString().trim();
-        } else {
-            return "jolokia";
+                Dispatcher dispatcher = new Dispatcher(configuration, muninProvider);
+                return dispatcher.handleRequest(commandLine) + "\n";
         }
     }
 }
