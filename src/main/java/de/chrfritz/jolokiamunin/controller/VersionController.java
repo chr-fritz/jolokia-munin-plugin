@@ -1,5 +1,6 @@
 package de.chrfritz.jolokiamunin.controller;
 
+import java.io.IOException;
 import java.util.Properties;
 
 /**
@@ -7,7 +8,7 @@ import java.util.Properties;
  */
 public class VersionController extends AbstractController {
     @Override
-    protected String handle() throws Exception {
+    protected String handle() throws IOException {
         Properties props = new Properties();
         props.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("version.properties"));
 

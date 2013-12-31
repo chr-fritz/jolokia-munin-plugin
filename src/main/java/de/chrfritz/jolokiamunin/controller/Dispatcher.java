@@ -35,11 +35,11 @@ public class Dispatcher {
         String[] requestArray = request.split("\\s+", 2);
         Controller controller = resolveController(requestArray[0]);
 
-        controller.setMuninProvider(proivder);
-        controller.setConfiguration(configuration);
-
         String arguments = requestArray.length > 1 ? requestArray[1] : "";
         if (controller != null) {
+            controller.setMuninProvider(proivder);
+            controller.setConfiguration(configuration);
+
             return controller.execute(arguments);
         }
         else {
