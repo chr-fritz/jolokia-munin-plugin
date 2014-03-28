@@ -45,9 +45,8 @@ public interface MuninProvider {
      *
      * @param categories The list of categories.
      * @return The fetched values as munin compatible string.
-     * @throws FetcherException In case of all errors when try to fetching the values.
      */
-    String getValues(List<Category> categories) throws FetcherException;
+    String getValues(List<Category> categories);
 
     /**
      * Fetch all values within a single category and generates the munin value string.

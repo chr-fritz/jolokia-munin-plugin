@@ -23,6 +23,8 @@ import de.chrfritz.jolokiamunin.jolokia.FetcherException;
 import de.chrfritz.jolokiamunin.jolokia.FetcherFactory;
 import de.chrfritz.jolokiamunin.jolokia.Request;
 import de.chrfritz.jolokiamunin.munin.MuninProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
@@ -39,6 +41,7 @@ public class MuninProviderImpl implements MuninProvider {
     private FetcherFactory fetcherFactory;
 
     private static final String LINE_SEPARATOR = System.lineSeparator();
+    private static final Logger LOGGER = LoggerFactory.getLogger(MuninProviderImpl.class);
 
     /**
      * Create a new instance with the given fetcher factory.
@@ -46,7 +49,6 @@ public class MuninProviderImpl implements MuninProvider {
      * @param fetcherFactory The fetcher factory.
      */
     public MuninProviderImpl(FetcherFactory fetcherFactory) {
-
         this.fetcherFactory = fetcherFactory;
     }
 
@@ -59,7 +61,6 @@ public class MuninProviderImpl implements MuninProvider {
      */
     @Override
     public String getConfig(List<Category> categories) {
-
         StringBuilder buffer = new StringBuilder();
         for (Category category : categories) {
             buffer.append(getConfig(category));
@@ -75,7 +76,6 @@ public class MuninProviderImpl implements MuninProvider {
      */
     @Override
     public String getConfig(Category category) {
-
         StringBuilder buffer = new StringBuilder();
         for (Graph graph : category.getGraphs()) {
 
@@ -109,7 +109,6 @@ public class MuninProviderImpl implements MuninProvider {
      *                   This buffer is filled with the field names to add this to a order field.
      */
     private void getFieldDefinitions(Graph graph, StringBuilder fields, StringBuilder fieldOrder) {
-
         for (Field field : graph.getFields()) {
             String fieldName = graph.getName() + "_" + field.getName();
             fieldOrder.append(fieldName).append(" ");
@@ -128,14 +127,17 @@ public class MuninProviderImpl implements MuninProvider {
      *
      * @param categories The list of categories.
      * @return The fetched values as munin compatible string.
-     * @throws FetcherException In case of all errors when try to fetching the values.
      */
     @Override
-    public String getValues(List<Category> categories) throws FetcherException {
-
+    public String getValues(List<Category> categories) {
         StringBuilder buffer = new StringBuilder();
         for (Category category : categories) {
-            buffer.append(getValues(category));
+            try {
+                buffer.append(getValues(category));
+            }
+            catch (FetcherException e) {
+                LOGGER.error("Can not fetch Category '" + category, e);
+            }
         }
         return buffer.toString();
     }
@@ -149,7 +151,6 @@ public class MuninProviderImpl implements MuninProvider {
      */
     @Override
     public String getValues(Category category) throws FetcherException {
-
         try {
             StringBuilder buffer = new StringBuilder();
             Map<String, Request> requests = buildRequests(category);
@@ -182,7 +183,6 @@ public class MuninProviderImpl implements MuninProvider {
      * @return A map which maps the munin field name to the created request.
      */
     private Map<String, Request> buildRequests(Category category) {
-
         Map<String, Request> requests = new HashMap<>();
 
         for (Graph graph : category.getGraphs()) {
@@ -207,7 +207,6 @@ public class MuninProviderImpl implements MuninProvider {
      * @param value  The value of the attribute.
      */
     private static void addAttribute(StringBuilder buffer, String name, String value) {
-
         if (!Strings.isNullOrEmpty(name) && !Strings.isNullOrEmpty(value)) {
             buffer.append(name).append(" ").append(value.trim()).append(LINE_SEPARATOR);
         }
@@ -222,7 +221,6 @@ public class MuninProviderImpl implements MuninProvider {
      * @param value     The value of the attribute.
      */
     private static void addFieldAttribute(StringBuilder buffer, String fieldName, String attribute, String value) {
-
         addAttribute(buffer, fieldName + "." + attribute, value);
     }
 
@@ -235,7 +233,6 @@ public class MuninProviderImpl implements MuninProvider {
      * @param value     The value of the attribute.
      */
     private static void addFieldAttribute(StringBuilder buffer, String fieldName, String attribute, Number value) {
-
         buffer.append(fieldName).append(".").append(attribute).append(" ").append(value).append(LINE_SEPARATOR);
     }
 }
