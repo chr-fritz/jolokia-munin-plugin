@@ -20,7 +20,6 @@ import de.chrfritz.jolokiamunin.config.ConfigurationException;
 import de.chrfritz.jolokiamunin.config.ConfigurationFactory;
 import de.chrfritz.jolokiamunin.config.impl.XMLConfigurationFactory;
 import de.chrfritz.jolokiamunin.daemon.Server;
-import de.chrfritz.jolokiamunin.jolokia.FetcherException;
 import de.chrfritz.jolokiamunin.jolokia.impl.JolokiaFetcherFactory;
 import de.chrfritz.jolokiamunin.munin.MuninProvider;
 import de.chrfritz.jolokiamunin.munin.impl.MuninProviderImpl;
@@ -42,11 +41,9 @@ public class App {
      *
      * @param args The commandline arguments
      * @throws IOException
-     * @throws FetcherException
      * @throws ConfigurationException
      */
-    public static void main(String[] args) throws IOException, FetcherException, ConfigurationException {
-
+    public static void main(String[] args) throws IOException, ConfigurationException {
         MuninProvider provider = new MuninProviderImpl(new JolokiaFetcherFactory());
         ConfigurationFactory configurationFactory = new XMLConfigurationFactory();
         System.out.print(new App(provider, configurationFactory).run(args));
@@ -67,12 +64,12 @@ public class App {
      *
      * @param args The commandline arguments.
      */
-    protected String run(String[] args) throws IOException, FetcherException, ConfigurationException {
-
+    protected String run(String[] args) throws IOException, ConfigurationException {
         // Fetch the values
         if (args.length == 0) {
             return fetch();
-        } else {
+        }
+        else {
             String command = args[0];
             switch (command) {
                 case "daemon":
@@ -114,9 +111,8 @@ public class App {
      *
      * @throws MalformedURLException
      * @throws ConfigurationException
-     * @throws FetcherException
      */
-    private String fetch() throws MalformedURLException, ConfigurationException, FetcherException {
+    private String fetch() throws MalformedURLException, ConfigurationException {
         Configuration config = getConfiguration();
         return muninProvider.getValues(config.getConfiguration());
     }
@@ -177,7 +173,6 @@ public class App {
      * @throws ConfigurationException
      */
     protected Configuration getConfiguration() throws MalformedURLException, ConfigurationException {
-
         String configName;
         configName = System.getProperty("configFile", System.getenv("JOLOKIAMUNIN_CONFIG"));
         if (Strings.isNullOrEmpty(configName)) {
