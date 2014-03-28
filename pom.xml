@@ -3,7 +3,7 @@
 
     <groupId>de.chrfritz</groupId>
     <artifactId>jolokia-munin-plugin</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.2-SNAPSHOT</version>
     <packaging>jar</packaging>
     <description>The Jolokia Munin Plugin can be used to fetch any numeric value from a jolokia agent.</description>
 
