@@ -24,7 +24,7 @@ public class HelpController extends AbstractController {
     private static final int PREFIX_LENGHT = 25;
 
     @Override
-    protected String handle() throws Exception {
+    protected String handle() {
 
         StringBuilder builder = new StringBuilder();
         builder.append("Usage: jolokia [command]\n")
