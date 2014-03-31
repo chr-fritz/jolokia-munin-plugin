@@ -32,7 +32,7 @@ import java.nio.file.*;
  * @author christian.fritz
  */
 public class ConfigurationWatchService implements Runnable {
-    private Logger LOGGER = LoggerFactory.getLogger(ConfigurationWatchService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ConfigurationWatchService.class);
     private ConfigurationFactory factory;
     private Dispatcher dispatcher;
     private WatchService watchService;
