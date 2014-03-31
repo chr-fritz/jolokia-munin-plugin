@@ -57,9 +57,11 @@ public class Client implements Runnable {
             socket.setSoTimeout(SOCKET_TIMEOUT);
             while (!Thread.interrupted()) {
                 String command = reader.readLine();
-                String response = handleCommands(command.trim());
-                writer.write(response);
-                writer.flush();
+                if (command != null) {
+                    String response = handleCommands(command.trim());
+                    writer.write(response);
+                    writer.flush();
+                }
             }
         }
         catch (SocketTimeoutException e) {
