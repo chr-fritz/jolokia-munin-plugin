@@ -14,6 +14,7 @@ public abstract class AbstractController implements Controller {
     private List<String> arguments;
     private Configuration configuration;
     private MuninProvider provider;
+    private Dispatcher dispatcher;
 
     @Override
     public String execute(String arguments) {
@@ -49,6 +50,15 @@ public abstract class AbstractController implements Controller {
     @Override
     public Configuration getConfiguration() {
         return configuration;
+    }
+
+    protected final Dispatcher getDispatcher() {
+        return dispatcher;
+    }
+
+    @Override
+    public final void setDispatcher(Dispatcher dispatcher) {
+        this.dispatcher = dispatcher;
     }
 
     protected abstract String handle() throws Exception;

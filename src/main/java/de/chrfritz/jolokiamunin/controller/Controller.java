@@ -17,4 +17,6 @@ public interface Controller {
     Configuration getConfiguration();
 
     void setConfiguration(Configuration configuration);
+
+    void setDispatcher(Dispatcher dispatcher);
 }
