@@ -17,7 +17,7 @@
 package de.chrfritz.jolokiamunin.daemon;
 
 
-import de.chrfritz.jolokiamunin.config.Configuration;
+import de.chrfritz.jolokiamunin.config.ConfigurationFactory;
 import de.chrfritz.jolokiamunin.controller.Dispatcher;
 import de.chrfritz.jolokiamunin.munin.MuninProvider;
 import org.slf4j.Logger;
@@ -37,22 +37,19 @@ public class Server implements Runnable, AutoCloseable {
     private final ServerSocket server;
 
     private Thread serverThread;
+    private Thread configurationWatchService;
+    private Dispatcher dispatcher;
 
-    private Configuration configuration;
-
-    private MuninProvider muninProvider;
-
-    public Server(MuninProvider muninProvider, Configuration configuration) throws IOException {
-        this.configuration = configuration;
-        this.muninProvider = muninProvider;
+    public Server(MuninProvider muninProvider, ConfigurationFactory configurationFactory) throws IOException {
         server = new ServerSocket(DEFAULT_PORT);
+        dispatcher = new Dispatcher(muninProvider);
+        configurationWatchService = new Thread(new ConfigurationWatchService(configurationFactory, dispatcher));
+        configurationWatchService.setName("configurationWatchService");
     }
 
-    public Server(MuninProvider muninProvider, Configuration configuration, SocketAddress socketAddress) throws
-            IOException {
-        this.configuration = configuration;
-        this.muninProvider = muninProvider;
-        server = new ServerSocket();
+    public Server(MuninProvider muninProvider, ConfigurationFactory configurationFactory,
+            SocketAddress socketAddress) throws IOException {
+        this(muninProvider, configurationFactory);
         server.bind(socketAddress);
     }
 
@@ -61,11 +58,7 @@ public class Server implements Runnable, AutoCloseable {
      */
     @Override
     public void run() {
-        if (configuration == null) {
-            LOGGER.error("Can not start daemon becuase there is no valid configuration");
-            return;
-        }
-        Dispatcher dispatcher = new Dispatcher(configuration, muninProvider);
+        configurationWatchService.start();
         try {
             dispatcher.resolveControllers();
         }
@@ -87,14 +80,6 @@ public class Server implements Runnable, AutoCloseable {
         catch (IOException e) {
             LOGGER.error("Can not handle client connection", e);
         }
-    }
-
-    public Configuration getConfiguration() {
-        return configuration;
-    }
-
-    public void setConfiguration(Configuration configuration) {
-        this.configuration = configuration;
     }
 
     @Override

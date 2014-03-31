@@ -19,6 +19,7 @@ import de.chrfritz.jolokiamunin.config.Configuration;
 import de.chrfritz.jolokiamunin.config.ConfigurationException;
 import de.chrfritz.jolokiamunin.config.ConfigurationFactory;
 import de.chrfritz.jolokiamunin.config.impl.XMLConfigurationFactory;
+import de.chrfritz.jolokiamunin.controller.VersionController;
 import de.chrfritz.jolokiamunin.daemon.Server;
 import de.chrfritz.jolokiamunin.jolokia.impl.JolokiaFetcherFactory;
 import de.chrfritz.jolokiamunin.munin.MuninProvider;
@@ -26,7 +27,6 @@ import de.chrfritz.jolokiamunin.munin.impl.MuninProviderImpl;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.Properties;
 
 /**
  * The Main Application Class
@@ -91,7 +91,7 @@ public class App {
      * Run the Jolokia Munin Plugin as Munin-Deamon.
      */
     private String daemon() throws IOException, ConfigurationException {
-        new Thread(new Server(muninProvider, getConfiguration())).start();
+        new Thread(new Server(muninProvider, configFactory)).start();
         return "Daemon successfully started";
     }
 
@@ -123,22 +123,7 @@ public class App {
      * @throws IOException In case of there are some io errors.
      */
     public static String version() throws IOException {
-        Properties props = new Properties();
-        props.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("version.properties"));
-
-        StringBuilder buffer = new StringBuilder();
-        buffer.append("Jolokia-Munin Plugin by Christian Fritz 2013 \n")
-                .append("Version: ")
-                .append(props.getProperty("jmp.version"))
-                .append("\nBuild from git commit ")
-                .append(props.getProperty("jmp.buildNumber"))
-                .append(" on git branch ")
-                .append(props.getProperty("jmp.buildBranch"))
-                .append("\nBuild date: ")
-                .append(props.getProperty("jmp.buildDate"))
-                .append("\n");
-
-        return buffer.toString();
+        return new VersionController().execute("");
     }
 
     /**
@@ -150,9 +135,10 @@ public class App {
         builder.append("Usage: jolokia [command]\n")
                 .append("Available Commands:\n")
                 .append("    config:    Get the configuration for munin\n")
-                .append("    fetch:     Fetch all values\n")
-                .append("    version:   Print the version string\n")
-                .append("    help:      Print this help\n")
+                .append("    daemon:    Run it as daemon\n")
+                .append("     fetch:    Fetch all values\n")
+                .append("   version:    Print the version string\n")
+                .append("      help:    Print this help\n")
                 .append("------------------------------------------------------------\n")
                 .append(version())
                 .append('\n');

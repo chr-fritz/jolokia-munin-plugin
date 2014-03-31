@@ -27,7 +27,7 @@ public class DispatcherTest {
 
     @Before
     public void setUp() throws Exception {
-        dispatcher = new Dispatcher(configuration, provider);
+        dispatcher = new Dispatcher(provider);
         dispatcher.resolveControllers();
     }
 

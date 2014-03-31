@@ -23,17 +23,24 @@ public class Dispatcher {
     private Configuration configuration;
     private MuninProvider proivder;
 
-    public Dispatcher(Configuration configuration, MuninProvider provider) {
-        this(Arrays.asList(DEFAULT_SEARCH_PACKAGE), configuration, provider);
+    public Dispatcher(MuninProvider provider) {
+        this(Arrays.asList(DEFAULT_SEARCH_PACKAGE), provider);
     }
 
-    public Dispatcher(List<String> searchPackages, Configuration configuration, MuninProvider provider) {
+    public Dispatcher(List<String> searchPackages, MuninProvider provider) {
         if (!searchPackages.contains(DEFAULT_SEARCH_PACKAGE)) {
             searchPackages.add(0, DEFAULT_SEARCH_PACKAGE);
         }
         this.searchPackages = searchPackages;
-        this.configuration = configuration;
         this.proivder = provider;
+    }
+
+    public synchronized Configuration getConfiguration() {
+        return configuration;
+    }
+
+    public synchronized void setConfiguration(Configuration configuration) {
+        this.configuration = configuration;
     }
 
     /**
@@ -50,7 +57,7 @@ public class Dispatcher {
         String arguments = requestArray.length > 1 ? requestArray[1] : "";
         if (controller != null) {
             controller.setMuninProvider(proivder);
-            controller.setConfiguration(configuration);
+            controller.setConfiguration(getConfiguration());
 
             return controller.execute(arguments);
         }
