@@ -13,8 +13,7 @@
 // ______________________________________________________________________________
 package de.chrfritz.jolokiamunin.daemon;
 
-import de.chrfritz.jolokiamunin.config.Configuration;
-import de.chrfritz.jolokiamunin.munin.MuninProvider;
+import de.chrfritz.jolokiamunin.controller.Dispatcher;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,8 +23,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.net.Socket;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ClientTest {
@@ -33,17 +33,13 @@ public class ClientTest {
     private Client client;
 
     @Mock
-    private MuninProvider provider;
-
-    @Mock
-    private Configuration config;
-
+    private Dispatcher dispatcher;
     @Mock
     private Socket clientSocket;
 
     @Before
     public void setUp() throws Exception {
-        client = new Client(clientSocket, provider, config);
+        client = new Client(clientSocket, dispatcher);
     }
 
     @After
@@ -52,15 +48,15 @@ public class ClientTest {
     }
 
     @Test
-    public void testHandleCommands() throws Exception {
-        Client clientMock = mock(Client.class);
-        when(clientMock.handleCommands(anyString())).thenCallRealMethod();
+    public void testHandleCommandsQuit() throws Exception {
+        assertThat(Thread.currentThread().isInterrupted(), is(false));
+        client.handleCommands("quit");
+        assertThat(Thread.currentThread().isInterrupted(), is(true));
+    }
 
-        assertFalse(Thread.currentThread().isInterrupted());
-        clientMock.handleCommands("quit");
-
-        assertTrue(Thread.currentThread().isInterrupted());
-
-        assertEquals("ERROR: Can not handle request. Invalid command\n", clientMock.handleCommands("unspecified"));
+    @Test
+    public void testHandleCommandsInvalid() throws Exception {
+        client.handleCommands("unspecified");
+        verify(dispatcher).handleRequest("unspecified");
     }
 }
