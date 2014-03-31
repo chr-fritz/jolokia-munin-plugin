@@ -66,6 +66,14 @@ public class Server implements Runnable, AutoCloseable {
             return;
         }
         Dispatcher dispatcher = new Dispatcher(configuration, muninProvider);
+        try {
+            dispatcher.resolveControllers();
+        }
+        catch (IOException e) {
+            LOGGER.error("Can not resolve controllers.", e);
+            return;
+        }
+
         serverThread = Thread.currentThread();
         serverThread.setName("Munin-Node-Server-Thread");
         LOGGER.info("Server successfully started at {}", server.getLocalSocketAddress());

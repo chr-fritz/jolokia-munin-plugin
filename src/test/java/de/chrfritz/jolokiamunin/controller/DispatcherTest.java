@@ -2,6 +2,7 @@ package de.chrfritz.jolokiamunin.controller;
 
 import de.chrfritz.jolokiamunin.config.Configuration;
 import de.chrfritz.jolokiamunin.munin.MuninProvider;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -22,7 +23,13 @@ public class DispatcherTest {
     @Mock
     private Configuration configuration;
 
-    private Dispatcher dispatcher = new Dispatcher(configuration, provider);
+    private Dispatcher dispatcher;
+
+    @Before
+    public void setUp() throws Exception {
+        dispatcher = new Dispatcher(configuration, provider);
+        dispatcher.resolveControllers();
+    }
 
     @Test
     public void testHandleRequest() throws Exception {
@@ -32,13 +39,13 @@ public class DispatcherTest {
 
     @Test
     public void testGetControllerNotExists() throws Exception {
-        Controller controller = dispatcher.resolveController("ControllerNotExists");
+        Controller controller = dispatcher.getControllerForCommand("ControllerNotExists");
         assertNull(controller);
     }
 
     @Test
     public void testGetController() throws Exception {
-        Controller controller = dispatcher.resolveController("version");
+        Controller controller = dispatcher.getControllerForCommand("version");
         assertTrue(controller instanceof VersionController);
     }
 }
