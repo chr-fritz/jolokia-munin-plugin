@@ -13,9 +13,7 @@
 // ______________________________________________________________________________
 package de.chrfritz.jolokiamunin.daemon;
 
-import de.chrfritz.jolokiamunin.config.Configuration;
 import de.chrfritz.jolokiamunin.controller.Dispatcher;
-import de.chrfritz.jolokiamunin.munin.MuninProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,16 +29,13 @@ public class Client implements Runnable {
     private static final int SOCKET_TIMEOUT = 1000 * 15;
 
     private final Socket clientSocket;
-
-    private final Configuration configuration;
-
-    private final MuninProvider muninProvider;
     private final Charset charset = Charset.forName("UTF-8");
+    private Dispatcher dispatcher;
 
-    public Client(Socket clientSocket, MuninProvider muninProvider, Configuration configuration) {
-        this.muninProvider = muninProvider;
-        this.configuration = configuration;
+
+    public Client(Socket clientSocket, Dispatcher dispatcher) {
         this.clientSocket = clientSocket;
+        this.dispatcher = dispatcher;
         LOGGER.info("Connection accepted from {}", clientSocket.getRemoteSocketAddress());
     }
 
@@ -81,7 +76,6 @@ public class Client implements Runnable {
                 Thread.currentThread().interrupt();
                 return "";
             default:
-                Dispatcher dispatcher = new Dispatcher(configuration, muninProvider);
                 return dispatcher.handleRequest(commandLine) + "\n";
         }
     }

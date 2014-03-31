@@ -18,6 +18,7 @@ package de.chrfritz.jolokiamunin.daemon;
 
 
 import de.chrfritz.jolokiamunin.config.Configuration;
+import de.chrfritz.jolokiamunin.controller.Dispatcher;
 import de.chrfritz.jolokiamunin.munin.MuninProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,7 +65,7 @@ public class Server implements Runnable, AutoCloseable {
             LOGGER.error("Can not start daemon becuase there is no valid configuration");
             return;
         }
-
+        Dispatcher dispatcher = new Dispatcher(configuration, muninProvider);
         serverThread = Thread.currentThread();
         serverThread.setName("Munin-Node-Server-Thread");
         LOGGER.info("Server successfully started at {}", server.getLocalSocketAddress());
@@ -72,7 +73,7 @@ public class Server implements Runnable, AutoCloseable {
             while (!Thread.interrupted()) {
 
                 Socket clientSocket = server.accept();
-                new Thread(new Client(clientSocket, muninProvider, configuration)).start();
+                new Thread(new Client(clientSocket, dispatcher)).start();
             }
         }
         catch (IOException e) {
