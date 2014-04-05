@@ -7,4 +7,4 @@ The Jolokia Munin Plugin is a plugin for the [Munin](http://munin-monitoring.org
 * Only one JVM execution per Munin-Update
 
 ## Travis Status
-[![Build Status](https://travis-ci.org/chr-fritz/jolokia-munin-plugin.png)](https://travis-ci.org/chr-fritz/jolokia-munin-plugin)
+[![Build Status](https://travis-ci.org/chr-fritz/jolokia-munin-plugin.svg?branch=master)](https://travis-ci.org/chr-fritz/jolokia-munin-plugin)
