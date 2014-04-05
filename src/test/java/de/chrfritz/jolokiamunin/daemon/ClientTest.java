@@ -6,7 +6,6 @@
 //              File: ClientTest.java
 //        changed by: christian
 //       change date: 15.05.13 14:56
-//       description:
 // ______________________________________________________________________________
 //
 //         Copyright: (c) Christian Fritz, all rights reserved
@@ -24,9 +23,15 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.net.Socket;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.startsWith;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 
+/**
+ * Tests the {@link Client}
+ *
+ * @author christian.fritz
+ */
 @RunWith(MockitoJUnitRunner.class)
 public class ClientTest {
 
@@ -56,7 +61,8 @@ public class ClientTest {
 
     @Test
     public void testHandleCommandsInvalid() throws Exception {
-        client.handleCommands("unspecified");
+        String actual = client.handleCommands("unspecified");
         verify(dispatcher).handleRequest("unspecified");
+        assertThat(actual, startsWith("ERROR:"));
     }
 }
