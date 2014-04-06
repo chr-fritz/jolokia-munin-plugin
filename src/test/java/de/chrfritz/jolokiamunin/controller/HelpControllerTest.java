@@ -51,7 +51,7 @@ public class HelpControllerTest {
         assertThat(controller.execute(""),
                    is(equalTo("Usage: jolokia [command]\n" +
                                       "Available Commands:\n" +
-                                      "                     help : Print this help message\n" +
+                                      "           help : Print this help message\n" +
                                       "------------------------------------------------------------\n" +
                                       "Version\n"))
                   );
