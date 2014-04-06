@@ -19,11 +19,12 @@ import de.chrfritz.jolokiamunin.config.Configuration;
 import de.chrfritz.jolokiamunin.config.ConfigurationException;
 import de.chrfritz.jolokiamunin.config.ConfigurationFactory;
 import de.chrfritz.jolokiamunin.config.impl.XMLConfigurationFactory;
-import de.chrfritz.jolokiamunin.controller.VersionController;
+import de.chrfritz.jolokiamunin.controller.Dispatcher;
 import de.chrfritz.jolokiamunin.daemon.Server;
 import de.chrfritz.jolokiamunin.jolokia.impl.JolokiaFetcherFactory;
 import de.chrfritz.jolokiamunin.munin.MuninProvider;
 import de.chrfritz.jolokiamunin.munin.impl.MuninProviderImpl;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -67,22 +68,15 @@ public class App {
     protected String run(String[] args) throws IOException, ConfigurationException {
         // Fetch the values
         if (args.length == 0) {
-            return fetch();
+            return dispatch(new String[]{"fetch"});
         }
         else {
             String command = args[0];
             switch (command) {
                 case "daemon":
                     return daemon();
-                case "config":
-                    return config();
-                case "fetch":
-                    return fetch();
-                case "version":
-                    return version();
-                case "help":
                 default:
-                    return help();
+                    return dispatch(args);
             }
         }
     }
@@ -95,54 +89,11 @@ public class App {
         return "Daemon successfully started";
     }
 
-    /**
-     * Load and show the configuration.
-     *
-     * @throws MalformedURLException
-     * @throws ConfigurationException
-     */
-    private String config() throws MalformedURLException, ConfigurationException {
-        Configuration config = getConfiguration();
-        return muninProvider.getConfig(config.getConfiguration());
-    }
-
-    /**
-     * Fetch the current values.
-     *
-     * @throws MalformedURLException
-     * @throws ConfigurationException
-     */
-    private String fetch() throws MalformedURLException, ConfigurationException {
-        Configuration config = getConfiguration();
-        return muninProvider.getValues(config.getConfiguration());
-    }
-
-    /**
-     * Print the current version string on system out.
-     *
-     * @throws IOException In case of there are some io errors.
-     */
-    public static String version() throws IOException {
-        return new VersionController().execute("");
-    }
-
-    /**
-     * Prints the help.
-     */
-    private String help() throws IOException {
-        StringBuilder builder = new StringBuilder();
-
-        builder.append("Usage: jolokia [command]\n")
-                .append("Available Commands:\n")
-                .append("    config:    Get the configuration for munin\n")
-                .append("    daemon:    Run it as daemon\n")
-                .append("     fetch:    Fetch all values\n")
-                .append("   version:    Print the version string\n")
-                .append("      help:    Print this help\n")
-                .append("------------------------------------------------------------\n")
-                .append(version())
-                .append('\n');
-        return builder.toString();
+    private String dispatch(String[] args) throws IOException, ConfigurationException {
+        Dispatcher dispatcher = new Dispatcher(muninProvider);
+        dispatcher.resolveControllers();
+        dispatcher.setConfiguration(getConfiguration());
+        return dispatcher.handleRequest(StringUtils.join(args, ' '));
     }
 
     /**

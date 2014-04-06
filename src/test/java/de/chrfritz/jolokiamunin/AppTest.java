@@ -75,7 +75,7 @@ public class AppTest {
 
     @Test
     public void testHelp() throws Exception {
-        String actual = application.run(new String[]{"Help"});
+        String actual = application.run(new String[]{"help"});
         assertTrue(actual.contains("Usage: jolokia [command]\nAvailable Commands:"));
     }
 
