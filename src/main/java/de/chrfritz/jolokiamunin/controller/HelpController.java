@@ -4,9 +4,8 @@
 //            Module: jolokia-munin-plugin
 //             Class: HelpController
 //              File: HelpController.java
-//        changed by: christian
+//        changed by: christian.fritz
 //       change date: 31.03.14 12:46
-//       description:
 // ______________________________________________________________________________
 //
 //         Copyright: (c) Christian Fritz, all rights reserved
@@ -17,11 +16,13 @@ package de.chrfritz.jolokiamunin.controller;
 import org.apache.commons.lang3.StringUtils;
 
 /**
+ * Build a short help message that contains the command name and a short description of all installed controllers.
+ *
  * @author christian.fritz
  */
 public class HelpController extends AbstractController {
 
-    private static final int PREFIX_LENGHT = 25;
+    private static final int PREFIX_LENGHT = 15;
 
     @Override
     protected String handle() {

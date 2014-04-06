@@ -1,3 +1,16 @@
+// ______________________________________________________________________________
+//
+//           Project: jolokia-munin-plugin
+//            Module: jolokia-munin-plugin
+//             Class: Dispatcher
+//              File: Dispatcher.java
+//        changed by: christian.fritz
+//       change date: 05.04.14 14:55
+// ______________________________________________________________________________
+//
+//         Copyright: (c) Christian Fritz, all rights reserved
+// ______________________________________________________________________________
+
 package de.chrfritz.jolokiamunin.controller;
 
 import com.google.common.reflect.ClassPath;
@@ -13,16 +26,28 @@ import java.util.*;
 /**
  * Handles the loading of all command controllers and dispatches the incomming command requests to the controllers.
  * They will handle the request.
+ *
+ * @author christian.fritz
  */
 public class Dispatcher {
 
     public static final String DEFAULT_SEARCH_PACKAGE = "de.chrfritz.jolokiamunin.controller";
+
     private static final Logger LOGGER = LoggerFactory.getLogger(Dispatcher.class);
+
     private List<String> searchPackages;
+
     private Map<String, Class<? extends Controller>> controllerClasses;
+
     private Configuration configuration;
+
     private MuninProvider proivder;
 
+    /**
+     * Initialize the dispatcher.
+     *
+     * @param provider Use this provider to generate the munin compatible answers.
+     */
     public Dispatcher(MuninProvider provider) {
         this(Arrays.asList(DEFAULT_SEARCH_PACKAGE), provider);
     }
@@ -109,23 +134,37 @@ public class Dispatcher {
         }
     }
 
+    /**
+     * Process the given class info.
+     * <p/>
+     * It checks if the given class info would produce a valid controller and add the class info to the the controller
+     * classes.
+     *
+     * @param info The class information info.
+     */
     private void processController(ClassPath.ClassInfo info) {
         String className = info.getSimpleName();
         if (!className.endsWith("Controller")) {
             return;
         }
-        Class<? extends Controller> clazz = (Class<? extends Controller>) info.load();
+        Class<?> clazz = info.load();
         int modifiers = clazz.getModifiers();
 
-        if (Modifier.isInterface(modifiers) || Modifier.isAbstract(modifiers) || !Controller.class.isAssignableFrom(
-                clazz)) {
+        if (Modifier.isInterface(modifiers) || Modifier.isAbstract(modifiers) ||
+                !Controller.class.isAssignableFrom(clazz)) {
             return;
         }
 
         String command = className.substring(0, className.lastIndexOf("Controller")).toLowerCase();
-        controllerClasses.put(command, clazz);
+        controllerClasses.put(command, (Class<? extends Controller>) clazz);
     }
 
+    /**
+     * Initialize the a new controller by the given class.
+     *
+     * @param controllerClass Initialize a new controller instance for this class.
+     * @return The fully initialized controller instance.
+     */
     private Controller initializeController(Class<? extends Controller> controllerClass) {
         if (controllerClass == null) {
             return null;

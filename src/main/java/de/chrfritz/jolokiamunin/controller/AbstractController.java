@@ -1,3 +1,16 @@
+// ______________________________________________________________________________
+//
+//           Project: jolokia-munin-plugin
+//            Module: jolokia-munin-plugin
+//             Class: AbstractController
+//              File: AbstractController.java
+//        changed by: christian.fritz
+//       change date: 31.03.14 13:53
+// ______________________________________________________________________________
+//
+//         Copyright: (c) Christian Fritz, all rights reserved
+// ______________________________________________________________________________
+
 package de.chrfritz.jolokiamunin.controller;
 
 import de.chrfritz.jolokiamunin.config.Configuration;
@@ -8,14 +21,30 @@ import org.slf4j.LoggerFactory;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Base class for all controllers. It implements the most methods of the {@link Controller} interface and provides the
+ * exception handling for executing the request.
+ *
+ * @author christian.fritz
+ */
 public abstract class AbstractController implements Controller {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractController.class);
+
     private List<String> arguments;
+
     private Configuration configuration;
+
     private MuninProvider provider;
+
     private Dispatcher dispatcher;
 
+    /**
+     * Process the request.
+     *
+     * @param arguments The arguments to execute the request processing.
+     * @return The response.
+     */
     @Override
     public String execute(String arguments) {
         try {
@@ -28,13 +57,8 @@ public abstract class AbstractController implements Controller {
         }
     }
 
-    public List<String> getArguments() {
+    protected List<String> getArguments() {
         return arguments;
-    }
-
-    @Override
-    public void setMuninProvider(MuninProvider provider) {
-        this.provider = provider;
     }
 
     @Override
@@ -43,13 +67,18 @@ public abstract class AbstractController implements Controller {
     }
 
     @Override
-    public void setConfiguration(Configuration configuration) {
-        this.configuration = configuration;
+    public void setMuninProvider(MuninProvider provider) {
+        this.provider = provider;
     }
 
     @Override
     public Configuration getConfiguration() {
         return configuration;
+    }
+
+    @Override
+    public void setConfiguration(Configuration configuration) {
+        this.configuration = configuration;
     }
 
     protected final Dispatcher getDispatcher() {
@@ -61,5 +90,11 @@ public abstract class AbstractController implements Controller {
         this.dispatcher = dispatcher;
     }
 
+    /**
+     * Handles the request processing.
+     *
+     * @return The response thats fullfill the request.
+     * @throws Exception In case of any error executing the request.
+     */
     protected abstract String handle() throws Exception;
 }

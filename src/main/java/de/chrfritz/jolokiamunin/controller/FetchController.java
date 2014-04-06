@@ -4,9 +4,8 @@
 //            Module: jolokia-munin-plugin
 //             Class: FetchController
 //              File: FetchController.java
-//        changed by: christian
+//        changed by: christian.fritz
 //       change date: 31.12.13 16:39
-//       description:
 // ______________________________________________________________________________
 //
 //         Copyright: (c) Christian Fritz, all rights reserved
@@ -17,7 +16,9 @@ package de.chrfritz.jolokiamunin.controller;
 import de.chrfritz.jolokiamunin.jolokia.FetcherException;
 
 /**
- * Fetch all values
+ * Fetches the values for all defined graphs from the jolokia agents and build a valid munin fetch response.
+ *
+ * @author christian.fritz
  */
 public class FetchController extends AbstractController {
 

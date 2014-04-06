@@ -23,7 +23,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.net.Socket;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.startsWith;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 
@@ -39,6 +38,7 @@ public class ClientTest {
 
     @Mock
     private Dispatcher dispatcher;
+
     @Mock
     private Socket clientSocket;
 
@@ -63,6 +63,5 @@ public class ClientTest {
     public void testHandleCommandsInvalid() throws Exception {
         String actual = client.handleCommands("unspecified");
         verify(dispatcher).handleRequest("unspecified");
-        assertThat(actual, startsWith("ERROR:"));
     }
 }

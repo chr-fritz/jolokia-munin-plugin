@@ -1,19 +1,35 @@
+// ______________________________________________________________________________
+//
+//           Project: jolokia-munin-plugin
+//            Module: jolokia-munin-plugin
+//             Class: VersionController
+//              File: VersionController.java
+//        changed by: christian.fritz
+//       change date: 31.03.14 13:31
+// ______________________________________________________________________________
+//
+//         Copyright: (c) Christian Fritz, all rights reserved
+// ______________________________________________________________________________
+
 package de.chrfritz.jolokiamunin.controller;
 
 import java.io.IOException;
 import java.util.Properties;
 
 /**
- * Handle the version request.
+ * Show the version information of the installed jolokia munin plugin.
+ *
+ * @author christian.fritz
  */
 public class VersionController extends AbstractController {
+
     @Override
     protected String handle() throws IOException {
         Properties props = new Properties();
         props.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("version.properties"));
 
         StringBuilder buffer = new StringBuilder();
-        buffer.append("Jolokia-Munin Plugin by Christian Fritz 2013 \n")
+        buffer.append("Jolokia-Munin Plugin by Christian Fritz 2013 - 2014 \n")
                 .append("Version: ")
                 .append(props.getProperty("jmp.version"))
                 .append("\nBuild from git commit ")

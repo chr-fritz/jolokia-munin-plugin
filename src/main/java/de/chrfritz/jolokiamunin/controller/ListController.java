@@ -4,9 +4,8 @@
 //            Module: jolokia-munin-plugin
 //             Class: ListController
 //              File: ListController.java
-//        changed by: christian
+//        changed by: christian.fritz
 //       change date: 31.12.13 16:40
-//       description:
 // ______________________________________________________________________________
 //
 //         Copyright: (c) Christian Fritz, all rights reserved
@@ -19,7 +18,9 @@ import de.chrfritz.jolokiamunin.config.Configuration;
 import java.util.List;
 
 /**
- * List the names of all available graphs
+ * List the names of all available graphs.
+ *
+ * @author christian.fritz
  */
 public class ListController extends AbstractController {
 
