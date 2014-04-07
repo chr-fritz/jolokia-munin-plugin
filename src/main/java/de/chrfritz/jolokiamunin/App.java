@@ -26,6 +26,8 @@ import de.chrfritz.jolokiamunin.jolokia.impl.JolokiaFetcherFactory;
 import de.chrfritz.jolokiamunin.munin.MuninProvider;
 import de.chrfritz.jolokiamunin.munin.impl.MuninProviderImpl;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.MalformedURLException;
@@ -35,7 +37,7 @@ import java.net.Socket;
  * The Main Application Class
  */
 public class App {
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(App.class);
     private MuninProvider muninProvider;
     private ConfigurationFactory configFactory;
 
@@ -101,12 +103,15 @@ public class App {
      * @throws IOException In case of some connection errors.
      */
     private String stop() throws IOException {
+        LOGGER.info("Stop daemon");
         Socket socket = new Socket("127.0.0.1", Integer.parseInt(System.getProperty("STOP.PORT", "49049")));
         try (Writer writer = new OutputStreamWriter(socket.getOutputStream());
              BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
-            writer.write(System.getProperty("STOP.PORT"));
+            LOGGER.debug("Send stop command");
+            writer.write(System.getProperty("STOP.KEY"));
             writer.write("\n");
             writer.write("stop\n");
+            writer.flush();
             return reader.readLine();
         }
     }

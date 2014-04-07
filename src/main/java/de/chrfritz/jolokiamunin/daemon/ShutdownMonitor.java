@@ -104,6 +104,7 @@ public final class ShutdownMonitor {
                         ShutdownThread.getInstance().run();
                         out.write("Stopping successful");
                         out.flush();
+                        socket.close();
                         serverSocket.close();
                         serverSocket = null;
                     }
