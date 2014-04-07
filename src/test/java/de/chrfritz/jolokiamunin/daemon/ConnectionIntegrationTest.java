@@ -85,4 +85,11 @@ public class ConnectionIntegrationTest {
         writer.flush();
         assertThat(reader.readLine(), is(equalTo("jolokia")));
     }
+
+    @Test
+    public void testInvalidCommand() throws Exception {
+        writer.write("invalidCommand\n");
+        writer.flush();
+        assertThat(reader.readLine(), is(equalTo("ERROR: Can not handle request. Invalid command")));
+    }
 }
