@@ -27,6 +27,8 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketAddress;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Server implements Runnable, AutoCloseable {
 
@@ -40,11 +42,14 @@ public class Server implements Runnable, AutoCloseable {
     private Thread configurationWatchService;
     private Dispatcher dispatcher;
 
+    private ExecutorService threadPool = Executors.newCachedThreadPool();
+
     public Server(MuninProvider muninProvider, ConfigurationFactory configurationFactory) throws IOException {
         server = new ServerSocket(DEFAULT_PORT);
         dispatcher = new Dispatcher(muninProvider);
         configurationWatchService = new Thread(new ConfigurationWatchService(configurationFactory, dispatcher));
         configurationWatchService.setName("configurationWatchService");
+        configurationWatchService.setDaemon(true);
     }
 
     public Server(MuninProvider muninProvider, ConfigurationFactory configurationFactory,
@@ -72,19 +77,20 @@ public class Server implements Runnable, AutoCloseable {
         LOGGER.info("Server successfully started at {}", server.getLocalSocketAddress());
         try {
             while (!Thread.interrupted()) {
-
                 Socket clientSocket = server.accept();
-                new Thread(new Client(clientSocket, dispatcher)).start();
+                threadPool.execute(new Client(clientSocket, dispatcher));
             }
         }
         catch (IOException e) {
-            LOGGER.error("Can not handle client connection", e);
+            LOGGER.debug("Can not handle client connection", e);
         }
     }
 
     @Override
     public void close() throws IOException {
         serverThread.interrupt();
+        configurationWatchService.interrupt();
+        threadPool.shutdown();
         synchronized (server) {
             server.close();
         }
