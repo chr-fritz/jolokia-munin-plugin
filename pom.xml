@@ -15,6 +15,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.build.jdkVersion>1.7</project.build.jdkVersion>
         <sonar.jacoco.itReportPath>${project.basedir}/target/jacoco-it.exec</sonar.jacoco.itReportPath>
+        <de.chrfritz.jolokiamunin.bindPort>49049</de.chrfritz.jolokiamunin.bindPort>
     </properties>
     <licenses>
         <license>
@@ -284,6 +285,10 @@
                             </execution>
                         </executions>
                         <configuration>
+                            <systemPropertyVariables>
+                                <de.chrfritz.jolokiamunin.bindPort>${de.chrfritz.jolokiamunin.bindPort}
+                                </de.chrfritz.jolokiamunin.bindPort>
+                            </systemPropertyVariables>
                             <encoding>${project.build.sourceEncoding}</encoding>
                             <includes>
                                 <include>**/*SlowTest.java</include>
@@ -316,8 +321,12 @@
                                         <argument>java</argument>
                                         <argument>-DconfigFile=${project.build.testOutputDirectory}/ITdaemon.xml
                                         </argument>
-                                        <argument>-DSTOP.PORT=49049</argument>
+                                        <argument>-DSTOP.PORT=49050</argument>
                                         <argument>-DSTOP.KEY=jolokia-integration-test</argument>
+                                        <argument>-Dde.chrfritz.jolokiamunin.bindIp=127.0.0.1</argument>
+                                        <argument>
+                                            -Dde.chrfritz.jolokiamunin.bindPort=${de.chrfritz.jolokiamunin.bindPort}
+                                        </argument>
                                         <argument>${jacoco.agent.argLine}</argument>
                                         <argument>-classpath</argument>
                                         <classpath/>
@@ -335,7 +344,7 @@
                                 <configuration>
                                     <executable>java</executable>
                                     <arguments>
-                                        <argument>-DSTOP.PORT=49049</argument>
+                                        <argument>-DSTOP.PORT=49050</argument>
                                         <argument>-DSTOP.KEY=jolokia-integration-test</argument>
                                         <argument>-classpath</argument>
                                         <classpath/>
