@@ -30,8 +30,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
 import java.net.Socket;
+import java.net.SocketAddress;
 import java.nio.charset.Charset;
 
 /**
@@ -93,8 +95,33 @@ public class App {
      */
     private String daemon() throws IOException, ConfigurationException {
         ShutdownMonitor.getInstance().start();
-        new Thread(new Server(muninProvider, configFactory)).start();
+        Server server;
+        SocketAddress bindTo = getBindAddress();
+        if (bindTo == null) {
+            server = new Server(muninProvider, configFactory);
+        }
+        else {
+            server = new Server(muninProvider, configFactory, bindTo);
+        }
+        new Thread(server).start();
         return "Daemon successfully started\n";
+    }
+
+    private static SocketAddress getBindAddress() {
+        String bindIp = System.getProperty("de.chrfritz.jolokiamunin.bindIp");
+        int bindPort = Integer.parseInt(System.getProperty("de.chrfritz.jolokiamunin.bindPort", "0"));
+        if (StringUtils.isNotBlank(bindIp) && bindPort > 0) {
+            return new InetSocketAddress(bindIp, bindPort);
+        }
+        else if (StringUtils.isNotBlank(bindIp) && bindPort == 0) {
+            return new InetSocketAddress(bindIp, Server.DEFAULT_PORT);
+        }
+        else if (StringUtils.isBlank(bindIp) && bindPort > 0) {
+            return new InetSocketAddress(Server.DEFAULT_PORT);
+        }
+        else {
+            return null;
+        }
     }
 
     /**
