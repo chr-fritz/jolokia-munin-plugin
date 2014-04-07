@@ -88,7 +88,6 @@ public class Server implements Runnable, AutoCloseable {
         catch (IOException e) {
             LOGGER.debug("Can not handle client connection", e);
         }
-        ShutdownThread.unregister(this);
     }
 
     @Override

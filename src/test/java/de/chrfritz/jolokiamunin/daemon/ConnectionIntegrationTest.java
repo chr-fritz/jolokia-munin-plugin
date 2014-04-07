@@ -45,6 +45,8 @@ public class ConnectionIntegrationTest {
             writer.write("version\n");
             writer.flush();
             assertThat(reader.readLine(), containsString("Jolokia-Munin Plugin by Christian Fritz"));
+            writer.write("quit\n");
+            writer.flush();
         }
     }
 }
