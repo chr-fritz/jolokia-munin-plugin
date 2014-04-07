@@ -1,0 +1,128 @@
+// ______________________________________________________________________________
+//
+//           Project: jolokia-munin-plugin
+//            Module: jolokia-munin-plugin
+//             Class: ShutdownMonitor
+//              File: ShutdownMonitor.java
+//        changed by: christian.fritz
+//       change date: 07.04.14 11:25
+// ______________________________________________________________________________
+//
+//         Copyright: (c) Christian Fritz, all rights reserved
+// ______________________________________________________________________________
+
+package de.chrfritz.jolokiamunin.daemon;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.*;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+/**
+ * Monitors the shutdown process. It listens on localhost on a configureable port for the stop command.
+ *
+ * @author christian.fritz
+ */
+public class ShutdownMonitor {
+
+    private Logger LOGGER = LoggerFactory.getLogger(ShutdownMonitor.class);
+    private ShutdownMonitorThread thread;
+    private ServerSocket serverSocket;
+    private int port;
+    private String key;
+
+    /**
+     * Get the monitor instance.
+     *
+     * @return The monitor instance.
+     */
+    public static ShutdownMonitor getInstance() {
+        return Holder.instance;
+    }
+
+    private ShutdownMonitor() {
+        port = Integer.parseInt(System.getProperty("STOP.PORT", "49049"));
+        key = System.getProperty("STOP.KEY");
+    }
+
+    /**
+     * Start the monitor
+     */
+    public void start() {
+        synchronized (this) {
+            if (thread != null && thread.isAlive()) {
+                return;
+            }
+            thread = new ShutdownMonitorThread();
+        }
+        thread.start();
+    }
+
+    /**
+     * The actual monitor thread.
+     */
+    private class ShutdownMonitorThread extends Thread {
+        public ShutdownMonitorThread() {
+            setDaemon(true);
+            setName("ShutdownMonitor");
+        }
+
+        @Override
+        public synchronized void start() {
+            try {
+                if (port < 1024) {
+                    LOGGER.info("Invalid port number {} assigned", port);
+                    return;
+                }
+                serverSocket = new ServerSocket(port, 1, InetAddress.getByName("127.0.0.1"));
+            }
+            catch (IOException e) {
+                LOGGER.warn("Can not start shutdown monitor", e);
+            }
+            super.start();
+        }
+
+        @Override
+        public void run() {
+            if (serverSocket == null) {
+                return;
+            }
+            while (serverSocket != null) {
+                try (Socket socket = serverSocket.accept();
+                     BufferedReader lin = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                     Writer out = new OutputStreamWriter(socket.getOutputStream())
+                ) {
+                    String receivedKey = lin.readLine();
+                    if (!key.equals(receivedKey)) {
+                        LOGGER.info("wrong key");
+                        continue;
+                    }
+                    String command = lin.readLine();
+                    if ("stop".equals(command)) {
+                        LOGGER.info("Issuing shutdown...");
+                        ShutdownThread.getInstance().run();
+                        out.write("Stopping successful");
+                        out.flush();
+                        serverSocket.close();
+                    }
+                }
+                catch (IOException e) {
+                    LOGGER.warn("Connection Error", e);
+                }
+            }
+        }
+    }
+
+    /**
+     * Implementation of safe lazy init, using Initialization on Demand Holder technique.
+     */
+    private static class Holder {
+        static ShutdownMonitor instance = new ShutdownMonitor();
+
+        private Holder() {
+        }
+    }
+}

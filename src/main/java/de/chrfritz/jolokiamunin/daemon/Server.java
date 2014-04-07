@@ -50,6 +50,7 @@ public class Server implements Runnable, AutoCloseable {
         configurationWatchService = new Thread(new ConfigurationWatchService(configurationFactory, dispatcher));
         configurationWatchService.setName("configurationWatchService");
         configurationWatchService.setDaemon(true);
+        ShutdownThread.register(this);
     }
 
     public Server(MuninProvider muninProvider, ConfigurationFactory configurationFactory,
@@ -84,6 +85,7 @@ public class Server implements Runnable, AutoCloseable {
         catch (IOException e) {
             LOGGER.debug("Can not handle client connection", e);
         }
+        ShutdownThread.unregister(this);
     }
 
     @Override

@@ -21,13 +21,15 @@ import de.chrfritz.jolokiamunin.config.ConfigurationFactory;
 import de.chrfritz.jolokiamunin.config.impl.XMLConfigurationFactory;
 import de.chrfritz.jolokiamunin.controller.Dispatcher;
 import de.chrfritz.jolokiamunin.daemon.Server;
+import de.chrfritz.jolokiamunin.daemon.ShutdownMonitor;
 import de.chrfritz.jolokiamunin.jolokia.impl.JolokiaFetcherFactory;
 import de.chrfritz.jolokiamunin.munin.MuninProvider;
 import de.chrfritz.jolokiamunin.munin.impl.MuninProviderImpl;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.IOException;
+import java.io.*;
 import java.net.MalformedURLException;
+import java.net.Socket;
 
 /**
  * The Main Application Class
@@ -75,6 +77,8 @@ public class App {
             switch (command) {
                 case "daemon":
                     return daemon();
+                case "stop":
+                    return stop();
                 default:
                     return dispatch(args);
             }
@@ -85,10 +89,36 @@ public class App {
      * Run the Jolokia Munin Plugin as Munin-Deamon.
      */
     private String daemon() throws IOException, ConfigurationException {
+        ShutdownMonitor.getInstance().start();
         new Thread(new Server(muninProvider, configFactory)).start();
-        return "Daemon successfully started";
+        return "Daemon successfully started\n";
     }
 
+    /**
+     * Stop the daemon.
+     *
+     * @return The answer from the daemon
+     * @throws IOException In case of some connection errors.
+     */
+    private String stop() throws IOException {
+        Socket socket = new Socket("127.0.0.1", Integer.parseInt(System.getProperty("STOP.PORT", "49049")));
+        try (Writer writer = new OutputStreamWriter(socket.getOutputStream());
+             BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
+            writer.write(System.getProperty("STOP.PORT"));
+            writer.write("\n");
+            writer.write("stop\n");
+            return reader.readLine();
+        }
+    }
+
+    /**
+     * Dispatch the requests.
+     *
+     * @param args The request args
+     * @return The response for the dispatched request
+     * @throws IOException            In case of the configuration or values can not be read.
+     * @throws ConfigurationException In case of the configuration contains errors.
+     */
     private String dispatch(String[] args) throws IOException, ConfigurationException {
         Dispatcher dispatcher = new Dispatcher(muninProvider);
         dispatcher.resolveControllers();
