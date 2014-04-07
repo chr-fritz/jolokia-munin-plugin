@@ -26,9 +26,9 @@ import java.net.Socket;
  *
  * @author christian.fritz
  */
-public class ShutdownMonitor {
+public final class ShutdownMonitor {
 
-    private Logger LOGGER = LoggerFactory.getLogger(ShutdownMonitor.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ShutdownMonitor.class);
     private ShutdownMonitorThread thread;
     private ServerSocket serverSocket;
     private int port;
@@ -51,13 +51,11 @@ public class ShutdownMonitor {
     /**
      * Start the monitor
      */
-    public void start() {
-        synchronized (this) {
-            if (thread != null && thread.isAlive()) {
-                return;
-            }
-            thread = new ShutdownMonitorThread();
+    public synchronized void start() {
+        if (thread != null && thread.isAlive()) {
+            return;
         }
+        thread = new ShutdownMonitorThread();
         thread.start();
     }
 
@@ -107,6 +105,7 @@ public class ShutdownMonitor {
                         out.write("Stopping successful");
                         out.flush();
                         serverSocket.close();
+                        serverSocket = null;
                     }
                 }
                 catch (IOException e) {
@@ -119,8 +118,8 @@ public class ShutdownMonitor {
     /**
      * Implementation of safe lazy init, using Initialization on Demand Holder technique.
      */
-    private static class Holder {
-        static ShutdownMonitor instance = new ShutdownMonitor();
+    private static final class Holder {
+        private static ShutdownMonitor instance = new ShutdownMonitor();
 
         private Holder() {
         }

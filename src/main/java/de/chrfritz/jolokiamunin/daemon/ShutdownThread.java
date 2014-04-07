@@ -26,9 +26,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
  *
  * @author christian.fritz
  */
-public class ShutdownThread extends Thread {
+public final class ShutdownThread extends Thread {
 
-    private static final ShutdownThread thread = new ShutdownThread();
+    private static final ShutdownThread THREAD = new ShutdownThread();
     private static final Logger LOGGER = LoggerFactory.getLogger(ShutdownThread.class);
     private final List<Server> servers = new CopyOnWriteArrayList<>();
     private boolean hooked;
@@ -42,7 +42,7 @@ public class ShutdownThread extends Thread {
      * @return The shutdown thread instance.
      */
     public static ShutdownThread getInstance() {
-        return thread;
+        return THREAD;
     }
 
     /**
@@ -52,8 +52,8 @@ public class ShutdownThread extends Thread {
      */
     public static synchronized void register(Server server) {
         getInstance().servers.add(server);
-        if (thread.servers.size() > 0) {
-            thread.hook();
+        if (THREAD.servers.size() > 0) {
+            THREAD.hook();
         }
     }
 
@@ -64,8 +64,8 @@ public class ShutdownThread extends Thread {
      */
     public static synchronized void unregister(Server server) {
         getInstance().servers.remove(server);
-        if (thread.servers.size() == 0) {
-            thread.unhook();
+        if (THREAD.servers.size() == 0) {
+            THREAD.unhook();
         }
     }
 
@@ -88,27 +88,17 @@ public class ShutdownThread extends Thread {
      * Register the shutdown thread as jvm shutdown hook
      */
     private synchronized void hook() {
-        try {
-            if (!hooked) {
-                Runtime.getRuntime().addShutdownHook(this);
-            }
-            hooked = true;
+        if (!hooked) {
+            Runtime.getRuntime().addShutdownHook(this);
         }
-        catch (Exception e) {
-            LOGGER.info("shutdown already commenced", e);
-        }
+        hooked = true;
     }
 
     /**
      * Unregister the shutdown thread as jvm shutdown hook
      */
     private synchronized void unhook() {
-        try {
-            hooked = false;
-            Runtime.getRuntime().removeShutdownHook(this);
-        }
-        catch (Exception e) {
-            LOGGER.debug("shutdown already commenced", e);
-        }
+        hooked = false;
+        Runtime.getRuntime().removeShutdownHook(this);
     }
 }
