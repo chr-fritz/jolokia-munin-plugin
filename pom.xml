@@ -14,6 +14,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.build.jdkVersion>1.7</project.build.jdkVersion>
+        <sonar.jacoco.itReportPath>${project.basedir}/target/jacoco-it.exec</sonar.jacoco.itReportPath>
     </properties>
     <licenses>
         <license>
@@ -91,7 +92,7 @@
             <version>1.3</version>
         </dependency>
         <dependency>
-        <groupId>org.mockito</groupId>
+            <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
             <version>1.9.5</version>
             <scope>test</scope>
@@ -196,6 +197,35 @@
                 <artifactId>maven-release-plugin</artifactId>
                 <version>2.4.1</version>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.16</version>
+                <configuration>
+                    <forkMode>always</forkMode>
+                    <includes>
+                        <include>**/*Test.java</include>
+                        <include>**/*TestSuite.java</include>
+                        <include>**/*TestCase.java</include>
+                        <include>**/*Spec.java</include>
+                    </includes>
+                    <excludes>
+                        <exclude>**/*SlowTest.java</exclude>
+                        <exclude>**/*FunctionalTest*.java</exclude>
+                        <exclude>**/*UITest*.java</exclude>
+                        <exclude>**/*IntegrationTest*.java</exclude>
+                        <exclude>**/*IntegrationSpec.java</exclude>
+                        <exclude>**/*SmokeTest.java</exclude>
+                        <exclude>**/*SmokeSpec.java</exclude>
+                        <exclude>**/*AcceptanceTest*.java</exclude>
+                        <exclude>**/*RegressionTest.java</exclude>
+                        <exclude>**/*ManualTest.java</exclude>
+                        <include>**/*SeleniumTest.java</include>
+                    </excludes>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
     <reporting>
@@ -217,4 +247,107 @@
             <url>https://chr-fritz-srv.de/nexus/content/repositories/snapshots_public</url>
         </snapshotRepository>
     </distributionManagement>
+
+    <profiles>
+        <profile>
+            <id>itests</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <version>0.7.0.201403182114</version>
+                        <executions>
+                            <execution>
+                                <id>pre-integration-test</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>prepare-agent-integration</goal>
+                                </goals>
+                                <configuration>
+                                    <propertyName>jacoco.agent.argLine</propertyName>
+                                    <destFile>${sonar.jacoco.itReportPath}</destFile>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <version>2.17</version>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>integration-test</goal>
+                                    <goal>verify</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <encoding>${project.build.sourceEncoding}</encoding>
+                            <includes>
+                                <include>**/*SlowTest.java</include>
+                                <include>**/*FunctionalTest*.java</include>
+                                <include>**/*UITest*.java</include>
+                                <include>**/*IntegrationTest*.java</include>
+                                <include>**/*IntegrationSpec.java</include>
+                                <include>**/*SmokeTest.java</include>
+                                <include>**/*SmokeSpec.java</include>
+                                <include>**/*AcceptanceTest*.java</include>
+                                <include>**/*RegressionTest.java</include>
+                                <include>**/*SeleniumTest.java</include>
+                            </includes>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>1.2.1</version>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <id>pre-integration-test-start</id>
+                                <phase>pre-integration-test</phase>
+                                <configuration>
+                                    <executable>${project.basedir}/src/test/run.sh</executable>
+                                    <arguments>
+                                        <argument>java</argument>
+                                        <argument>-DconfigFile=${project.build.testOutputDirectory}/ITdaemon.xml
+                                        </argument>
+                                        <argument>-DSTOP.PORT=49049</argument>
+                                        <argument>-DSTOP.KEY=jolokia-integration-test</argument>
+                                        <argument>${jacoco.agent.argLine}</argument>
+                                        <argument>-classpath</argument>
+                                        <classpath/>
+                                        <argument>de.chrfritz.jolokiamunin.App</argument>
+                                        <argument>daemon</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <id>post-integration-test-stop</id>
+                                <phase>post-integration-test</phase>
+                                <configuration>
+                                    <executable>java</executable>
+                                    <arguments>
+                                        <argument>-DSTOP.PORT=49049</argument>
+                                        <argument>-DSTOP.KEY=jolokia-integration-test</argument>
+                                        <argument>-classpath</argument>
+                                        <classpath/>
+                                        <argument>de.chrfritz.jolokiamunin.App</argument>
+                                        <argument>stop</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
