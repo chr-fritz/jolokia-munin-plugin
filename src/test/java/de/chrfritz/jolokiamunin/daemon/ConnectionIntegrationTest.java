@@ -13,6 +13,7 @@
 
 package de.chrfritz.jolokiamunin.daemon;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -24,6 +25,8 @@ import java.net.Socket;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 
 /**
  * @author christian.fritz
@@ -31,22 +34,55 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class ConnectionIntegrationTest {
 
     private Socket socket;
+    private Writer writer;
+    private BufferedReader reader;
 
     @Before
     public void setUp() throws Exception {
         int port = Integer.parseInt(System.getProperty("de.chrfritz.jolokiamunin.bindPort", "4949"));
         socket = new Socket("127.0.0.1", port);
+        writer = new OutputStreamWriter(socket.getOutputStream());
+        reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        writer.write("quit\n");
+        writer.flush();
+        reader.close();
+        writer.close();
+        socket.close();
     }
 
     @Test
     public void testVersion() throws Exception {
-        try (Writer writer = new OutputStreamWriter(socket.getOutputStream());
-             BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
-            writer.write("version\n");
-            writer.flush();
-            assertThat(reader.readLine(), containsString("Jolokia-Munin Plugin by Christian Fritz"));
-            writer.write("quit\n");
-            writer.flush();
-        }
+        writer.write("version\n");
+        writer.flush();
+        assertThat(reader.readLine(), containsString("Jolokia-Munin Plugin by Christian Fritz"));
+    }
+
+    @Test
+    public void testHelp() throws Exception {
+        writer.write("help\n");
+        writer.flush();
+        assertThat(reader.readLine(), is(equalTo("Usage: jolokia [command]")));
+        assertThat(reader.readLine(), is(equalTo("Available Commands:")));
+    }
+
+    @Test
+    public void testConfig() throws Exception {
+        writer.write("config\n");
+        writer.flush();
+        assertThat(reader.readLine(), is(equalTo("multigraph ServletContainer::heapMem")));
+        assertThat(reader.readLine(), is(equalTo("graph_title HeapMemoryUsage")));
+        assertThat(reader.readLine(), is(equalTo("graph_args --base 1024")));
+        assertThat(reader.readLine(), is(equalTo("graph_category ServletContainer")));
+    }
+
+    @Test
+    public void testList() throws Exception {
+        writer.write("list\n");
+        writer.flush();
+        assertThat(reader.readLine(), is(equalTo("jolokia")));
     }
 }
