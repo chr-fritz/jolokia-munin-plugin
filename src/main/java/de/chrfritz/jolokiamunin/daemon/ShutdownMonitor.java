@@ -20,6 +20,7 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.charset.Charset;
 
 /**
  * Monitors the shutdown process. It listens on localhost on a configureable port for the stop command.
@@ -88,10 +89,11 @@ public final class ShutdownMonitor {
             if (serverSocket == null) {
                 return;
             }
+            Charset charset = Charset.forName("UTF-8");
             while (serverSocket != null) {
                 try (Socket socket = serverSocket.accept();
-                     BufferedReader lin = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                     Writer out = new OutputStreamWriter(socket.getOutputStream())
+                     BufferedReader lin = new BufferedReader(new InputStreamReader(socket.getInputStream(), charset));
+                     Writer out = new OutputStreamWriter(socket.getOutputStream(), charset)
                 ) {
                     String receivedKey = lin.readLine();
                     if (!key.equals(receivedKey)) {

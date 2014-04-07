@@ -32,6 +32,7 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.Socket;
+import java.nio.charset.Charset;
 
 /**
  * The Main Application Class
@@ -105,8 +106,9 @@ public class App {
     private String stop() throws IOException {
         LOGGER.info("Stop daemon");
         Socket socket = new Socket("127.0.0.1", Integer.parseInt(System.getProperty("STOP.PORT", "49049")));
-        try (Writer writer = new OutputStreamWriter(socket.getOutputStream());
-             BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
+        Charset charset = Charset.forName("UTF-8");
+        try (Writer writer = new OutputStreamWriter(socket.getOutputStream(), charset);
+             BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), charset))) {
             LOGGER.debug("Send stop command");
             writer.write(System.getProperty("STOP.KEY"));
             writer.write("\n");
