@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketAddress;
@@ -43,20 +44,21 @@ public class Server implements Runnable, AutoCloseable {
     private Dispatcher dispatcher;
 
     private ExecutorService threadPool = Executors.newCachedThreadPool();
+    private SocketAddress socketAddress;
 
     public Server(MuninProvider muninProvider, ConfigurationFactory configurationFactory) throws IOException {
-        server = new ServerSocket(DEFAULT_PORT);
+        this(muninProvider, configurationFactory, new InetSocketAddress(DEFAULT_PORT));
+    }
+
+    public Server(MuninProvider muninProvider, ConfigurationFactory configurationFactory,
+            SocketAddress socketAddress) throws IOException {
+        server = new ServerSocket();
         dispatcher = new Dispatcher(muninProvider);
         configurationWatchService = new Thread(new ConfigurationWatchService(configurationFactory, dispatcher));
         configurationWatchService.setName("configurationWatchService");
         configurationWatchService.setDaemon(true);
         ShutdownThread.register(this);
-    }
-
-    public Server(MuninProvider muninProvider, ConfigurationFactory configurationFactory,
-            SocketAddress socketAddress) throws IOException {
-        this(muninProvider, configurationFactory);
-        server.bind(socketAddress);
+        this.socketAddress = socketAddress;
     }
 
     /**
@@ -77,6 +79,7 @@ public class Server implements Runnable, AutoCloseable {
         serverThread.setName("Munin-Node-Server-Thread");
         LOGGER.info("Server successfully started at {}", server.getLocalSocketAddress());
         try {
+            server.bind(socketAddress);
             while (!Thread.interrupted()) {
                 Socket clientSocket = server.accept();
                 threadPool.execute(new Client(clientSocket, dispatcher));
