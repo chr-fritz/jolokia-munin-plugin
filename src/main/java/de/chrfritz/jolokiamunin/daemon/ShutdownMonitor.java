@@ -30,6 +30,7 @@ import java.nio.charset.Charset;
 public final class ShutdownMonitor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ShutdownMonitor.class);
+    public static final int MIN_PORT_NUMBER = 1024;
     private ShutdownMonitorThread thread;
     private ServerSocket serverSocket;
     private int port;
@@ -72,7 +73,7 @@ public final class ShutdownMonitor {
         @Override
         public synchronized void start() {
             try {
-                if (port < 1024) {
+                if (port < MIN_PORT_NUMBER) {
                     LOGGER.info("Invalid port number {} assigned", port);
                     return;
                 }
