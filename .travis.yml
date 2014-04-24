@@ -19,3 +19,13 @@ addons:
     build_command_prepend:
     build_command: mvn clean install -DskipTests
     branch_pattern: coverity_scan
+
+branches:
+  except:
+    - coverity_scan
+
+
+matrix:
+  include:
+    - jdk: oraclejdk7
+      branch: coverity_scan
