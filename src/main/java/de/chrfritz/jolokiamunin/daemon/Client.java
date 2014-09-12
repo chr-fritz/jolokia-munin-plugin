@@ -26,7 +26,7 @@ public class Client implements Runnable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Client.class);
 
-    private static final int SOCKET_TIMEOUT = 1000 * 15;
+    private static final int SOCKET_TIMEOUT = 1000 * 90;
 
     private final Socket clientSocket;
     private final Charset charset = Charset.forName("UTF-8");
