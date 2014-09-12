@@ -76,6 +76,7 @@ public class Dispatcher {
      * @return The response.
      */
     public String handleRequest(String request) {
+        LOGGER.info("Handle request: {}", request);
         String[] requestArray = request.split("\\s+", 2);
         Controller controller = getControllerForCommand(requestArray[0]);
 
@@ -84,7 +85,9 @@ public class Dispatcher {
             controller.setMuninProvider(proivder);
             controller.setConfiguration(getConfiguration());
 
-            return controller.execute(arguments);
+            String response = controller.execute(arguments);
+            LOGGER.info("Finished handling request (command: {})", requestArray[0]);
+            return response;
         }
         else {
             return "ERROR: Can not handle request. Invalid command";

@@ -108,7 +108,7 @@ public class MuninProviderImpl implements MuninProvider {
     public String getConfig(Category category) {
         StringBuilder buffer = new StringBuilder();
         for (Graph graph : category.getGraphs()) {
-
+            LOGGER.debug("Build config string for graph {}", getGraphName(category, graph));
             buffer.append("multigraph ").append(getGraphName(category, graph)).append(LINE_SEPARATOR);
             addAttribute(buffer, "graph_title", graph.getTitle());
             addAttribute(buffer, "graph_args", graph.getArgs());
@@ -141,6 +141,7 @@ public class MuninProviderImpl implements MuninProvider {
     private void getFieldDefinitions(Graph graph, StringBuilder fields, StringBuilder fieldOrder) {
         for (Field field : graph.getFields()) {
             String fieldName = graph.getName() + "_" + field.getName();
+            LOGGER.debug("Build config string for field {}", fieldName);
             fieldOrder.append(fieldName).append(" ");
             addFieldAttribute(fields, fieldName, "label", field.getLabel());
             addFieldAttribute(fields, fieldName, "draw", field.getDraw());
