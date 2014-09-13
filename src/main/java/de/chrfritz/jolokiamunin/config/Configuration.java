@@ -59,4 +59,11 @@ public interface Configuration {
      * @return Is the single fetch mode allowed.
      */
     boolean isSingleFetchAllowed();
+
+    /**
+     * Get the hostname for the hello banner when using the daemon mode.
+     *
+     * @return the hostname
+     */
+    String getBannerHostname();
 }

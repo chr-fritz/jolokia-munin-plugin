@@ -46,6 +46,7 @@ public class XMLConfiguration implements Configuration {
     private String address;
     private int port;
     private boolean singleFetchAllowed;
+    private String bannerHostname;
 
     /**
      * Load configuration form the given url.
@@ -71,6 +72,7 @@ public class XMLConfiguration implements Configuration {
                 address = config.getDaemon().getAddress();
                 port = config.getDaemon().getPort();
                 singleFetchAllowed = config.getDaemon().isAllowSingleFetch();
+                bannerHostname = config.getDaemon().getBannerHostname();
             }
             Mapper mapper = getMapper();
             categories = new ArrayList<Category>();
@@ -144,5 +146,15 @@ public class XMLConfiguration implements Configuration {
     @Override
     public boolean isSingleFetchAllowed() {
         return singleFetchAllowed;
+    }
+
+    /**
+     * Get the hostname for the hello banner when using the daemon mode.
+     *
+     * @return the hostname
+     */
+    @Override
+    public String getBannerHostname() {
+        return bannerHostname;
     }
 }
