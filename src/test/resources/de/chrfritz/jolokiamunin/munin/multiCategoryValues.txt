@@ -5,4 +5,3 @@ noneHeapMem_max.value 1000
 noneHeapMem_committed.value 1000
 noneHeapMem_init.value 1000
 noneHeapMem_used.value 1000
-.

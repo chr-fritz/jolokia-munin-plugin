@@ -56,7 +56,7 @@ public class Client implements Runnable {
                 String command = reader.readLine();
                 LOGGER.debug("Received command \"{}\" from client {}", command, clientSocket.getRemoteSocketAddress());
                 if (command != null) {
-                    String response = handleCommands(command.trim());
+                    String response = handleCommands(command.trim()) + ".\n";
                     LOGGER.debug("Finished processing of command \"{}\".", command);
                     writer.write(response);
                     writer.flush();
