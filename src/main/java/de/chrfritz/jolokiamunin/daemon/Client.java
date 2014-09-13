@@ -44,6 +44,7 @@ public class Client implements Runnable {
      */
     @Override
     public void run() {
+        LOGGER.debug("Start processing client communication");
         try (
                 Socket socket = clientSocket;
                 BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), charset));
@@ -52,8 +53,10 @@ public class Client implements Runnable {
             socket.setSoTimeout(SOCKET_TIMEOUT);
             while (!Thread.interrupted()) {
                 String command = reader.readLine();
+                LOGGER.debug("Received command \"{}\" from client {}", command, clientSocket.getRemoteSocketAddress());
                 if (command != null) {
                     String response = handleCommands(command.trim());
+                    LOGGER.debug("Finished processing of command \"{}\". Sending response \"{}\"", command, response);
                     writer.write(response);
                     writer.flush();
                 }

@@ -72,7 +72,7 @@ public class ConfigurationWatchService implements Runnable {
                 if (watchEvent.kind() == StandardWatchEventKinds.ENTRY_MODIFY
                         && configFilePath.getFileName().equals(watchEvent.context())) {
 
-                    LOGGER.info("Configuration changed");
+                    LOGGER.warn("Configuration changed");
                     loadConfiguration();
                 }
                 watchKey.reset();

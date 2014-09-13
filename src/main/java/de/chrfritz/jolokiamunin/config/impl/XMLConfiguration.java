@@ -65,6 +65,7 @@ public class XMLConfiguration implements Configuration {
         try {
             JAXBContext jc = JAXBContext.newInstance(Config.class);
             Unmarshaller unmarshaller = jc.createUnmarshaller();
+            LOGGER.info("Attempt to load configuration from file {} as xml", configFile);
             Config config = (Config) unmarshaller.unmarshal(configFile);
             if (config.getDaemon() != null) {
                 address = config.getDaemon().getAddress();
@@ -77,6 +78,7 @@ public class XMLConfiguration implements Configuration {
             for (CategoryType category : config.getCategory()) {
                 categories.add(mapper.map(category, Category.class));
             }
+            LOGGER.debug("Finished loading configuration");
         }
         catch (JAXBException e) {
             LOGGER.error("Can not load configuration", e);

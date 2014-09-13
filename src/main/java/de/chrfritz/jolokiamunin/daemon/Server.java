@@ -92,6 +92,7 @@ public class Server implements Runnable, AutoCloseable {
 
     @Override
     public void close() throws IOException {
+        LOGGER.warn("Shutdown server");
         serverThread.interrupt();
         configurationWatchService.interrupt();
         threadPool.shutdown();
