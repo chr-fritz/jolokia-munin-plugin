@@ -56,6 +56,7 @@ public class ConnectionIntegrationTest {
 
     @Test
     public void testVersion() throws Exception {
+        assertThat(reader.readLine(), is(equalTo("# munin node at localhost")));
         writer.write("version\n");
         writer.flush();
         assertThat(reader.readLine(), containsString("Jolokia-Munin Plugin by Christian Fritz"));
@@ -63,6 +64,7 @@ public class ConnectionIntegrationTest {
 
     @Test
     public void testHelp() throws Exception {
+        assertThat(reader.readLine(), is(equalTo("# munin node at localhost")));
         writer.write("help\n");
         writer.flush();
         assertThat(reader.readLine(), is(equalTo("Usage: jolokia [command]")));
@@ -71,6 +73,7 @@ public class ConnectionIntegrationTest {
 
     @Test
     public void testConfig() throws Exception {
+        assertThat(reader.readLine(), is(equalTo("# munin node at localhost")));
         writer.write("config\n");
         writer.flush();
         assertThat(reader.readLine(), is(equalTo("multigraph ServletContainer::heapMem")));
@@ -81,13 +84,15 @@ public class ConnectionIntegrationTest {
 
     @Test
     public void testList() throws Exception {
+        assertThat(reader.readLine(), is(equalTo("# munin node at localhost")));
         writer.write("list\n");
         writer.flush();
-        assertThat(reader.readLine(), is(equalTo("jolokia")));
+        assertThat(reader.readLine(), is(equalTo("ServletContainer::heapMem Tomcat::noneHeapMem")));
     }
 
     @Test
     public void testInvalidCommand() throws Exception {
+        assertThat(reader.readLine(), is(equalTo("# munin node at localhost")));
         writer.write("invalidCommand\n");
         writer.flush();
         assertThat(reader.readLine(), is(equalTo("ERROR: Can not handle request. Invalid command")));

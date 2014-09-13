@@ -51,12 +51,13 @@ public class Client implements Runnable {
                 BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), charset))
         ) {
             socket.setSoTimeout(SOCKET_TIMEOUT);
+            sendHelloBanner(writer);
             while (!Thread.interrupted()) {
                 String command = reader.readLine();
                 LOGGER.debug("Received command \"{}\" from client {}", command, clientSocket.getRemoteSocketAddress());
                 if (command != null) {
                     String response = handleCommands(command.trim());
-                    LOGGER.debug("Finished processing of command \"{}\". Sending response \"{}\"", command, response);
+                    LOGGER.debug("Finished processing of command \"{}\".", command);
                     writer.write(response);
                     writer.flush();
                 }
@@ -68,6 +69,12 @@ public class Client implements Runnable {
         catch (IOException e) {
             LOGGER.error("Can not open streams", e);
         }
+    }
+
+    private void sendHelloBanner(BufferedWriter writer) throws IOException {
+        LOGGER.debug("Send hello banner with hostname {}", dispatcher.getConfiguration().getBannerHostname());
+        writer.write("# munin node at " + dispatcher.getConfiguration().getBannerHostname() + "\n");
+        writer.flush();
     }
 
     protected String handleCommands(String commandLine) {
