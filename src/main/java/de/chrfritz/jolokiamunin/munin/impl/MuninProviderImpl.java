@@ -171,6 +171,7 @@ public class MuninProviderImpl implements MuninProvider {
                 LOGGER.error("Can not fetch Category '" + category, e);
             }
         }
+        buffer.append('.').append(LINE_SEPARATOR);
         return buffer.toString();
     }
 
