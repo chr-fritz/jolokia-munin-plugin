@@ -28,3 +28,4 @@ noneHeapMem_init.type GAUGE
 noneHeapMem_used.label Used
 noneHeapMem_used.draw AREA
 noneHeapMem_used.type GAUGE
+.
