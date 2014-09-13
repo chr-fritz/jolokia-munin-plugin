@@ -95,6 +95,7 @@ public class MuninProviderImpl implements MuninProvider {
         for (Category category : categories) {
             buffer.append(getConfig(category));
         }
+        buffer.append('.').append(LINE_SEPARATOR);
         return buffer.toString();
     }
 
