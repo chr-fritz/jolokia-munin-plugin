@@ -1,4 +1,4 @@
-multigraph ServletContainer::heapMem
+multigraph ServletContainer_heapMem
 graph_title HeapMemoryUsage
 graph_args --base 1024
 graph_category ServletContainer
@@ -17,7 +17,7 @@ heapMem_init.type GAUGE
 heapMem_used.label Used
 heapMem_used.draw AREA
 heapMem_used.type GAUGE
-multigraph ServletContainer::noneHeapMem
+multigraph ServletContainer_noneHeapMem
 graph_title NonHeapMemoryUsage
 graph_args --base 1024
 graph_category ServletContainer

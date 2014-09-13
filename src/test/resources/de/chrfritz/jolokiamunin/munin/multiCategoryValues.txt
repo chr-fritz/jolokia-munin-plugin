@@ -1,6 +1,6 @@
-multigraph ServletContainer::heapMem
+multigraph ServletContainer_heapMem
 heapMem_max.value 1000
-multigraph Tomcat::noneHeapMem
+multigraph Tomcat_noneHeapMem
 noneHeapMem_max.value 1000
 noneHeapMem_committed.value 1000
 noneHeapMem_init.value 1000

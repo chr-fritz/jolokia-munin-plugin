@@ -76,7 +76,7 @@ public class ConnectionIntegrationTest {
         assertThat(reader.readLine(), is(equalTo("# munin node at localhost")));
         writer.write("config\n");
         writer.flush();
-        assertThat(reader.readLine(), is(equalTo("multigraph ServletContainer::heapMem")));
+        assertThat(reader.readLine(), is(equalTo("multigraph ServletContainer_heapMem")));
         assertThat(reader.readLine(), is(equalTo("graph_title HeapMemoryUsage")));
         assertThat(reader.readLine(), is(equalTo("graph_args --base 1024")));
         assertThat(reader.readLine(), is(equalTo("graph_category ServletContainer")));
@@ -87,7 +87,7 @@ public class ConnectionIntegrationTest {
         assertThat(reader.readLine(), is(equalTo("# munin node at localhost")));
         writer.write("list\n");
         writer.flush();
-        assertThat(reader.readLine(), is(equalTo("ServletContainer::heapMem Tomcat::noneHeapMem")));
+        assertThat(reader.readLine(), is(equalTo("ServletContainer_heapMem Tomcat_noneHeapMem")));
     }
 
     @Test

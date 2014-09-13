@@ -233,7 +233,7 @@ public class MuninProviderImpl implements MuninProvider {
     }
 
     private String getGraphName(Category category, Graph graph) {
-        return category.getName() + "::" + graph.getName();
+        return category.getName() + "_" + graph.getName();
     }
 
     /**
