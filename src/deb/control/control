@@ -1,0 +1,9 @@
+Package: [[name]]
+Version: [[version]]
+Section: net
+Priority: optional
+Architecture: all
+Depends: default-jdk
+Maintainer: Christian Fritz <mail@chr-fritz.de>
+Description: jolokia plugin for munin monitoring
+Distribution: development

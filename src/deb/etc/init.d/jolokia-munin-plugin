@@ -1,22 +1,22 @@
 #!/bin/bash
-# /etc/init.d/jolokia-munin
-# debian-compatible jolokia-munin startup script.
+# /etc/init.d/jolokia-munin-plugin
+# debian-compatible jolokia-munin-plugin startup script.
 # Christian Fritz <mail at chr-fritz dot de>
 #
 ### BEGIN INIT INFO
-# Provides:          jolokia-munin
+# Provides:          jolokia-munin-plugin
 # Required-Start:    $remote_fs $syslog $network
 # Required-Stop:     $remote_fs $syslog $network
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Short-Description: Start jolokia-munin at boot time
-# Description:       Controls the jolokia-munin
+# Short-Description: Start jolokia-munin-plugin at boot time
+# Description:       Controls the jolokia-munin-plugin
 ### END INIT INFO
 
 PATH=/bin:/usr/bin:/sbin:/usr/sbin
 
-DESC="jolokia-munin daemon"
-NAME=jolokia-munin
+DESC="jolokia-munin-plugin daemon"
+NAME=jolokia-munin-plugin
 SCRIPTNAME=/etc/init.d/$NAME
 
 [ -r /etc/default/$NAME ] && . /etc/default/$NAME
@@ -25,6 +25,11 @@ DAEMON=/usr/bin/daemon
 DAEMON_ARGS="--name=$NAME --inherit --output=$LOG --pidfile=$PIDFILE"
 
 SU=/bin/su
+
+if [ ! "$DAEMON"=="true" ]; then
+    echo "daemon mode disabled" >&2
+    exit 1
+fi
 
 # Exit if the package is not installed
 if [ ! -x "$DAEMON" ]; then
@@ -81,7 +86,7 @@ check_tcp_port() {
 #
 do_start()
 {
-    # the default location is /var/run/jolokia-munin/jolokia-munin.pid but the parent directory needs to be created
+    # the default location is /var/run/jolokia-munin-plugin/jolokia-munin-plugin.pid but the parent directory needs to be created
     mkdir `dirname $PIDFILE` > /dev/null 2>&1 || true
     chown $JM_USER `dirname $PIDFILE`
     # Return
@@ -90,11 +95,11 @@ do_start()
     #   2 if daemon could not be started
     $DAEMON $DAEMON_ARGS --running && return 1
 
-    # Verify that the jolokia-munin port is not already in use, winstone does not exit
+    # Verify that the jolokia-munin-plugin port is not already in use, winstone does not exit
     # even for BindException
     check_tcp_port "munin-node" "$PORT" "4949" || return 1
 
-    # If the var MAXOPENFILES is enabled in /etc/default/jolokia-munin then set the max open files to the
+    # If the var MAXOPENFILES is enabled in /etc/default/jolokia-munin-plugin then set the max open files to the
     # proper value
     if [ -n "$MAXOPENFILES" ]; then
         [ "$VERBOSE" != no ] && echo Setting up max open files limit to $MAXOPENFILES
@@ -114,7 +119,7 @@ do_start()
 
 
 #
-# Verify that all jolokia-munin processes have been shutdown
+# Verify that all jolokia-munin-plugin processes have been shutdown
 # and if not, then do killall for them
 #
 get_running()
@@ -230,7 +235,7 @@ case "$1" in
 			fi
 
 		else
-			echo "$procs instances of jolokia-munin daemon are running at the moment"
+			echo "$procs instances of jolokia-munin-plugin daemon are running at the moment"
 			echo "but the pidfile $PIDFILE is missing"
 			rc=0
 		fi

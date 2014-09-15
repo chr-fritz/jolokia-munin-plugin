@@ -1,0 +1,36 @@
+<!--
+  ~ ______________________________________________________________________________
+  ~
+  ~           Project: jolokia-munin-plugin
+  ~            Module: jolokia-munin-plugin
+  ~             Class: logback.xml
+  ~              File: logback.xml
+  ~        changed by: christian.fritz
+  ~       change date: 15.09.14 19:56
+  ~ ______________________________________________________________________________
+  ~
+  ~         Copyright: (c) Christian Fritz, all rights reserved
+  ~ ______________________________________________________________________________
+  -->
+
+<configuration scan="true" scanPeriod="30 seconds">
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>
+                %d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>/var/log/jolokia-munin/application.log</file>
+
+        <encoder>
+            <pattern>%date %level [%thread] %logger{10} [%file:%line] %msg%n</pattern>
+        </encoder>
+    </appender>
+    <logger name="de.chrfritz.jolokiamunin" level="INFO"/>
+    <root level="INFO">
+        <appender-ref ref="FILE"/>
+    </root>
+</configuration>
