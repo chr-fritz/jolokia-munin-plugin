@@ -17,7 +17,7 @@ JM_JAR=/usr/share/jolokia-munin-plugin/jolokia-munin-plugin.jar
 LOG=/var/log/jolokia-munin-plugin/$NAME.log
 
 CONFIG_FILE=/etc/jolokia-munin-plugin/jolokia.xml
-LOG_CONFIG=/etc/jolokia-munin-plugin/jolokia-logging.xml
+LOG_CONFIG=/etc/jolokia-munin-plugin/logback.xml
 STOP_KEY=asdfqewRSDFWERsdfjqiwoer
 STOP_PORT=49051
 PORT=49049
