@@ -7,7 +7,7 @@ NAME=jolokia-munin-plugin
 JAVA=/usr/bin/java
 
 PIDFILE=/var/run/jolokia-munin-plugin/jolokia-munin-plugin.pid
-DAEMON=false
+AS_DAEMON=false
 # user and group to be invoked as (default to jenkins)
 JM_USER=munin
 JM_USER=munin

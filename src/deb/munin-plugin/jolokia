@@ -7,7 +7,7 @@ if [ "$1" = "autoconf" ]; then
 	echo yes
     exit 0
 fi
-if [ "$DAEMON"=="true" ]; then
+if [ "$AS_DAEMON"=="true" ]; then
 	command="fetch"
 	if [ "$1" != "" ]; then
 		command="$1"
