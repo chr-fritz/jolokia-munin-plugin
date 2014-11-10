@@ -4,7 +4,7 @@
 NAME=jolokia-munin-plugin
 [ -r /etc/default/$NAME ] && . /etc/default/$NAME
 
-if [ -x "/etc/init.d/$NAME" ] && [ "$AS_DAEMON"=="true" ]; then
+if [ "$AS_DAEMON" == "true" ] && [ -x "/etc/init.d/$NAME" ]; then
 	update-rc.d $NAME defaults >/dev/null
 	invoke-rc.d $NAME start || exit $?
 fi
