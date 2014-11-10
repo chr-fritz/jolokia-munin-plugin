@@ -13,7 +13,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.build.jdkVersion>1.8</project.build.jdkVersion>
+        <project.build.jdkVersion>1.7</project.build.jdkVersion>
         <sonar.jacoco.itReportPath>${project.basedir}/target/jacoco-it.exec</sonar.jacoco.itReportPath>
         <de.chrfritz.jolokiamunin.bindPort>49049</de.chrfritz.jolokiamunin.bindPort>
     </properties>
