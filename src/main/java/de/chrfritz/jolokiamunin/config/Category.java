@@ -18,6 +18,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,7 +30,7 @@ public final class Category {
 
     private String sourceUrl;
 
-    private List<Graph> graphs;
+    private List<Graph> graphs = new ArrayList<>();
 
     public List<Graph> getGraphs() {
         return graphs;
@@ -41,10 +42,6 @@ public final class Category {
 
     public String getSourceUrl() {
         return sourceUrl;
-    }
-
-    public void setGraphs(List<Graph> graphs) {
-        this.graphs = graphs;
     }
 
     public void setName(String name) {

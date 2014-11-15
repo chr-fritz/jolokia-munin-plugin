@@ -18,6 +18,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,7 +26,7 @@ import java.util.List;
  */
 public final class Graph {
 
-    private List<Field> fields;
+    private List<Field> fields = new ArrayList<>();
     private String name;
     private String title;
     private String vlabel;
@@ -62,10 +63,6 @@ public final class Graph {
 
     public List<Field> getFields() {
         return fields;
-    }
-
-    public void setFields(List<Field> fields) {
-        this.fields = fields;
     }
 
     public String getInfo() {
