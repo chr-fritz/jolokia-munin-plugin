@@ -1,8 +1,6 @@
 language: java
 jdk:
   - oraclejdk8
-  - oraclejdk7
-  - openjdk7
 
 env:
   global:
@@ -27,5 +25,5 @@ branches:
 
 matrix:
   include:
-    - jdk: oraclejdk7
+    - jdk: oraclejdk8
       branch: coverity_scan
