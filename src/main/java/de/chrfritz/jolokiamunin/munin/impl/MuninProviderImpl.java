@@ -13,7 +13,7 @@
 // ______________________________________________________________________________
 package de.chrfritz.jolokiamunin.munin.impl;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Strings;
 import de.chrfritz.jolokiamunin.config.Category;
 import de.chrfritz.jolokiamunin.config.Field;
@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * A handler that thats get a configuration and produces either the configuration for munin or fetches the values and
@@ -75,11 +76,10 @@ public class MuninProviderImpl implements MuninProvider {
      */
     @Override
     public List<String> getGraphNames(Category category) {
-        List<String> ret = new ArrayList<>();
-        for (Graph graph : category.getGraphs()) {
-            ret.add(getGraphName(category, graph));
-        }
-        return ret;
+        return category.getGraphs()
+                .stream()
+                .map(graph -> getGraphName(category, graph))
+                .collect(Collectors.toList());
     }
 
     /**
@@ -207,7 +207,7 @@ public class MuninProviderImpl implements MuninProvider {
 
     /**
      * Build the unique requests for a single category which should be executed when the values should be realy fetched.
-     * <p/>
+     * <p>
      * It returns a map which maps the munin field name to the created request must not have all values filled.
      *
      * @param category The category they values should be fetched.
@@ -222,8 +222,8 @@ public class MuninProviderImpl implements MuninProvider {
             String graphName = graph.getName();
 
             for (Field field : graph.getFields()) {
-                String mbean = Objects.firstNonNull(field.getMbean(), graphMbean);
-                String attribute = Objects.firstNonNull(field.getAttribute(), graphAttribute);
+                String mbean = MoreObjects.firstNonNull(field.getMbean(), graphMbean);
+                String attribute = MoreObjects.firstNonNull(field.getAttribute(), graphAttribute);
                 requests.put(graphName + "_" + field.getName(), new Request(mbean, attribute, field.getPath()));
             }
         }
