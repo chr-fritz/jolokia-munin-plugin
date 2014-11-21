@@ -13,9 +13,10 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.build.jdkVersion>1.7</project.build.jdkVersion>
+        <project.build.jdkVersion>1.8</project.build.jdkVersion>
         <sonar.jacoco.itReportPath>${project.basedir}/target/jacoco-it.exec</sonar.jacoco.itReportPath>
         <de.chrfritz.jolokiamunin.bindPort>49049</de.chrfritz.jolokiamunin.bindPort>
+        <groovy.version>2.3.7</groovy.version>
     </properties>
     <licenses>
         <license>
@@ -53,7 +54,7 @@
         <dependency>
             <groupId>org.jolokia</groupId>
             <artifactId>jolokia-client-java</artifactId>
-            <version>1.2.2</version>
+            <version>1.2.3</version>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
@@ -68,7 +69,7 @@
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy-all</artifactId>
-            <version>2.3.6</version>
+            <version>${groovy.version}</version>
         </dependency>
         <dependency>
         <groupId>org.slf4j</groupId>
@@ -110,7 +111,13 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
-            <version>1.9.5</version>
+            <version>1.10.8</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.spockframework</groupId>
+            <artifactId>spock-core</artifactId>
+            <version>0.7-groovy-2.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -143,6 +150,10 @@
                 <groupId>org.codehaus.gmaven</groupId>
                 <artifactId>gmaven-plugin</artifactId>
                 <version>1.5</version>
+                <configuration>
+                    <providerSelection>2.0</providerSelection>
+                    <source/>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>
@@ -153,6 +164,13 @@
                         </goals>
                     </execution>
                 </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.codehaus.groovy</groupId>
+                        <artifactId>groovy-all</artifactId>
+                        <version>${groovy.version}</version>
+                    </dependency>
+                </dependencies>
             </plugin>
             <plugin>
             <artifactId>maven-assembly-plugin</artifactId>
