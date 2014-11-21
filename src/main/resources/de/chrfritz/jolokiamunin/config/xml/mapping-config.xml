@@ -11,7 +11,7 @@
             <b>src</b>
         </field>
         <field>
-            <a>graphs</a>
+            <a is-accessible="true">graphs</a>
             <b>graph</b>
         </field>
     </mapping>
@@ -19,7 +19,7 @@
         <class-a>de.chrfritz.jolokiamunin.config.Graph</class-a>
         <class-b>de.chrfritz.jolokiamunin.config.xml.GraphType</class-b>
         <field>
-            <a>fields</a>
+            <a is-accessible="true">fields</a>
             <b>field</b>
         </field>
     </mapping>
