@@ -86,7 +86,6 @@ public class ConfigurationWatchService implements Runnable {
     private void loadConfiguration() {
         try {
             Configuration instance = factory.getInstance(configFilePath.toFile());
-            instance.load();
             dispatcher.setConfiguration(instance);
             LOGGER.info("Configuration successfully loaded");
         }

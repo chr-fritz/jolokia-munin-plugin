@@ -179,9 +179,7 @@ public class App {
         if (Strings.isNullOrEmpty(configName)) {
             configName = System.getenv("PWD") + "jolokiamunin.xml";
         }
-        Configuration config = configFactory.getInstance(configName);
-        config.load();
-        return config;
+        return configFactory.getInstance(configName);
     }
 }
 
