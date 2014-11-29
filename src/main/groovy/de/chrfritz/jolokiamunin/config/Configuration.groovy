@@ -28,10 +28,12 @@ class Configuration {
     int port
     boolean singleFetchAllowed
     String bannerHostname
-    List<Category> configuration = new ArrayList<Category>()
+    private List<de.chrfritz.jolokiamunin.config.Category> configuration = new ArrayList<>()
 
     /**
      * {@inheritDoc}
      */
-    public void load() {}
+    List<de.chrfritz.jolokiamunin.config.Category> getConfiguration() {
+        return configuration
+    }
 }
