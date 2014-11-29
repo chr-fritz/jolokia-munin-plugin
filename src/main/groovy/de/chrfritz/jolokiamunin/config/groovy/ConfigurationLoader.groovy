@@ -33,4 +33,14 @@ class ConfigurationLoader implements de.chrfritz.jolokiamunin.config.Configurati
         s.binding = new ConfigurationBuilderBinding(builder: builder)
         return (Configuration) s.run()
     }
+
+    /**
+     * Get a list of all file extensions which can be read by the implementing configuration loader.
+     *
+     * @return A list of all readable file extensions.
+     */
+    @Override
+    List<String> getAssignedFileExtensions() {
+        return ['groovy']
+    }
 }

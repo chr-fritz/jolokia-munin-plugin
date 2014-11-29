@@ -18,12 +18,11 @@ import de.chrfritz.jolokiamunin.config.ConfigurationException;
 import de.chrfritz.jolokiamunin.config.ConfigurationFactory;
 
 import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 /**
  * Initalize a new xml configuration.
  */
+@Deprecated
 public class XMLConfigurationFactory implements ConfigurationFactory {
 
     /**
@@ -34,12 +33,7 @@ public class XMLConfigurationFactory implements ConfigurationFactory {
      */
     @Override
     public Configuration getInstance(File file) throws ConfigurationException {
-        try {
-            return new XMLConfiguration(file.toURI().toURL());
-        }
-        catch (MalformedURLException e) {
-            throw new ConfigurationException(e);
-        }
+        return new XMLConfiguration().loadConfig(file);
     }
 
     /**
@@ -51,16 +45,5 @@ public class XMLConfigurationFactory implements ConfigurationFactory {
     @Override
     public Configuration getInstance(String filePath) throws ConfigurationException {
         return getInstance(new File(filePath));
-    }
-
-    /**
-     * Get a configuration from given url.
-     *
-     * @param url The url for the new configuration
-     * @return The new configuration.
-     */
-    @Override
-    public Configuration getInstance(URL url) {
-        return new XMLConfiguration(url);
     }
 }

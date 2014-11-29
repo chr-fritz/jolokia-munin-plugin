@@ -17,11 +17,11 @@
 package de.chrfritz.jolokiamunin.config;
 
 import java.io.File;
-import java.net.URL;
 
 /**
  * Factory for new configuration instances.
  */
+@Deprecated
 public interface ConfigurationFactory {
 
     /**
@@ -41,13 +41,4 @@ public interface ConfigurationFactory {
      * @throws ConfigurationException In case of the configuration can not be created.
      */
     Configuration getInstance(String filePath) throws ConfigurationException;
-
-    /**
-     * Get a configuration from given url.
-     *
-     * @param url The url for the new configuration
-     * @return The new configuration.
-     * @throws ConfigurationException In case of the configuration can not be created.
-     */
-    Configuration getInstance(URL url) throws ConfigurationException;
 }

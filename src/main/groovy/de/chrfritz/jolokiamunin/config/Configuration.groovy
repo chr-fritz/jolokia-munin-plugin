@@ -11,9 +11,8 @@
 //         Copyright: (c) Christian Fritz, all rights reserved
 // ______________________________________________________________________________
 
-package de.chrfritz.jolokiamunin.config.groovy
+package de.chrfritz.jolokiamunin.config
 
-import de.chrfritz.jolokiamunin.config.Category
 import groovy.transform.Canonical
 
 /**
@@ -22,7 +21,7 @@ import groovy.transform.Canonical
  * @author christian.fritz
  */
 @Canonical
-class Configuration implements de.chrfritz.jolokiamunin.config.Configuration {
+class Configuration {
 
     String name
     String bindAddress
