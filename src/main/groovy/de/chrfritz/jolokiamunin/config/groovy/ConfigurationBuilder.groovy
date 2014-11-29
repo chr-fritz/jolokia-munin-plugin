@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory
 /**
  * Groovy Builder to build the configuration instance with groovy.
  *
+ * @see BuilderSupport
  * @author christian.fritz
  */
 public class ConfigurationBuilder extends BuilderSupport {
@@ -51,7 +52,7 @@ public class ConfigurationBuilder extends BuilderSupport {
         attributes << [name: name]
 
         if (current == null) {
-            node = new de.chrfritz.jolokiamunin.config.groovy.Configuration(name: name)
+            node = new Configuration(name: name)
         }
         else if (current instanceof Configuration) {
             node = new Category()
