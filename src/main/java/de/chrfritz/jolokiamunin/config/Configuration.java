@@ -26,6 +26,7 @@ public interface Configuration {
      *
      * @throws ConfigurationException In case of the configuration can not be loaded.
      */
+    @Deprecated()
     void load() throws ConfigurationException;
 
     /**
@@ -37,7 +38,7 @@ public interface Configuration {
 
     /**
      * Get the ip address for that interface where the daemon should be bind.
-     * <p/>
+     * <p>
      * Default is 0.0.0.0 (also known as all interfaces)
      *
      * @return The bind ip address.
@@ -46,7 +47,7 @@ public interface Configuration {
 
     /**
      * Get the port to listen for incomming connections when run in daemon mode.
-     * <p/>
+     * <p>
      * Default is 4949.
      *
      * @return The listen port for daemon mode.
