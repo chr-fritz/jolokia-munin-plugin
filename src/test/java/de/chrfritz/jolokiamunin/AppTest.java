@@ -89,7 +89,6 @@ public class AppTest {
     public void testGetConfiguration() throws Exception {
 
         Configuration actual = application.getConfiguration();
-        verify(configuration).load();
         assertSame(configuration, actual);
     }
 
@@ -100,7 +99,6 @@ public class AppTest {
         System.setProperty("configFile", configPath);
         Configuration actual = application.getConfiguration();
         verify(configFactory).getInstance(configPath);
-        verify(configuration).load();
         assertSame(configuration, actual);
     }
 }

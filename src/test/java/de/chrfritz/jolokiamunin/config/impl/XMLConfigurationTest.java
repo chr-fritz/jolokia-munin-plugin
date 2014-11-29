@@ -22,7 +22,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.net.URL;
+import java.io.File;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -36,9 +36,9 @@ public class XMLConfigurationTest {
 
     @Before
     public void setUp() throws Exception {
-        URL configFile = getClass().getResource("/de/chrfritz/jolokiamunin/config/impl/xmltest.xml");
+        File configFile = new File(getClass().getResource("/de/chrfritz/jolokiamunin/config/impl/xmltest.xml").toURI());
 
-        config = new XMLConfiguration(configFile);
+        config = new XMLConfiguration().loadConfig(configFile);
     }
 
     @After
@@ -48,7 +48,6 @@ public class XMLConfigurationTest {
 
     @Test
     public void testLoad() throws Exception {
-        config.load();
         List<Category> categories = config.getConfiguration();
 
         assertEquals(1, categories.size());
@@ -67,11 +66,9 @@ public class XMLConfigurationTest {
 
     @Test(expected = ConfigurationException.class)
     public void testLoadInvalidFile() throws Exception {
-        URL configFile =
-                getClass().getResource("/de/chrfritz/jolokiamunin/config/impl/xmltestInvalid.xml");
+        File configFile = new File(
+                getClass().getResource("/de/chrfritz/jolokiamunin/config/impl/xmltestInvalid.xml").toURI());
 
-        config = new XMLConfiguration(configFile);
-        config.load();
-
+        config = new XMLConfiguration().loadConfig(configFile);
     }
 }

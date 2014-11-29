@@ -30,6 +30,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.File;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.HashMap;
@@ -131,12 +132,10 @@ public class MuninProviderImplTest {
         assertEquals(expected, actual);
     }
 
-    private static Configuration loadConfig(String configFile) throws ConfigurationException {
-        URL configUrl = MuninProviderImpl.class.getResource(configFile);
+    private static Configuration loadConfig(String configFile) throws ConfigurationException, URISyntaxException {
+        File file = new File(MuninProviderImpl.class.getResource(configFile).toURI());
 
-        Configuration config = new XMLConfiguration(configUrl);
-        config.load();
-        return config;
+        return new XMLConfiguration().loadConfig(file);
     }
 
     private String loadFromClasspath(String filename) throws Exception {

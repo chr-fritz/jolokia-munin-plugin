@@ -21,7 +21,9 @@ import org.junit.Test;
 import java.io.File;
 import java.net.URL;
 
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.Assert.assertThat;
 
 public class XMLConfigurationFactoryTest {
 
@@ -39,18 +41,12 @@ public class XMLConfigurationFactoryTest {
     @Test
     public void testGetInstanceFile() throws Exception {
         Configuration fetcher = factory.getInstance(new File(configFile.getFile()));
-        assertTrue(fetcher instanceof XMLConfiguration);
+        assertThat(fetcher, is(notNullValue()));
     }
 
     @Test
     public void testGetInstanceString() throws Exception {
         Configuration fetcher = factory.getInstance(configFile.getFile());
-        assertTrue(fetcher instanceof XMLConfiguration);
-    }
-
-    @Test
-    public void testGetInstanceUrl() throws Exception {
-        Configuration fetcher = factory.getInstance(configFile);
-        assertTrue(fetcher instanceof XMLConfiguration);
+        assertThat(fetcher, is(notNullValue()));
     }
 }
