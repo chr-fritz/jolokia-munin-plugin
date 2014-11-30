@@ -256,7 +256,7 @@ public class MuninProviderImpl implements MuninProvider {
      * @param value     The value of the attribute.
      */
     private static void addFieldAttribute(StringBuilder buffer, String fieldName, String attribute, String value) {
-        addAttribute(buffer, fieldName + "." + attribute, value);
+        addAttribute(buffer, fieldName + "" + attribute, value);
     }
 
     /**
@@ -268,6 +268,6 @@ public class MuninProviderImpl implements MuninProvider {
      * @param value     The value of the attribute.
      */
     private static void addFieldAttribute(StringBuilder buffer, String fieldName, String attribute, Number value) {
-        buffer.append(fieldName).append(".").append(attribute).append(" ").append(value).append(LINE_SEPARATOR);
+        buffer.append(fieldName).append("").append(attribute).append(" ").append(value).append(LINE_SEPARATOR);
     }
 }
