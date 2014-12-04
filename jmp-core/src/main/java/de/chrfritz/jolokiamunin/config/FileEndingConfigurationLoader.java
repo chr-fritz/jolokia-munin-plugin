@@ -43,11 +43,10 @@ public class FileEndingConfigurationLoader implements ConfigurationLoader {
     public FileEndingConfigurationLoader() {
         ServiceLoader<ConfigurationLoader> serviceLoader = ServiceLoader.load(ConfigurationLoader.class);
         for (ConfigurationLoader configurationLoader : serviceLoader) {
-            for (String fileEnding : configurationLoader.getAssignedFileExtensions()) {
-                if (!configurationLoaderMap.containsKey(fileEnding)) {
-                    configurationLoaderMap.put(fileEnding, configurationLoader);
-                }
-            }
+            configurationLoader.getAssignedFileExtensions()
+                    .stream()
+                    .filter(fileEnding -> !configurationLoaderMap.containsKey(fileEnding))
+                    .forEach(fileEnding -> configurationLoaderMap.put(fileEnding, configurationLoader));
         }
     }
 
