@@ -13,8 +13,6 @@
 
     <modules>
         <module>jmp-core</module>
-        <module>jmp-deb</module>
-        <module>jmp-tar</module>
     </modules>
 
     <properties>
@@ -256,6 +254,16 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>distribution</id>
+            <modules>
+                <module>jmp-deb</module>
+                <module>jmp-tar</module>
+            </modules>
+        </profile>
+    </profiles>
 
     <distributionManagement>
         <repository>
