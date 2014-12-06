@@ -39,8 +39,8 @@ public class ConnectionIntegrationTest {
 
     @Before
     public void setUp() throws Exception {
-        int port = Integer.parseInt(System.getProperty("de.chrfritz.jolokiamunin.bindPort", "4949"));
-        socket = new Socket("127.0.0.1", port);
+        int port = Integer.parseInt(System.getProperty("de.chrfritz.jolokiamunin.bindPort", "65049"));
+        socket = new Socket("127.0.0.2", port);
         writer = new OutputStreamWriter(socket.getOutputStream());
         reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
     }

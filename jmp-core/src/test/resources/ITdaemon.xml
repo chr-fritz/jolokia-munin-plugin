@@ -16,8 +16,8 @@
 
 <config xmlns="http://chrfritz.de/jolokia-munin-plugin/config">
     <daemon>
-        <address>0.0.0.0</address>
-        <port>4949</port>
+        <address>127.0.0.2</address>
+        <port>65049</port>
         <allowSingleFetch>1</allowSingleFetch>
         <bannerHostname>localhost</bannerHostname>
     </daemon>

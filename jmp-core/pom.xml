@@ -235,9 +235,9 @@
                                         <argument>
                                             -Dlogback.configurationFile=${project.build.testOutputDirectory}/logback-integrationtests.xml
                                         </argument>
-                                        <argument>-DSTOP.PORT=49050</argument>
+                                        <argument>-DSTOP.PORT=65050</argument>
                                         <argument>-DSTOP.KEY=jolokia-integration-test</argument>
-                                        <argument>-Dde.chrfritz.jolokiamunin.bindIp=127.0.0.1</argument>
+                                        <argument>-Dde.chrfritz.jolokiamunin.bindIp=127.0.0.2</argument>
                                         <argument>
                                             -Dde.chrfritz.jolokiamunin.bindPort=${de.chrfritz.jolokiamunin.bindPort}
                                         </argument>
@@ -258,7 +258,7 @@
                                 <configuration>
                                     <executable>java</executable>
                                     <arguments>
-                                        <argument>-DSTOP.PORT=49050</argument>
+                                        <argument>-DSTOP.PORT=65050</argument>
                                         <argument>-DSTOP.KEY=jolokia-integration-test</argument>
                                         <argument>-classpath</argument>
                                         <classpath/>
