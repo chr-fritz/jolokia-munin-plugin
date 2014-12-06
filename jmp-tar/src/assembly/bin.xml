@@ -1,0 +1,73 @@
+<!--
+  ~ ______________________________________________________________________________
+  ~
+  ~           Project: jolokia-munin-plugin
+  ~            Module: jmp-tar
+  ~             Class: bin.xml
+  ~              File: bin.xml
+  ~        changed by: christian.fritz
+  ~       change date: 30.11.14 14:53
+  ~ ______________________________________________________________________________
+  ~
+  ~         Copyright: (c) Christian Fritz, all rights reserved
+  ~ ______________________________________________________________________________
+  -->
+
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
+    <id>bin</id>
+    <formats>
+        <format>tar.gz</format>
+    </formats>
+    <includeBaseDirectory>false</includeBaseDirectory>
+    <moduleSets>
+        <moduleSet>
+            <useAllReactorProjects>true</useAllReactorProjects>
+            <includes>
+                <include>de.chrfritz:jmp-core</include>
+            </includes>
+            <binaries>
+                <outputDirectory>lib</outputDirectory>
+                <unpack>false</unpack>
+                <includeDependencies>true</includeDependencies>
+                <dependencySets>
+                    <dependencySet>
+                        <outputDirectory>lib</outputDirectory>
+                    </dependencySet>
+                </dependencySets>
+            </binaries>
+        </moduleSet>
+    </moduleSets>
+    <fileSets>
+        <fileSet>
+            <outputDirectory>etc</outputDirectory>
+            <directory>src/main/resources/etc</directory>
+            <filtered>true</filtered>
+        </fileSet>
+
+        <fileSet>
+            <outputDirectory>run</outputDirectory>
+            <directory>src/main/resources/run</directory>
+            <excludes>
+                <exclude>*</exclude>
+            </excludes>
+        </fileSet>
+        <fileSet>
+            <outputDirectory>log</outputDirectory>
+            <directory>src/main/resources/log</directory>
+            <excludes>
+                <exclude>*</exclude>
+            </excludes>
+        </fileSet>
+
+    </fileSets>
+    <files>
+        <file>
+            <source>src/main/resources/bin/jolokia-munin</source>
+            <destName>bin/jolokia-munin</destName>
+            <fileMode>0755</fileMode>
+        </file>
+    </files>
+
+</assembly>

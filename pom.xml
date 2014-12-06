@@ -14,6 +14,7 @@
     <modules>
         <module>jmp-core</module>
         <module>jmp-deb</module>
+        <module>jmp-tar</module>
     </modules>
 
     <properties>
@@ -57,6 +58,23 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>de.chrfritz</groupId>
+                <artifactId>jmp-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.chrfritz</groupId>
+                <artifactId>jmp-tar</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.chrfritz</groupId>
+                <artifactId>jmp-deb</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+
             <dependency>
                 <groupId>org.jolokia</groupId>
                 <artifactId>jolokia-client-java</artifactId>
@@ -238,15 +256,7 @@
             </plugin>
         </plugins>
     </build>
-    <reporting>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-project-info-reports-plugin</artifactId>
-                <version>2.7</version>
-            </plugin>
-        </plugins>
-    </reporting>
+
     <distributionManagement>
         <repository>
             <id>chr-fritz-srv.de_releases_public</id>

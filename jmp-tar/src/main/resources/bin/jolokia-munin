@@ -1,0 +1,29 @@
+#!/bin/bash
+
+NAME=jolokia-munin-plugin
+WRAPPER_PATH=$(cd `dirname "${BASH_SOURCE[0]}"` && pwd)/`basename "${BASH_SOURCE[0]}"`
+BASE_PATH=$(dirname $(dirname $WRAPPER_PATH))
+CONFIG_PATH=$BASE_PATH/etc
+
+[ -r $CONFIG_PATH/wrapper.conf ] && . $CONFIG_PATH/wrapper.conf
+
+if [ -z "$JAVA" ]
+then
+  echo "Cannot find a Java JDK. Please set either set JAVA or put java (>=1.8) in your PATH." 2>&2
+  exit 1
+fi
+
+if [ "$1" = "autoconf" ]; then
+	echo yes
+    exit 0
+fi
+if [ "$AS_DAEMON"=="true" ]; then
+	command="fetch"
+	if [ "$1" != "" ]; then
+		command="$1"
+	fi
+#	(echo $command;  echo "quit";) | netcat $BIND_TO $PORT
+
+fi
+
+$JAVA $JAVA_ARGS -jar $JM_JAR $1
