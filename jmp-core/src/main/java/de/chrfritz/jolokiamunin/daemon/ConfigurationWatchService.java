@@ -17,7 +17,7 @@ package de.chrfritz.jolokiamunin.daemon;
 import com.google.common.base.Strings;
 import de.chrfritz.jolokiamunin.config.Configuration;
 import de.chrfritz.jolokiamunin.config.ConfigurationException;
-import de.chrfritz.jolokiamunin.config.ConfigurationFactory;
+import de.chrfritz.jolokiamunin.config.ConfigurationLoader;
 import de.chrfritz.jolokiamunin.controller.Dispatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +33,7 @@ import java.nio.file.*;
  */
 public class ConfigurationWatchService implements Runnable {
     private static final Logger LOGGER = LoggerFactory.getLogger(ConfigurationWatchService.class);
-    private ConfigurationFactory factory;
+    private ConfigurationLoader configurationLoader;
     private Dispatcher dispatcher;
     private WatchService watchService;
     private Path configFilePath;
@@ -41,12 +41,13 @@ public class ConfigurationWatchService implements Runnable {
     /**
      * Initialize a new configuration watch service.
      *
-     * @param factory    Use this factory to initialize the configuration.
-     * @param dispatcher The controller dispatcher thats use the new configuration.
+     * @param configurationLoader Use this configurationLoader to initialize the configuration.
+     * @param dispatcher          The controller dispatcher thats use the new configuration.
      * @throws IOException In case of the first configuration loading failed.
      */
-    public ConfigurationWatchService(ConfigurationFactory factory, Dispatcher dispatcher) throws IOException {
-        this.factory = factory;
+    public ConfigurationWatchService(ConfigurationLoader configurationLoader, Dispatcher dispatcher) throws
+            IOException {
+        this.configurationLoader = configurationLoader;
         this.dispatcher = dispatcher;
         init();
     }
@@ -85,8 +86,8 @@ public class ConfigurationWatchService implements Runnable {
 
     private void loadConfiguration() {
         try {
-            Configuration instance = factory.getInstance(configFilePath.toFile());
-            dispatcher.setConfiguration(instance);
+            Configuration config = configurationLoader.loadConfig(configFilePath.toFile());
+            dispatcher.setConfiguration(config);
             LOGGER.info("Configuration successfully loaded");
         }
         catch (ConfigurationException e) {

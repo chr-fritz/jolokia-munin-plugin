@@ -17,8 +17,8 @@ package de.chrfritz.jolokiamunin;
 import com.google.common.base.Strings;
 import de.chrfritz.jolokiamunin.config.Configuration;
 import de.chrfritz.jolokiamunin.config.ConfigurationException;
-import de.chrfritz.jolokiamunin.config.ConfigurationFactory;
-import de.chrfritz.jolokiamunin.config.impl.XMLConfigurationFactory;
+import de.chrfritz.jolokiamunin.config.ConfigurationLoader;
+import de.chrfritz.jolokiamunin.config.FileEndingConfigurationLoader;
 import de.chrfritz.jolokiamunin.controller.Dispatcher;
 import de.chrfritz.jolokiamunin.daemon.Server;
 import de.chrfritz.jolokiamunin.daemon.ShutdownMonitor;
@@ -42,7 +42,7 @@ import java.nio.charset.Charset;
 public class App {
     private static final Logger LOGGER = LoggerFactory.getLogger(App.class);
     private MuninProvider muninProvider;
-    private ConfigurationFactory configFactory;
+    private ConfigurationLoader configLoader;
 
     /**
      * Main Entry Point to run the application.
@@ -53,7 +53,7 @@ public class App {
      */
     public static void main(String[] args) throws IOException, ConfigurationException {
         MuninProvider provider = new MuninProviderImpl(new JolokiaFetcherFactory());
-        ConfigurationFactory configurationFactory = new XMLConfigurationFactory();
+        ConfigurationLoader configurationFactory = new FileEndingConfigurationLoader();
         System.out.print(new App(provider, configurationFactory).run(args));
     }
 
@@ -62,9 +62,9 @@ public class App {
      *
      * @param muninProvider The MuninProvider for fetching and configuring the application.
      */
-    public App(MuninProvider muninProvider, ConfigurationFactory configFactory) {
+    public App(MuninProvider muninProvider, ConfigurationLoader configLoader) {
         this.muninProvider = muninProvider;
-        this.configFactory = configFactory;
+        this.configLoader = configLoader;
     }
 
     /**
@@ -98,10 +98,10 @@ public class App {
         Server server;
         SocketAddress bindTo = getBindAddress();
         if (bindTo == null) {
-            server = new Server(muninProvider, configFactory);
+            server = new Server(muninProvider, configLoader);
         }
         else {
-            server = new Server(muninProvider, configFactory, bindTo);
+            server = new Server(muninProvider, configLoader, bindTo);
         }
         new Thread(server).start();
         return "Daemon successfully started\n";
@@ -179,7 +179,7 @@ public class App {
         if (Strings.isNullOrEmpty(configName)) {
             configName = System.getenv("PWD") + "/jolokiamunin.xml";
         }
-        return configFactory.getInstance(configName);
+        return configLoader.loadConfig(new File(configName));
     }
 }
 

@@ -17,7 +17,7 @@
 package de.chrfritz.jolokiamunin.daemon;
 
 
-import de.chrfritz.jolokiamunin.config.ConfigurationFactory;
+import de.chrfritz.jolokiamunin.config.ConfigurationLoader;
 import de.chrfritz.jolokiamunin.controller.Dispatcher;
 import de.chrfritz.jolokiamunin.munin.MuninProvider;
 import org.slf4j.Logger;
@@ -46,15 +46,15 @@ public class Server implements Runnable, AutoCloseable {
     private ExecutorService threadPool = Executors.newCachedThreadPool();
     private SocketAddress socketAddress;
 
-    public Server(MuninProvider muninProvider, ConfigurationFactory configurationFactory) throws IOException {
-        this(muninProvider, configurationFactory, new InetSocketAddress(DEFAULT_PORT));
+    public Server(MuninProvider muninProvider, ConfigurationLoader configLoader) throws IOException {
+        this(muninProvider, configLoader, new InetSocketAddress(DEFAULT_PORT));
     }
 
-    public Server(MuninProvider muninProvider, ConfigurationFactory configurationFactory,
+    public Server(MuninProvider muninProvider, ConfigurationLoader configLoader,
             SocketAddress socketAddress) throws IOException {
         server = new ServerSocket();
         dispatcher = new Dispatcher(muninProvider);
-        configurationWatchService = new Thread(new ConfigurationWatchService(configurationFactory, dispatcher));
+        configurationWatchService = new Thread(new ConfigurationWatchService(configLoader, dispatcher));
         configurationWatchService.setName("configurationWatchService");
         configurationWatchService.setDaemon(true);
         ShutdownThread.register(this);

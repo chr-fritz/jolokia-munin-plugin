@@ -15,7 +15,7 @@ package de.chrfritz.jolokiamunin;
 
 import de.chrfritz.jolokiamunin.config.Category;
 import de.chrfritz.jolokiamunin.config.Configuration;
-import de.chrfritz.jolokiamunin.config.ConfigurationFactory;
+import de.chrfritz.jolokiamunin.config.ConfigurationLoader;
 import de.chrfritz.jolokiamunin.munin.MuninProvider;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,11 +23,12 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.io.File;
 import java.util.List;
 
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyCollectionOf;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -41,7 +42,7 @@ public class AppTest {
     private MuninProvider provider;
 
     @Mock
-    private ConfigurationFactory configFactory;
+    private ConfigurationLoader configLoader;
 
     @Mock
     private Configuration configuration;
@@ -50,8 +51,8 @@ public class AppTest {
 
     @Before
     public void setUp() throws Exception {
-        application = new App(provider, configFactory);
-        when(configFactory.getInstance(anyString())).thenReturn(configuration);
+        application = new App(provider, configLoader);
+        when(configLoader.loadConfig(any())).thenReturn(configuration);
     }
 
     @Test
@@ -98,7 +99,7 @@ public class AppTest {
         String configPath = "configfile.xml";
         System.setProperty("configFile", configPath);
         Configuration actual = application.getConfiguration();
-        verify(configFactory).getInstance(configPath);
+        verify(configLoader).loadConfig(new File(configPath));
         assertSame(configuration, actual);
     }
 }
