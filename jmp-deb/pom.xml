@@ -102,6 +102,7 @@
                                         <prefix>etc</prefix>
                                         <user>munin</user>
                                         <group>munin</group>
+                                        <conffile>true</conffile>
                                     </mapper>
                                 </data>
                                 <data>
