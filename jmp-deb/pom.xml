@@ -26,8 +26,36 @@
 
     <artifactId>jmp-deb</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>de.chrfritz</groupId>
+            <artifactId>jmp-core</artifactId>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                            <overWriteReleases>false</overWriteReleases>
+                            <overWriteSnapshots>false</overWriteSnapshots>
+                            <overWriteIfNewer>true</overWriteIfNewer>
+                            <stripVersion>false</stripVersion>
+                            <includeScope>runtime</includeScope>
+                            <type>jar</type>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
             <plugin>
                 <artifactId>jdeb</artifactId>
                 <groupId>org.vafer</groupId>
@@ -47,17 +75,24 @@
                             <controlDir>${basedir}/src/deb/control</controlDir>
                             <dataSet>
                                 <data>
-                                    <src>
-                                        ${project.build.directory}/${project.build.finalName}-jar-with-dependencies.jar
-                                    </src>
-                                    <dst>usr/share/${project.artifactId}/${project.artifactId}.jar</dst>
-                                    <type>file</type>
+                                    <src>${project.build.directory}/lib</src>
+                                    <type>directory</type>
                                     <mapper>
+                                        <prefix>usr/lib/${project.parent.artifactId}</prefix>
                                         <type>perm</type>
                                         <user>munin</user>
                                         <group>munin</group>
                                         <filemode>644</filemode>
                                     </mapper>
+                                </data>
+                                <data>
+                                    <type>link</type>
+                                    <symlink>true</symlink>
+                                    <linkName>/usr/share/${project.parent.artifactId}/${project.parent.artifactId}.jar
+                                    </linkName>
+                                    <linkTarget>
+                                        /usr/lib/${project.parent.artifactId}/jmp-core-${project.parent.version}.jar
+                                    </linkTarget>
                                 </data>
                                 <data>
                                     <src>${basedir}/src/deb/etc</src>
@@ -94,10 +129,10 @@
                                 <data>
                                     <type>template</type>
                                     <paths>
-                                        <path>etc/${project.artifactId}</path>
-                                        <path>var/lib/${project.artifactId}</path>
-                                        <path>var/log/${project.artifactId}</path>
-                                        <path>var/run/${project.artifactId}</path>
+                                        <path>etc/${project.parent.artifactId}</path>
+                                        <path>var/lib/${project.parent.artifactId}</path>
+                                        <path>var/log/${project.parent.artifactId}</path>
+                                        <path>var/run/${project.parent.artifactId}</path>
                                     </paths>
                                     <mapper>
                                         <type>perm</type>
