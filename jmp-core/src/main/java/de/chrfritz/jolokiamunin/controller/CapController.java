@@ -26,7 +26,7 @@ public class CapController extends AbstractController {
      */
     @Override
     protected String handle() throws Exception {
-        return "multigraph dirtyconfig";
+        return "cap multigraph dirtyconfig";
     }
 
     /**
