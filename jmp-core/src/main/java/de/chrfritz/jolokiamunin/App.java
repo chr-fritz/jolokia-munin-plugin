@@ -177,7 +177,7 @@ public class App {
         String configName;
         configName = System.getProperty("configFile", System.getenv("JOLOKIAMUNIN_CONFIG"));
         if (Strings.isNullOrEmpty(configName)) {
-            configName = System.getenv("PWD") + "jolokiamunin.xml";
+            configName = System.getenv("PWD") + "/jolokiamunin.xml";
         }
         return configFactory.getInstance(configName);
     }
