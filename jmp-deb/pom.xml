@@ -51,9 +51,15 @@
                             <stripVersion>false</stripVersion>
                             <includeScope>runtime</includeScope>
                             <type>jar</type>
+
                         </configuration>
                     </execution>
                 </executions>
+                <configuration>
+                    <usedDependencies>
+                        <usedDependency>de.chrfritz:jmp-core</usedDependency>
+                    </usedDependencies>
+                </configuration>
             </plugin>
 
             <plugin>
