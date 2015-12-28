@@ -1,4 +1,4 @@
-# defaults for jenkins continuous integration server
+# defaults for jolokia-munin-plugin
 
 # pulled in from the init script; makes things easier.
 NAME=jolokia-munin-plugin
@@ -17,10 +17,10 @@ JM_JAR=/usr/share/jolokia-munin-plugin/jolokia-munin-plugin.jar
 LOG=/var/log/jolokia-munin-plugin/$NAME.log
 
 CONFIG_FILE=/etc/jolokia-munin-plugin/jolokia.xml
-LOG_CONFIG=/etc/jolokia-munin-plugin/logback.xml
+LOG_CONFIG=/etc/jolokia-munin-plugin/log4j2.yaml
 STOP_KEY=asdfqewRSDFWERsdfjqiwoer
 STOP_PORT=49051
 PORT=49049
 BIND_TO=127.0.0.1
-JAVA_ARGS="-DconfigFile=$CONFIG_FILE -DSTOP.KEY=$STOP_KEY -DSTOP.PORT=$STOP_PORT -Dde.chrfritz.jolokiamunin.bindPort=$PORT -Dde.chrfritz.jolokiamunin.bindIp=$BIND_TO -Dlogback.configurationFile=$LOG_CONFIG"
+JAVA_ARGS="-DconfigFile=$CONFIG_FILE -DSTOP.KEY=$STOP_KEY -DSTOP.PORT=$STOP_PORT -Dde.chrfritz.jolokiamunin.bindPort=$PORT -Dde.chrfritz.jolokiamunin.bindIp=$BIND_TO -Dlog4j.configurationFile=$LOG_CONFIG"
 
