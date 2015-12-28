@@ -27,7 +27,7 @@ import java.nio.file.*;
 
 /**
  * This is a watch service for the current configuration file. It is notified when the configuration file is changed and
- * reload it automaticly.
+ * reload it automatically.
  *
  * @author christian.fritz
  */
