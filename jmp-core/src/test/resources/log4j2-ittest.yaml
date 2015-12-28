@@ -1,0 +1,31 @@
+Configuration:
+  status: warn
+
+  Appenders:
+    Console:
+      name: Console
+      target: SYSTEM_OUT
+      PatternLayout:
+        Pattern: "%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"
+    File:
+      name: File
+      fileName: target/IntegrationTests.log
+      PatternLayout:
+        Pattern: "%d{dd-mm-yyyy HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"
+    Async:
+      name: Async
+      AppenderRef:
+        - ref: File
+        - ref: Console
+
+  Loggers:
+    AsyncLogger:
+      level: debug
+      name: de.chrfritz.jolokiamunin
+      includeLocation: true
+      AppenderRef:
+        ref: Async
+    Root:
+      level: info
+      AppenderRef:
+        ref: Async

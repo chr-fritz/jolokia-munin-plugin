@@ -1,0 +1,39 @@
+Configuration:
+  status: warn
+  monitorInterval: 30
+
+  Appenders:
+    Console:
+      name: Console
+      target: SYSTEM_OUT
+      PatternLayout:
+        Pattern: "%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"
+    RollingRandomAccessFile:
+      name: File
+      fileName: /var/log/jolokia-munin-plugin/application.log
+      filePattern: /var/log/jolokia-munin-plugin/application-%d{dd-MM-yyyy}.%i.log
+      PatternLayout:
+        Pattern: "%d %-5level [%t] %logger{36} [%F:%L] %msg%n"
+      Policies:
+        - TimeBasedTriggeringPolicy
+        - SizeBasedTriggeringPolicy:
+          size: 50 MB
+      DefaultRolloverStrategy:
+        max: 10
+    Async:
+      name: Async
+      AppenderRef:
+        - ref: File
+        - ref: Console
+
+  Loggers:
+    AsyncLogger:
+      level: info
+      name: de.chrfritz.jolokiamunin
+      includeLocation: true
+      AppenderRef:
+        ref: Async
+    Root:
+      level: info
+      AppenderRef:
+        ref: Async

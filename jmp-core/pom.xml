@@ -39,14 +39,34 @@
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy-all</artifactId>
         </dependency>
+
+        <!-- logging -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-yaml</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.lmax</groupId>
+            <artifactId>disruptor</artifactId>
+        </dependency>
+
+        <!-- commons -->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
@@ -55,10 +75,8 @@
             <groupId>net.sf.dozer</groupId>
             <artifactId>dozer</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.googlecode.json-simple</groupId>
-            <artifactId>json-simple</artifactId>
-        </dependency>
+
+        <!-- testing -->
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-all</artifactId>
@@ -78,6 +96,11 @@
             <artifactId>spock-core</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient-osgi</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     <build>
         <resources>
@@ -91,6 +114,9 @@
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>false</filtering>
+                <excludes>
+                    <exclude>*-test.yaml</exclude>
+                </excludes>
             </resource>
         </resources>
 
@@ -176,6 +202,19 @@
                     </archive>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <configuration>
+                    <usedDependencies>
+                        <usedDependency>com.fasterxml.jackson.core:jackson-databind</usedDependency>
+                        <usedDependency>com.fasterxml.jackson.dataformat:jackson-dataformat-yaml</usedDependency>
+                        <usedDependency>com.lmax:disruptor</usedDependency>
+                        <usedDependency>org.apache.logging.log4j:log4j-core</usedDependency>
+                        <usedDependency>org.apache.logging.log4j:log4j-slf4j-impl</usedDependency>
+                    </usedDependencies>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
     <profiles>
@@ -250,11 +289,11 @@
                                         <argument>-DconfigFile=${project.build.testOutputDirectory}/ITdaemon.xml
                                         </argument>
                                         <argument>
-                                            -Dlogback.configurationFile=${project.build.testOutputDirectory}/logback-integrationtests.xml
+                                            -Dlog4j.configurationFile=${project.build.testOutputDirectory}/log4j2-ittest.yaml
                                         </argument>
                                         <argument>-DSTOP.PORT=65050</argument>
                                         <argument>-DSTOP.KEY=jolokia-integration-test</argument>
-                                        <argument>-Dde.chrfritz.jolokiamunin.bindIp=127.0.0.2</argument>
+                                        <argument>-Dde.chrfritz.jolokiamunin.bindIp=127.0.0.1</argument>
                                         <argument>
                                             -Dde.chrfritz.jolokiamunin.bindPort=${de.chrfritz.jolokiamunin.bindPort}
                                         </argument>
