@@ -23,7 +23,6 @@ import org.jolokia.client.J4pClient;
 import org.jolokia.client.exception.J4pException;
 import org.jolokia.client.request.J4pReadRequest;
 import org.jolokia.client.request.J4pReadResponse;
-import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -101,8 +100,7 @@ public class JolokiaFetcher implements Fetcher {
             Object value = response.getValue();
             Request request = requests.get(i);
 
-            boolean isValid = StringUtils.equals(request.getMbean(),
-                                                 response.getRequest().getObjectName().toString()) &&
+            boolean isValid = StringUtils.equals(request.getMbean(), response.getRequest().getObjectName().toString()) &&
                     StringUtils.equals(request.getAttribute(), response.getRequest().getAttribute()) &&
                     StringUtils.equals(request.getPath(), response.getRequest().getPath());
 
@@ -131,13 +129,15 @@ public class JolokiaFetcher implements Fetcher {
             LOGGER.debug("Adding {}:{}", request, value);
             results.put(request, (Number) value);
 
-        } else if (!Strings.isNullOrEmpty(request.getMbean())
+        }
+        else if (!Strings.isNullOrEmpty(request.getMbean())
                 && !Strings.isNullOrEmpty(request.getAttribute())
                 && Strings.isNullOrEmpty(request.getPath())) {
 
-            handleAttributeResponse(results, (JSONObject) value, request);
-        } else {
-            handleMbeanResponse(results, (JSONObject) value, request);
+            handleAttributeResponse(results, (Map) value, request);
+        }
+        else {
+            handleMbeanResponse(results, (Map) value, request);
         }
     }
 
@@ -154,10 +154,10 @@ public class JolokiaFetcher implements Fetcher {
                 continue;
             }
             Map.Entry entry = (Map.Entry) entryObject;
-            if (entry.getValue() instanceof JSONObject) {
-                handleAttributeResponse(results, (JSONObject) entry.getValue(),
-                                        new Request(request.getMbean(), (String) entry.getKey()));
-            } else if (entry.getValue() instanceof Number) {
+            if (entry.getValue() instanceof Map) {
+                handleAttributeResponse(results, (Map) entry.getValue(), new Request(request.getMbean(), (String) entry.getKey()));
+            }
+            else if (entry.getValue() instanceof Number) {
                 Request key = new Request(request.getMbean(), (String) entry.getKey());
                 LOGGER.debug("Adding {}:{}", key, entry.getValue());
                 results.put(key, (Number) entry.getValue());
