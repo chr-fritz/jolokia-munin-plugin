@@ -96,6 +96,11 @@
             <artifactId>spock-core</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient-osgi</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     <build>
         <resources>
@@ -195,6 +200,19 @@
                             <mainClass>de.chrfritz.jolokiamunin.App</mainClass>
                         </manifest>
                     </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <configuration>
+                    <usedDependencies>
+                        <usedDependency>com.fasterxml.jackson.core:jackson-databind</usedDependency>
+                        <usedDependency>com.fasterxml.jackson.dataformat:jackson-dataformat-yaml</usedDependency>
+                        <usedDependency>com.lmax:disruptor</usedDependency>
+                        <usedDependency>org.apache.logging.log4j:log4j-core</usedDependency>
+                        <usedDependency>org.apache.logging.log4j:log4j-slf4j-impl</usedDependency>
+                    </usedDependencies>
                 </configuration>
             </plugin>
         </plugins>
