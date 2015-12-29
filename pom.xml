@@ -8,7 +8,7 @@
     <packaging>pom</packaging>
     <description>The Jolokia Munin Plugin can be used to fetch any numeric value from a jolokia agent.</description>
 
-    <name>jolokia-munin-plugin</name>
+    <name>Jolokia Munin Plugin</name>
     <url>http://chrfritz.de/jolokia-munin-plugin/</url>
 
     <modules>

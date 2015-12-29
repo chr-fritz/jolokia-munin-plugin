@@ -25,6 +25,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>jmp-distribution</artifactId>
+    <name>Jolokia Munin Plugin: Distribution</name>
+
     <packaging>pom</packaging>
     <modules>
         <module>jmp-tar</module>

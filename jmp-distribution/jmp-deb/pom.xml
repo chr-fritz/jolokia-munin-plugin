@@ -25,7 +25,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>jmp-deb</artifactId>
-
+    <name>Jolokia Munin Plugin: Distribution: Debian</name>
     <dependencies>
         <dependency>
             <groupId>de.chrfritz</groupId>
