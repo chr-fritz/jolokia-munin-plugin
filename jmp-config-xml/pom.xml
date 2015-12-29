@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ ______________________________________________________________________________
+  ~
+  ~           Project: jolokia-munin-plugin
+  ~            Module: jolokia-munin-plugin
+  ~             Class: pom.xml
+  ~              File: pom.xml
+  ~        changed by: christian.fritz
+  ~       change date: 29.12.15 14:57
+  ~ ______________________________________________________________________________
+  ~
+  ~         Copyright: (c) Christian Fritz, all rights reserved
+  ~ ______________________________________________________________________________
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>jolokia-munin-plugin</artifactId>
+        <groupId>de.chrfritz</groupId>
+        <version>1.1.1-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>jmp-config-xml</artifactId>
+    <name>Jolokia Munin Plugin: Configuration: XML</name>
+    <dependencies>
+        <dependency>
+            <groupId>de.chrfritz</groupId>
+            <artifactId>jmp-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.dozer</groupId>
+            <artifactId>dozer</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-all</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jaxb2-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>xjc</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <packageName>de.chrfritz.jolokiamunin.config.xml</packageName>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

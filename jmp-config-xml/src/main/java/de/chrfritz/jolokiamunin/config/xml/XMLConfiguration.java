@@ -1,25 +1,22 @@
 // ______________________________________________________________________________
 //
 //           Project: jolokia-munin-plugin
-//            Module: jolokia-munin-plugin
+//            Module: jmp-config-xml
 //             Class: XMLConfiguration
 //              File: XMLConfiguration.java
-//        changed by: christian
-//       change date: 19.02.13 19:12
-//       description: Load a configuration form XML
+//        changed by: christian.fritz
+//       change date: 29.12.15 14:58
 // ______________________________________________________________________________
 //
 //         Copyright: (c) Christian Fritz, all rights reserved
 // ______________________________________________________________________________
 
-package de.chrfritz.jolokiamunin.config.impl;
+package de.chrfritz.jolokiamunin.config.xml;
 
 import de.chrfritz.jolokiamunin.api.config.Category;
 import de.chrfritz.jolokiamunin.api.config.Configuration;
 import de.chrfritz.jolokiamunin.api.config.ConfigurationException;
 import de.chrfritz.jolokiamunin.api.config.ConfigurationLoader;
-import de.chrfritz.jolokiamunin.config.xml.CategoryType;
-import de.chrfritz.jolokiamunin.config.xml.Config;
 import org.dozer.DozerBeanMapper;
 import org.dozer.Mapper;
 import org.slf4j.Logger;
@@ -94,9 +91,7 @@ public class XMLConfiguration implements ConfigurationLoader {
      */
     protected Mapper getMapper() {
 
-        InputStream mapping = Thread.currentThread()
-                .getContextClassLoader()
-                .getResourceAsStream("de/chrfritz/jolokiamunin/config/xml/mapping-config.xml");
+        InputStream mapping = getClass().getResourceAsStream("mapping-config.xml");
         DozerBeanMapper mapper = new DozerBeanMapper();
         mapper.addMapping(mapping);
 

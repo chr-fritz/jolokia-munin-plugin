@@ -21,7 +21,7 @@ import de.chrfritz.jolokiamunin.api.config.ConfigurationException;
 import de.chrfritz.jolokiamunin.api.fetcher.Fetcher;
 import de.chrfritz.jolokiamunin.api.fetcher.FetcherFactory;
 import de.chrfritz.jolokiamunin.api.fetcher.Request;
-import de.chrfritz.jolokiamunin.config.impl.XMLConfiguration;
+import de.chrfritz.jolokiamunin.config.xml.XMLConfiguration;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

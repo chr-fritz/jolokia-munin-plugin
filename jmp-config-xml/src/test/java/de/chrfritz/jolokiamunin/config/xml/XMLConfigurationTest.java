@@ -1,18 +1,17 @@
 // ______________________________________________________________________________
 //
 //           Project: jolokia-munin-plugin
-//            Module: jolokia-munin-plugin
+//            Module: jmp-config-xml
 //             Class: XMLConfigurationTest
 //              File: XMLConfigurationTest.java
-//        changed by: christian
-//       change date: 18.02.13 19:46
-//       description: Test for xml configuration
+//        changed by: christian.fritz
+//       change date: 29.12.15 15:00
 // ______________________________________________________________________________
 //
 //         Copyright: (c) Christian Fritz, all rights reserved
 // ______________________________________________________________________________
 
-package de.chrfritz.jolokiamunin.config.impl;
+package de.chrfritz.jolokiamunin.config.xml;
 
 import de.chrfritz.jolokiamunin.api.config.Category;
 import de.chrfritz.jolokiamunin.api.config.Configuration;
@@ -36,7 +35,7 @@ public class XMLConfigurationTest {
 
     @Before
     public void setUp() throws Exception {
-        File configFile = new File(getClass().getResource("/de/chrfritz/jolokiamunin/config/impl/xmltest.xml").toURI());
+        File configFile = new File(getClass().getResource("/de/chrfritz/jolokiamunin/config/xml/xmltest.xml").toURI());
 
         config = new XMLConfiguration().loadConfig(configFile);
     }
@@ -67,7 +66,7 @@ public class XMLConfigurationTest {
     @Test(expected = ConfigurationException.class)
     public void testLoadInvalidFile() throws Exception {
         File configFile = new File(
-                getClass().getResource("/de/chrfritz/jolokiamunin/config/impl/xmltestInvalid.xml").toURI());
+                getClass().getResource("/de/chrfritz/jolokiamunin/config/xml/xmltestInvalid.xml").toURI());
 
         config = new XMLConfiguration().loadConfig(configFile);
     }

@@ -1,0 +1,14 @@
+# ______________________________________________________________________________
+#
+#           Project: jolokia-munin-plugin
+#            Module: jmp-config-xml
+#             Class: de.chrfritz.jolokiamunin.api.config.ConfigurationLoader
+#              File: de.chrfritz.jolokiamunin.api.config.ConfigurationLoader
+#        changed by: christian.fritz
+#       change date: 29.12.15 15:02
+# ______________________________________________________________________________
+#
+#         Copyright: (c) Christian Fritz, all rights reserved
+# ______________________________________________________________________________
+
+de.chrfritz.jolokiamunin.config.xml.XMLConfiguration
