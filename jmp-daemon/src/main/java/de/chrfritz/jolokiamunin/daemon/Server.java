@@ -1,25 +1,20 @@
-//______________________________________________________________________________
+// ______________________________________________________________________________
 //
-//          Project:
-//             File: $Id: ${FILE_NAME} $
-//     last changed: $Rev$
-//______________________________________________________________________________
+//           Project: jolokia-munin-plugin
+//            Module: jmp-daemon
+//             Class: Server
+//              File: Server.java
+//        changed by: christian.fritz
+//       change date: 29.12.15 14:55
+// ______________________________________________________________________________
 //
-//       created by: Christian Fritz
-//    creation date: 23.04.13
-//       changed by: $Author$
-//      change date: $LastChangedDate$
-//      description:
-//______________________________________________________________________________
-//
-//        Copyright: (c) Christian Fritz, all rights reserved
-//______________________________________________________________________________
+//         Copyright: (c) Christian Fritz, all rights reserved
+// ______________________________________________________________________________
 package de.chrfritz.jolokiamunin.daemon;
 
 
-import de.chrfritz.jolokiamunin.api.MuninProvider;
+import de.chrfritz.jolokiamunin.api.Dispatcher;
 import de.chrfritz.jolokiamunin.api.config.ConfigurationLoader;
-import de.chrfritz.jolokiamunin.controller.Dispatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,14 +41,14 @@ public class Server implements Runnable, AutoCloseable {
     private ExecutorService threadPool = Executors.newCachedThreadPool();
     private SocketAddress socketAddress;
 
-    public Server(MuninProvider muninProvider, ConfigurationLoader configLoader) throws IOException {
-        this(muninProvider, configLoader, new InetSocketAddress(DEFAULT_PORT));
+    public Server(Dispatcher dispatcher, ConfigurationLoader configLoader) throws IOException {
+        this(dispatcher, configLoader, new InetSocketAddress(DEFAULT_PORT));
     }
 
-    public Server(MuninProvider muninProvider, ConfigurationLoader configLoader,
+    public Server(Dispatcher dispatcher, ConfigurationLoader configLoader,
             SocketAddress socketAddress) throws IOException {
         server = new ServerSocket();
-        dispatcher = new Dispatcher(muninProvider);
+        this.dispatcher = dispatcher;
         configurationWatchService = new Thread(new ConfigurationWatchService(configLoader, dispatcher));
         configurationWatchService.setName("configurationWatchService");
         configurationWatchService.setDaemon(true);
@@ -70,7 +65,7 @@ public class Server implements Runnable, AutoCloseable {
         try {
             dispatcher.resolveControllers();
         }
-        catch (IOException e) {
+        catch (Exception e) {
             LOGGER.error("Can not resolve controllers.", e);
             return;
         }

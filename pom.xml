@@ -12,10 +12,10 @@
     <url>http://chrfritz.de/jolokia-munin-plugin/</url>
 
     <modules>
-        <module>jmp-core</module>
-        <module>jmp-distribution</module>
         <module>jmp-api</module>
         <module>jmp-config-xml</module>
+        <module>jmp-core</module>
+        <module>jmp-daemon</module>
     </modules>
 
     <properties>
@@ -73,6 +73,11 @@
             <dependency>
                 <groupId>de.chrfritz</groupId>
                 <artifactId>jmp-config-xml</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.chrfritz</groupId>
+                <artifactId>jmp-daemon</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

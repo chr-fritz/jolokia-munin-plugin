@@ -1,19 +1,18 @@
 // ______________________________________________________________________________
 //
 //           Project: jolokia-munin-plugin
-//            Module: jolokia-munin-plugin
+//            Module: jmp-daemon
 //             Class: Client
 //              File: Client.java
-//        changed by: christian
-//       change date: 23.04.13 19:06
-//       description:
+//        changed by: christian.fritz
+//       change date: 13.09.14 16:54
 // ______________________________________________________________________________
 //
 //         Copyright: (c) Christian Fritz, all rights reserved
 // ______________________________________________________________________________
 package de.chrfritz.jolokiamunin.daemon;
 
-import de.chrfritz.jolokiamunin.controller.Dispatcher;
+import de.chrfritz.jolokiamunin.api.Dispatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

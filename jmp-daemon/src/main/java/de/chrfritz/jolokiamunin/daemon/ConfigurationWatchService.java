@@ -1,12 +1,11 @@
 // ______________________________________________________________________________
 //
 //           Project: jolokia-munin-plugin
-//            Module: jolokia-munin-plugin
+//            Module: jmp-daemon
 //             Class: ConfigurationWatchService
 //              File: ConfigurationWatchService.java
-//        changed by: christian
-//       change date: 31.03.14 14:26
-//       description:
+//        changed by: christian.fritz
+//       change date: 29.12.15 14:46
 // ______________________________________________________________________________
 //
 //         Copyright: (c) Christian Fritz, all rights reserved
@@ -14,11 +13,11 @@
 
 package de.chrfritz.jolokiamunin.daemon;
 
-import com.google.common.base.Strings;
+import de.chrfritz.jolokiamunin.api.Dispatcher;
 import de.chrfritz.jolokiamunin.api.config.Configuration;
 import de.chrfritz.jolokiamunin.api.config.ConfigurationException;
 import de.chrfritz.jolokiamunin.api.config.ConfigurationLoader;
-import de.chrfritz.jolokiamunin.controller.Dispatcher;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,7 +53,7 @@ public class ConfigurationWatchService implements Runnable {
 
     private void init() throws IOException {
         String configName = System.getProperty("configFile", System.getenv("JOLOKIAMUNIN_CONFIG"));
-        if (Strings.isNullOrEmpty(configName)) {
+        if (StringUtils.isBlank(configName)) {
             configName = System.getenv("PWD") + "jolokiamunin.xml";
         }
         configFilePath = Paths.get(configName).toAbsolutePath();

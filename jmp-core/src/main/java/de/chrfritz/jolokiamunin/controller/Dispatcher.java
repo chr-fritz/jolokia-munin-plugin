@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.lang.reflect.Modifier;
 import java.util.*;
 
@@ -30,7 +31,7 @@ import java.util.*;
  *
  * @author christian.fritz
  */
-public class Dispatcher {
+public class Dispatcher implements de.chrfritz.jolokiamunin.api.Dispatcher {
 
     public static final String DEFAULT_SEARCH_PACKAGE = "de.chrfritz.jolokiamunin.controller";
 
@@ -61,10 +62,12 @@ public class Dispatcher {
         this.proivder = provider;
     }
 
+    @Override
     public synchronized Configuration getConfiguration() {
         return configuration;
     }
 
+    @Override
     public synchronized void setConfiguration(Configuration configuration) {
         this.configuration = configuration;
     }
@@ -76,6 +79,7 @@ public class Dispatcher {
      * @param request The request string.
      * @return The response.
      */
+    @Override
     public String handleRequest(String request) {
         LOGGER.info("Handle request: {}", request);
         String[] requestArray = request.split("\\s+", 2);
@@ -124,17 +128,23 @@ public class Dispatcher {
      *
      * @throws IOException In case of the classpath can not be fully read.
      */
-    public void resolveControllers() throws IOException {
+    @Override
+    public void resolveControllers() {
         if (controllerClasses != null) {
             return;
         }
         controllerClasses = new HashMap<>();
 
-        ClassPath classPath = ClassPath.from(Thread.currentThread().getContextClassLoader());
-        for (String searchPackage : searchPackages) {
-            for (ClassPath.ClassInfo info : classPath.getTopLevelClassesRecursive(searchPackage)) {
-                processController(info);
+        try {
+            ClassPath classPath = ClassPath.from(Thread.currentThread().getContextClassLoader());
+            for (String searchPackage : searchPackages) {
+                for (ClassPath.ClassInfo info : classPath.getTopLevelClassesRecursive(searchPackage)) {
+                    processController(info);
+                }
             }
+        }
+        catch (IOException e) {
+            throw new UncheckedIOException(e);
         }
     }
 

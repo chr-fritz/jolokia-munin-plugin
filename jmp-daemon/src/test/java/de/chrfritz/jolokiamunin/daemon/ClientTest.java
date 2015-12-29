@@ -1,18 +1,18 @@
 // ______________________________________________________________________________
 //
 //           Project: jolokia-munin-plugin
-//            Module: jolokia-munin-plugin
+//            Module: jmp-daemon
 //             Class: ClientTest
 //              File: ClientTest.java
-//        changed by: christian
-//       change date: 15.05.13 14:56
+//        changed by: christian.fritz
+//       change date: 29.12.15 15:51
 // ______________________________________________________________________________
 //
 //         Copyright: (c) Christian Fritz, all rights reserved
 // ______________________________________________________________________________
 package de.chrfritz.jolokiamunin.daemon;
 
-import de.chrfritz.jolokiamunin.controller.Dispatcher;
+import de.chrfritz.jolokiamunin.api.Dispatcher;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,7 +22,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.net.Socket;
 
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 

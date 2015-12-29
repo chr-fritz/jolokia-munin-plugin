@@ -1,11 +1,11 @@
 // ______________________________________________________________________________
 //
 //           Project: jolokia-munin-plugin
-//            Module: jolokia-munin-plugin
+//            Module: jmp-daemon
 //             Class: ShutdownThreadTest
 //              File: ShutdownThreadTest.java
 //        changed by: christian.fritz
-//       change date: 07.04.14 13:23
+//       change date: 29.12.15 15:51
 // ______________________________________________________________________________
 //
 //         Copyright: (c) Christian Fritz, all rights reserved
@@ -17,6 +17,7 @@ import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.lang.reflect.Field;
@@ -24,7 +25,6 @@ import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.mockito.Mockito.verify;
 
 /**
  * Test for {@link ShutdownThread}
@@ -66,7 +66,7 @@ public class ShutdownThreadTest {
         ShutdownThread.register(server);
         assertThat(getHiddenServerList(), contains(server));
         thread.run();
-        verify(server).close();
+        Mockito.verify(server).close();
     }
 
     private List<Server> getHiddenServerList() throws IllegalAccessException, NoSuchFieldException {

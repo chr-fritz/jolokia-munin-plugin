@@ -98,10 +98,10 @@ public class App {
         Server server;
         SocketAddress bindTo = getBindAddress();
         if (bindTo == null) {
-            server = new Server(muninProvider, configLoader);
+            server = new Server(new Dispatcher(muninProvider), configLoader);
         }
         else {
-            server = new Server(muninProvider, configLoader, bindTo);
+            server = new Server(new Dispatcher(muninProvider), configLoader, bindTo);
         }
         new Thread(server).start();
         return "Daemon successfully started\n";
