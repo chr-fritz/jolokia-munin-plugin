@@ -13,7 +13,7 @@
 
 package de.chrfritz.jolokiamunin.controller;
 
-import de.chrfritz.jolokiamunin.config.Configuration;
+import de.chrfritz.jolokiamunin.api.config.Configuration;
 
 import java.util.List;
 

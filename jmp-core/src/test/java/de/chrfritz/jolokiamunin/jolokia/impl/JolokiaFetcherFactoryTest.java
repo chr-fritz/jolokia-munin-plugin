@@ -13,8 +13,8 @@
 // ______________________________________________________________________________
 package de.chrfritz.jolokiamunin.jolokia.impl;
 
-import de.chrfritz.jolokiamunin.jolokia.Fetcher;
-import de.chrfritz.jolokiamunin.jolokia.FetcherFactory;
+import de.chrfritz.jolokiamunin.api.fetcher.Fetcher;
+import de.chrfritz.jolokiamunin.api.fetcher.FetcherFactory;
 import org.junit.Before;
 import org.junit.Test;
 

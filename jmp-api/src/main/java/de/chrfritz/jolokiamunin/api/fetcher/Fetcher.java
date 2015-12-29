@@ -1,18 +1,17 @@
 // ______________________________________________________________________________
 //
 //           Project: jolokia-munin-plugin
-//            Module: jolokia-munin-plugin
+//            Module: jmp-api
 //             Class: Fetcher
 //              File: Fetcher.java
-//        changed by: christian
-//       change date: 24.02.13 00:46
-//       description: The fetcher interface
+//        changed by: christian.fritz
+//       change date: 29.12.15 14:39
 // ______________________________________________________________________________
 //
 //         Copyright: (c) Christian Fritz, all rights reserved
 // ______________________________________________________________________________
 
-package de.chrfritz.jolokiamunin.jolokia;
+package de.chrfritz.jolokiamunin.api.fetcher;
 
 import java.util.List;
 import java.util.Map;

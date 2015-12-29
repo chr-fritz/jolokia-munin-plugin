@@ -13,10 +13,10 @@
 // ______________________________________________________________________________
 package de.chrfritz.jolokiamunin;
 
-import de.chrfritz.jolokiamunin.config.Category;
-import de.chrfritz.jolokiamunin.config.Configuration;
-import de.chrfritz.jolokiamunin.config.ConfigurationLoader;
-import de.chrfritz.jolokiamunin.munin.MuninProvider;
+import de.chrfritz.jolokiamunin.api.MuninProvider;
+import de.chrfritz.jolokiamunin.api.config.Category;
+import de.chrfritz.jolokiamunin.api.config.Configuration;
+import de.chrfritz.jolokiamunin.api.config.ConfigurationLoader;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

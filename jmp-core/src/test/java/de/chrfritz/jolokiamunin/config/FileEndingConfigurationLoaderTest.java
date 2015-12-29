@@ -13,6 +13,9 @@
 
 package de.chrfritz.jolokiamunin.config;
 
+import de.chrfritz.jolokiamunin.api.config.Configuration;
+import de.chrfritz.jolokiamunin.api.config.ConfigurationException;
+import de.chrfritz.jolokiamunin.api.config.ConfigurationLoader;
 import org.junit.Before;
 import org.junit.Test;
 

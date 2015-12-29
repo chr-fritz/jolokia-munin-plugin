@@ -13,10 +13,10 @@
 
 package de.chrfritz.jolokiamunin.config.groovy
 
-import de.chrfritz.jolokiamunin.config.Category
-import de.chrfritz.jolokiamunin.config.Configuration
-import de.chrfritz.jolokiamunin.config.Field
-import de.chrfritz.jolokiamunin.config.Graph
+import de.chrfritz.jolokiamunin.api.config.Category
+import de.chrfritz.jolokiamunin.api.config.Configuration
+import de.chrfritz.jolokiamunin.api.config.Field
+import de.chrfritz.jolokiamunin.api.config.Graph
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 

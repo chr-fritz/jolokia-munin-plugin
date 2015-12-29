@@ -15,9 +15,9 @@
 package de.chrfritz.jolokiamunin.jolokia.impl;
 
 import com.google.common.base.Strings;
-import de.chrfritz.jolokiamunin.jolokia.Fetcher;
-import de.chrfritz.jolokiamunin.jolokia.FetcherException;
-import de.chrfritz.jolokiamunin.jolokia.Request;
+import de.chrfritz.jolokiamunin.api.fetcher.Fetcher;
+import de.chrfritz.jolokiamunin.api.fetcher.FetcherException;
+import de.chrfritz.jolokiamunin.api.fetcher.Request;
 import org.apache.commons.lang3.StringUtils;
 import org.jolokia.client.J4pClient;
 import org.jolokia.client.exception.J4pException;

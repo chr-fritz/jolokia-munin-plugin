@@ -14,10 +14,10 @@
 
 package de.chrfritz.jolokiamunin.config.impl;
 
-import de.chrfritz.jolokiamunin.config.Category;
-import de.chrfritz.jolokiamunin.config.Configuration;
-import de.chrfritz.jolokiamunin.config.ConfigurationException;
-import de.chrfritz.jolokiamunin.config.ConfigurationLoader;
+import de.chrfritz.jolokiamunin.api.config.Category;
+import de.chrfritz.jolokiamunin.api.config.Configuration;
+import de.chrfritz.jolokiamunin.api.config.ConfigurationException;
+import de.chrfritz.jolokiamunin.api.config.ConfigurationLoader;
 import de.chrfritz.jolokiamunin.config.xml.CategoryType;
 import de.chrfritz.jolokiamunin.config.xml.Config;
 import org.dozer.DozerBeanMapper;
@@ -45,7 +45,7 @@ public class XMLConfiguration implements ConfigurationLoader {
      *
      * @param configFile Load the configuration from this file.
      * @return A configuration instance.
-     * @throws de.chrfritz.jolokiamunin.config.ConfigurationException In case of the configuration can not loaded.
+     * @throws ConfigurationException In case of the configuration can not loaded.
      */
     @Override
     public Configuration loadConfig(File configFile) throws ConfigurationException {

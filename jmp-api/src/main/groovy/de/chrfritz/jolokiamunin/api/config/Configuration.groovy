@@ -1,17 +1,17 @@
 // ______________________________________________________________________________
 //
 //           Project: jolokia-munin-plugin
-//            Module: jolokia-munin-plugin
-//             Class: GroovyConfiguration.groovy
-//              File: GroovyConfiguration.groovy
+//            Module: jmp-api
+//             Class: Configuration.groovy
+//              File: Configuration.groovy
 //        changed by: christian.fritz
-//       change date: 14.11.14 23:25
+//       change date: 29.12.15 14:46
 // ______________________________________________________________________________
 //
 //         Copyright: (c) Christian Fritz, all rights reserved
 // ______________________________________________________________________________
 
-package de.chrfritz.jolokiamunin.config
+package de.chrfritz.jolokiamunin.api.config
 
 import groovy.transform.Canonical
 
@@ -28,12 +28,12 @@ class Configuration {
     int port
     boolean singleFetchAllowed
     String bannerHostname
-    private List<de.chrfritz.jolokiamunin.config.Category> configuration = new ArrayList<>()
+    private List<Category> configuration = new ArrayList<>()
 
     /**
      * {@inheritDoc}
      */
-    List<de.chrfritz.jolokiamunin.config.Category> getConfiguration() {
+    List<Category> getConfiguration() {
         return configuration
     }
 }

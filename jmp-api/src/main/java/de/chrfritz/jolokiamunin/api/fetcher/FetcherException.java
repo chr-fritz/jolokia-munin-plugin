@@ -1,18 +1,17 @@
 // ______________________________________________________________________________
 //
 //           Project: jolokia-munin-plugin
-//            Module: jolokia-munin-plugin
+//            Module: jmp-api
 //             Class: FetcherException
 //              File: FetcherException.java
-//        changed by: christian
-//       change date: 20.02.13 21:59
-//       description: Fetcher Exception
+//        changed by: christian.fritz
+//       change date: 29.12.15 14:39
 // ______________________________________________________________________________
 //
 //         Copyright: (c) Christian Fritz, all rights reserved
 // ______________________________________________________________________________
 
-package de.chrfritz.jolokiamunin.jolokia;
+package de.chrfritz.jolokiamunin.api.fetcher;
 
 /**
  * The FetcherException will be thrown in cases of no or some values can't be fetched.

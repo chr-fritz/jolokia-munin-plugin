@@ -28,6 +28,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>de.chrfritz</groupId>
+            <artifactId>jmp-api</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.jolokia</groupId>
             <artifactId>jolokia-client-java</artifactId>
         </dependency>

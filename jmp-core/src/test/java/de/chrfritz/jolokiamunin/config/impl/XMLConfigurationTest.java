@@ -14,10 +14,10 @@
 
 package de.chrfritz.jolokiamunin.config.impl;
 
-import de.chrfritz.jolokiamunin.config.Category;
-import de.chrfritz.jolokiamunin.config.Configuration;
-import de.chrfritz.jolokiamunin.config.ConfigurationException;
-import de.chrfritz.jolokiamunin.config.Graph;
+import de.chrfritz.jolokiamunin.api.config.Category;
+import de.chrfritz.jolokiamunin.api.config.Configuration;
+import de.chrfritz.jolokiamunin.api.config.ConfigurationException;
+import de.chrfritz.jolokiamunin.api.config.Graph;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

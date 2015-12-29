@@ -1,17 +1,16 @@
 // ______________________________________________________________________________
 //
 //           Project: jolokia-munin-plugin
-//            Module: jolokia-munin-plugin
+//            Module: jmp-api
 //             Class: ConfigurationException
 //              File: ConfigurationException.java
-//        changed by: christian
-//       change date: 24.02.13 01:03
-//       description: The configuration exception
+//        changed by: christian.fritz
+//       change date: 29.12.15 14:43
 // ______________________________________________________________________________
 //
 //         Copyright: (c) Christian Fritz, all rights reserved
 // ______________________________________________________________________________
-package de.chrfritz.jolokiamunin.config;
+package de.chrfritz.jolokiamunin.api.config;
 
 /**
  * The FetcherException will be thrown in cases of the configuration can not be loaded.

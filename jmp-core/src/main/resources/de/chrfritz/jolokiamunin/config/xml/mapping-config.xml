@@ -4,7 +4,7 @@
           xsi:schemaLocation="http://dozer.sourceforge.net
           http://dozer.sourceforge.net/schema/beanmapping.xsd">
     <mapping>
-        <class-a>de.chrfritz.jolokiamunin.config.Category</class-a>
+        <class-a>de.chrfritz.jolokiamunin.api.config.Category</class-a>
         <class-b>de.chrfritz.jolokiamunin.config.xml.CategoryType</class-b>
         <field>
             <a>sourceUrl</a>
@@ -16,7 +16,7 @@
         </field>
     </mapping>
     <mapping>
-        <class-a>de.chrfritz.jolokiamunin.config.Graph</class-a>
+        <class-a>de.chrfritz.jolokiamunin.api.config.Graph</class-a>
         <class-b>de.chrfritz.jolokiamunin.config.xml.GraphType</class-b>
         <field>
             <a is-accessible="true">fields</a>

@@ -17,9 +17,9 @@
 package de.chrfritz.jolokiamunin.daemon;
 
 
-import de.chrfritz.jolokiamunin.config.ConfigurationLoader;
+import de.chrfritz.jolokiamunin.api.MuninProvider;
+import de.chrfritz.jolokiamunin.api.config.ConfigurationLoader;
 import de.chrfritz.jolokiamunin.controller.Dispatcher;
-import de.chrfritz.jolokiamunin.munin.MuninProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

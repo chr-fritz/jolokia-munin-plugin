@@ -1,18 +1,17 @@
 // ______________________________________________________________________________
 //
 //           Project: jolokia-munin-plugin
-//            Module: jolokia-munin-plugin
+//            Module: jmp-api
 //             Class: Request
 //              File: Request.java
-//        changed by: christian
-//       change date: 23.02.13 19:37
-//       description: Request DTO
+//        changed by: christian.fritz
+//       change date: 29.12.15 14:39
 // ______________________________________________________________________________
 //
 //         Copyright: (c) Christian Fritz, all rights reserved
 // ______________________________________________________________________________
 
-package de.chrfritz.jolokiamunin.jolokia;
+package de.chrfritz.jolokiamunin.api.fetcher;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;

@@ -1,18 +1,17 @@
 // ______________________________________________________________________________
 //
 //           Project: jolokia-munin-plugin
-//            Module: jolokia-munin-plugin
+//            Module: jmp-api
 //             Class: Category
 //              File: Category.java
-//        changed by: christian
-//       change date: 18.02.13 19:26
-//       description: Category DTO
+//        changed by: christian.fritz
+//       change date: 29.12.15 14:43
 // ______________________________________________________________________________
 //
 //         Copyright: (c) Christian Fritz, all rights reserved
 // ______________________________________________________________________________
 
-package de.chrfritz.jolokiamunin.config;
+package de.chrfritz.jolokiamunin.api.config;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;

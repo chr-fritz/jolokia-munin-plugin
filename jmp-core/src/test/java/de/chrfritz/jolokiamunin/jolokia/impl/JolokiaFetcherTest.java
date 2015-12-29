@@ -14,8 +14,8 @@
 
 package de.chrfritz.jolokiamunin.jolokia.impl;
 
-import de.chrfritz.jolokiamunin.jolokia.Fetcher;
-import de.chrfritz.jolokiamunin.jolokia.Request;
+import de.chrfritz.jolokiamunin.api.fetcher.Fetcher;
+import de.chrfritz.jolokiamunin.api.fetcher.Request;
 import org.apache.http.HttpResponse;
 import org.apache.http.ProtocolVersion;
 import org.apache.http.client.HttpClient;

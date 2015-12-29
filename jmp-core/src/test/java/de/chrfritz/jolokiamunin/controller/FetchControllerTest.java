@@ -14,9 +14,10 @@
 
 package de.chrfritz.jolokiamunin.controller;
 
-import de.chrfritz.jolokiamunin.config.Category;
-import de.chrfritz.jolokiamunin.config.Configuration;
-import de.chrfritz.jolokiamunin.munin.MuninProvider;
+import de.chrfritz.jolokiamunin.api.Controller;
+import de.chrfritz.jolokiamunin.api.MuninProvider;
+import de.chrfritz.jolokiamunin.api.config.Category;
+import de.chrfritz.jolokiamunin.api.config.Configuration;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

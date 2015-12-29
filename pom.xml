@@ -14,6 +14,7 @@
     <modules>
         <module>jmp-core</module>
         <module>jmp-distribution</module>
+        <module>jmp-api</module>
     </modules>
 
     <properties>
@@ -58,6 +59,11 @@
     <dependencyManagement>
         <dependencies>
             <!-- jmp dependencies -->
+            <dependency>
+                <groupId>de.chrfritz</groupId>
+                <artifactId>jmp-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <dependency>
                 <groupId>de.chrfritz</groupId>
                 <artifactId>jmp-core</artifactId>

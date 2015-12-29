@@ -14,6 +14,9 @@
 package de.chrfritz.jolokiamunin.config;
 
 import com.google.common.collect.Lists;
+import de.chrfritz.jolokiamunin.api.config.Configuration;
+import de.chrfritz.jolokiamunin.api.config.ConfigurationException;
+import de.chrfritz.jolokiamunin.api.config.ConfigurationLoader;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
@@ -26,7 +29,7 @@ import java.util.ServiceLoader;
  * Load a configuration using a configuration loader based by the file ending of the given config file.
  * <p>
  * It uses the {@link java.util.ServiceLoader} to find the available configuration loader. If you want to implement your
- * own configuration loader just implement the {@link de.chrfritz.jolokiamunin.config.ConfigurationLoader} interface and
+ * own configuration loader just implement the {@link ConfigurationLoader} interface and
  * register it through the {@code /META-INF/services/de.chrfritz.jolokiamunin.config.ConfigurationLoader} in your own jar
  * within the classpath.
  *
@@ -55,7 +58,7 @@ public class FileEndingConfigurationLoader implements ConfigurationLoader {
      *
      * @param configFile Load the configuration from this file.
      * @return A configuration instance.
-     * @throws de.chrfritz.jolokiamunin.config.ConfigurationException In case of the configuration can not loaded.
+     * @throws ConfigurationException In case of the configuration can not loaded.
      */
     @Override
     public Configuration loadConfig(File configFile) throws ConfigurationException {

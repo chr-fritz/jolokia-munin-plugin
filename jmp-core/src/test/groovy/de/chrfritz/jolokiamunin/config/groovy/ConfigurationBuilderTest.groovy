@@ -13,7 +13,7 @@
 
 package de.chrfritz.jolokiamunin.config.groovy
 
-import de.chrfritz.jolokiamunin.config.Configuration
+import de.chrfritz.jolokiamunin.api.config.Configuration
 import spock.lang.Specification
 
 import javax.script.ScriptEngine

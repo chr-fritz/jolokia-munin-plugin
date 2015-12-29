@@ -14,6 +14,7 @@
 
 package de.chrfritz.jolokiamunin.controller;
 
+import de.chrfritz.jolokiamunin.api.Controller;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,7 +36,7 @@ import static org.mockito.Mockito.when;
 public class HelpControllerTest {
     @Mock
     private Dispatcher dispatcher;
-    private Controller controller = new HelpController();
+    private AbstractController controller = new HelpController();
 
     @Before
     public void setUp() throws Exception {
@@ -49,7 +50,7 @@ public class HelpControllerTest {
     @Test
     public void testHandle() throws Exception {
         assertThat(controller.execute(""),
-                   is(equalTo("Usage: jolokia [command]\n" +
+                   is                             (equalTo                    ("Usage: jolokia [command]\n" +
                                       "Available Commands:\n" +
                                       "           help : Print this help message\n" +
                                       "------------------------------------------------------------\n" +

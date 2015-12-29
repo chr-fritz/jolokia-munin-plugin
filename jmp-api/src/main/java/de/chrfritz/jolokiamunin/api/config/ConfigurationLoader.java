@@ -11,7 +11,7 @@
 //         Copyright: (c) Christian Fritz, all rights reserved
 // ______________________________________________________________________________
 
-package de.chrfritz.jolokiamunin.config;
+package de.chrfritz.jolokiamunin.api.config;
 
 import java.io.File;
 import java.util.List;

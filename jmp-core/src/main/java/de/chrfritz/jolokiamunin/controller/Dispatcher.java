@@ -14,8 +14,9 @@
 package de.chrfritz.jolokiamunin.controller;
 
 import com.google.common.reflect.ClassPath;
-import de.chrfritz.jolokiamunin.config.Configuration;
-import de.chrfritz.jolokiamunin.munin.MuninProvider;
+import de.chrfritz.jolokiamunin.api.Controller;
+import de.chrfritz.jolokiamunin.api.MuninProvider;
+import de.chrfritz.jolokiamunin.api.config.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -139,7 +140,7 @@ public class Dispatcher {
 
     /**
      * Process the given class info.
-     * <p/>
+     * <p>
      * It checks if the given class info would produce a valid controller and add the class info to the the controller
      * classes.
      *
@@ -174,7 +175,9 @@ public class Dispatcher {
         }
         try {
             Object controller = controllerClass.newInstance();
-            ((Controller) controller).setDispatcher(this);
+            if (controller instanceof AbstractController) {
+                ((AbstractController) controller).setDispatcher(this);
+            }
             return (Controller) controller;
         }
         catch (InstantiationException | IllegalAccessException e) {

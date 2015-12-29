@@ -13,14 +13,14 @@
 
 package de.chrfritz.jolokiamunin.config.groovy
 
-import de.chrfritz.jolokiamunin.config.Configuration
+import de.chrfritz.jolokiamunin.api.config.Configuration
 
 /**
  * Load a groovy configuration.
  *
  * @author christian.fritz
  */
-class ConfigurationLoader implements de.chrfritz.jolokiamunin.config.ConfigurationLoader {
+class ConfigurationLoader implements de.chrfritz.jolokiamunin.api.config.ConfigurationLoader {
 
     private ConfigurationBuilder builder = new ConfigurationBuilder()
 

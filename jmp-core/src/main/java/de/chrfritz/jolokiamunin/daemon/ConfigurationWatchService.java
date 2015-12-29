@@ -15,9 +15,9 @@
 package de.chrfritz.jolokiamunin.daemon;
 
 import com.google.common.base.Strings;
-import de.chrfritz.jolokiamunin.config.Configuration;
-import de.chrfritz.jolokiamunin.config.ConfigurationException;
-import de.chrfritz.jolokiamunin.config.ConfigurationLoader;
+import de.chrfritz.jolokiamunin.api.config.Configuration;
+import de.chrfritz.jolokiamunin.api.config.ConfigurationException;
+import de.chrfritz.jolokiamunin.api.config.ConfigurationLoader;
 import de.chrfritz.jolokiamunin.controller.Dispatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

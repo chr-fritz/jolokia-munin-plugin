@@ -1,20 +1,19 @@
 // ______________________________________________________________________________
 //
 //           Project: jolokia-munin-plugin
-//            Module: jolokia-munin-plugin
+//            Module: jmp-api
 //             Class: Controller
 //              File: Controller.java
 //        changed by: christian.fritz
-//       change date: 31.03.14 14:42
+//       change date: 29.12.15 14:47
 // ______________________________________________________________________________
 //
 //         Copyright: (c) Christian Fritz, all rights reserved
 // ______________________________________________________________________________
 
-package de.chrfritz.jolokiamunin.controller;
+package de.chrfritz.jolokiamunin.api;
 
-import de.chrfritz.jolokiamunin.config.Configuration;
-import de.chrfritz.jolokiamunin.munin.MuninProvider;
+import de.chrfritz.jolokiamunin.api.config.Configuration;
 
 /**
  * A controller which handles incoming requests.
@@ -72,11 +71,4 @@ public interface Controller {
      * @param configuration the new configuration
      */
     void setConfiguration(Configuration configuration);
-
-    /**
-     * Set the dispatcher which delegates the request to the controller.
-     *
-     * @param dispatcher The dispatcher instance
-     */
-    void setDispatcher(Dispatcher dispatcher);
 }

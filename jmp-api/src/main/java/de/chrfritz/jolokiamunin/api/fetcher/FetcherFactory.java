@@ -1,17 +1,16 @@
 // ______________________________________________________________________________
 //
 //           Project: jolokia-munin-plugin
-//            Module: jolokia-munin-plugin
+//            Module: jmp-api
 //             Class: FetcherFactory
 //              File: FetcherFactory.java
-//        changed by: christian
-//       change date: 02.03.13 13:48
-//       description: Fetcher Factory interface
+//        changed by: christian.fritz
+//       change date: 29.12.15 14:39
 // ______________________________________________________________________________
 //
 //         Copyright: (c) Christian Fritz, all rights reserved
 // ______________________________________________________________________________
-package de.chrfritz.jolokiamunin.jolokia;
+package de.chrfritz.jolokiamunin.api.fetcher;
 
 import java.net.MalformedURLException;
 import java.net.URL;

@@ -15,15 +15,15 @@
 package de.chrfritz.jolokiamunin;
 
 import com.google.common.base.Strings;
-import de.chrfritz.jolokiamunin.config.Configuration;
-import de.chrfritz.jolokiamunin.config.ConfigurationException;
-import de.chrfritz.jolokiamunin.config.ConfigurationLoader;
+import de.chrfritz.jolokiamunin.api.MuninProvider;
+import de.chrfritz.jolokiamunin.api.config.Configuration;
+import de.chrfritz.jolokiamunin.api.config.ConfigurationException;
+import de.chrfritz.jolokiamunin.api.config.ConfigurationLoader;
 import de.chrfritz.jolokiamunin.config.FileEndingConfigurationLoader;
 import de.chrfritz.jolokiamunin.controller.Dispatcher;
 import de.chrfritz.jolokiamunin.daemon.Server;
 import de.chrfritz.jolokiamunin.daemon.ShutdownMonitor;
 import de.chrfritz.jolokiamunin.jolokia.impl.JolokiaFetcherFactory;
-import de.chrfritz.jolokiamunin.munin.MuninProvider;
 import de.chrfritz.jolokiamunin.munin.impl.MuninProviderImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

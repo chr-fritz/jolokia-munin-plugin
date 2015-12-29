@@ -13,6 +13,7 @@
 
 package de.chrfritz.jolokiamunin.controller;
 
+import de.chrfritz.jolokiamunin.api.Controller;
 import org.apache.commons.lang3.StringUtils;
 
 /**

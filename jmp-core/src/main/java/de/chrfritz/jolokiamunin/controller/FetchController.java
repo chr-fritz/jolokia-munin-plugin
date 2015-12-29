@@ -13,7 +13,7 @@
 
 package de.chrfritz.jolokiamunin.controller;
 
-import de.chrfritz.jolokiamunin.jolokia.FetcherException;
+import de.chrfritz.jolokiamunin.api.fetcher.FetcherException;
 
 /**
  * Fetches the values for all defined graphs from the jolokia agents and build a valid munin fetch response.

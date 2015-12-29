@@ -15,14 +15,14 @@ package de.chrfritz.jolokiamunin.munin.impl;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Strings;
-import de.chrfritz.jolokiamunin.config.Category;
-import de.chrfritz.jolokiamunin.config.Field;
-import de.chrfritz.jolokiamunin.config.Graph;
-import de.chrfritz.jolokiamunin.jolokia.Fetcher;
-import de.chrfritz.jolokiamunin.jolokia.FetcherException;
-import de.chrfritz.jolokiamunin.jolokia.FetcherFactory;
-import de.chrfritz.jolokiamunin.jolokia.Request;
-import de.chrfritz.jolokiamunin.munin.MuninProvider;
+import de.chrfritz.jolokiamunin.api.MuninProvider;
+import de.chrfritz.jolokiamunin.api.config.Category;
+import de.chrfritz.jolokiamunin.api.config.Field;
+import de.chrfritz.jolokiamunin.api.config.Graph;
+import de.chrfritz.jolokiamunin.api.fetcher.Fetcher;
+import de.chrfritz.jolokiamunin.api.fetcher.FetcherException;
+import de.chrfritz.jolokiamunin.api.fetcher.FetcherFactory;
+import de.chrfritz.jolokiamunin.api.fetcher.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

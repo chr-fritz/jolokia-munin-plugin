@@ -1,20 +1,20 @@
 // ______________________________________________________________________________
 //
 //           Project: jolokia-munin-plugin
-//            Module: jolokia-munin-plugin
+//            Module: jmp-api
 //             Class: MuninProvider
 //              File: MuninProvider.java
-//        changed by: christian
-//       change date: 19.02.13 18:32
-//       description: Munin Provider Interface
+//        changed by: christian.fritz
+//       change date: 29.12.15 14:38
 // ______________________________________________________________________________
 //
 //         Copyright: (c) Christian Fritz, all rights reserved
 // ______________________________________________________________________________
-package de.chrfritz.jolokiamunin.munin;
+package de.chrfritz.jolokiamunin.api;
 
-import de.chrfritz.jolokiamunin.config.Category;
-import de.chrfritz.jolokiamunin.jolokia.FetcherException;
+
+import de.chrfritz.jolokiamunin.api.config.Category;
+import de.chrfritz.jolokiamunin.api.fetcher.FetcherException;
 
 import java.util.List;
 
