@@ -16,6 +16,7 @@
         <module>jmp-config-xml</module>
         <module>jmp-core</module>
         <module>jmp-daemon</module>
+        <module>jmp-common</module>
     </modules>
 
     <properties>
