@@ -14,7 +14,6 @@
 
 package de.chrfritz.jolokiamunin.jolokia.impl;
 
-import com.google.common.base.Strings;
 import de.chrfritz.jolokiamunin.api.fetcher.Fetcher;
 import de.chrfritz.jolokiamunin.api.fetcher.FetcherException;
 import de.chrfritz.jolokiamunin.api.fetcher.Request;
@@ -32,6 +31,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
  * Implementation of the fechter interface to fetch values from a jolokia agent.
@@ -123,17 +124,12 @@ public class JolokiaFetcher implements Fetcher {
      * @param request The original request
      */
     private void handleResponse(Map<Request, Number> results, Object value, Request request) {
-        if (!Strings.isNullOrEmpty(request.getAttribute())
-                && value instanceof Number) {
-
+        if (!isBlank(request.getAttribute()) && value instanceof Number) {
             LOGGER.debug("Adding {}:{}", request, value);
             results.put(request, (Number) value);
-
         }
-        else if (!Strings.isNullOrEmpty(request.getMbean())
-                && !Strings.isNullOrEmpty(request.getAttribute())
-                && Strings.isNullOrEmpty(request.getPath())) {
-
+        else if (!isBlank(request.getMbean()) && !isBlank(request.getAttribute())
+                && isBlank(request.getPath())) {
             handleAttributeResponse(results, (Map) value, request);
         }
         else {
@@ -201,7 +197,7 @@ public class JolokiaFetcher implements Fetcher {
 
             try {
                 J4pReadRequest readRequest = new J4pReadRequest(request.getMbean(), request.getAttribute());
-                if (!Strings.isNullOrEmpty(request.getPath())) {
+                if (!isBlank(request.getPath())) {
                     readRequest.setPath(request.getPath());
                 }
                 readRequests.add(readRequest);

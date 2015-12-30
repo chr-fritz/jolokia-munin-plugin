@@ -13,8 +13,6 @@
 // ______________________________________________________________________________
 package de.chrfritz.jolokiamunin.munin.impl;
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.Strings;
 import de.chrfritz.jolokiamunin.api.MuninProvider;
 import de.chrfritz.jolokiamunin.api.config.Category;
 import de.chrfritz.jolokiamunin.api.config.Field;
@@ -32,6 +30,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
  * A handler that thats get a configuration and produces either the configuration for munin or fetches the values and
@@ -222,8 +223,8 @@ public class MuninProviderImpl implements MuninProvider {
             String graphName = graph.getName();
 
             for (Field field : graph.getFields()) {
-                String mbean = MoreObjects.firstNonNull(field.getMbean(), graphMbean);
-                String attribute = MoreObjects.firstNonNull(field.getAttribute(), graphAttribute);
+                String mbean = defaultIfNull(field.getMbean(), graphMbean);
+                String attribute = defaultIfNull(field.getAttribute(), graphAttribute);
                 requests.put(graphName + "_" + field.getName(), new Request(mbean, attribute, field.getPath()));
             }
         }
@@ -242,7 +243,7 @@ public class MuninProviderImpl implements MuninProvider {
      * @param value  The value of the attribute.
      */
     private static void addAttribute(StringBuilder buffer, String name, String value) {
-        if (!Strings.isNullOrEmpty(name) && !Strings.isNullOrEmpty(value)) {
+        if (!isBlank(name) && !isBlank(value)) {
             buffer.append(name).append(" ").append(value.trim()).append(LINE_SEPARATOR);
         }
     }
