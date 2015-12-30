@@ -17,13 +17,13 @@ import com.google.common.collect.Lists;
 import de.chrfritz.jolokiamunin.api.config.Configuration;
 import de.chrfritz.jolokiamunin.api.config.ConfigurationException;
 import de.chrfritz.jolokiamunin.api.config.ConfigurationLoader;
+import de.chrfritz.jolokiamunin.common.lookup.Lookup;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.ServiceLoader;
 
 /**
  * Load a configuration using a configuration loader based by the file ending of the given config file.
@@ -44,7 +44,7 @@ public class FileEndingConfigurationLoader implements ConfigurationLoader {
      * Initialize the configuraton loader.
      */
     public FileEndingConfigurationLoader() {
-        ServiceLoader<ConfigurationLoader> serviceLoader = ServiceLoader.load(ConfigurationLoader.class);
+        List<ConfigurationLoader> serviceLoader = Lookup.lookupAll(ConfigurationLoader.class);
         for (ConfigurationLoader configurationLoader : serviceLoader) {
             configurationLoader.getAssignedFileExtensions()
                     .stream()

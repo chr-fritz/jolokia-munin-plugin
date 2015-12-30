@@ -33,6 +33,10 @@
         </dependency>
         <dependency>
             <groupId>de.chrfritz</groupId>
+            <artifactId>jmp-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.chrfritz</groupId>
             <artifactId>jmp-daemon</artifactId>
         </dependency>
 

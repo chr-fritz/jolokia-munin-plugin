@@ -73,6 +73,11 @@
             </dependency>
             <dependency>
                 <groupId>de.chrfritz</groupId>
+                <artifactId>jmp-common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.chrfritz</groupId>
                 <artifactId>jmp-config-xml</artifactId>
                 <version>${project.version}</version>
             </dependency>
