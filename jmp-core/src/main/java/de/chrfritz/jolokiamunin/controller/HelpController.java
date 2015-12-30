@@ -16,6 +16,10 @@ package de.chrfritz.jolokiamunin.controller;
 import de.chrfritz.jolokiamunin.api.Controller;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.List;
+
+import static java.util.Collections.singletonList;
+
 /**
  * Build a short help message that contains the command name and a short description of all installed controllers.
  *
@@ -44,6 +48,16 @@ public class HelpController extends AbstractController {
                 .append(getDispatcher().handleRequest("version"))
                 .append('\n');
         return builder.toString();
+    }
+
+    /**
+     * Get a list with all command names that the controller is responsible for.
+     *
+     * @return A list with all handled commands.
+     */
+    @Override
+    public List<String> getHandledCommands() {
+        return singletonList("help");
     }
 
     @Override

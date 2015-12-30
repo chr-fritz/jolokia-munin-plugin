@@ -15,6 +15,10 @@ package de.chrfritz.jolokiamunin.controller;
 
 import de.chrfritz.jolokiamunin.api.config.Configuration;
 
+import java.util.List;
+
+import static java.util.Collections.singletonList;
+
 /**
  * Get the munin compatible configuration for all graphs defined within the configuration.
  *
@@ -26,6 +30,16 @@ public class ConfigController extends AbstractController {
     protected String handle() {
         Configuration config = getConfiguration();
         return getMuninProvider().getConfig(config.getConfiguration());
+    }
+
+    /**
+     * Get a list with all command names that the controller is responsible for.
+     *
+     * @return A list with all handled commands.
+     */
+    @Override
+    public List<String> getHandledCommands() {
+        return singletonList("config");
     }
 
     @Override

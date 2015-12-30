@@ -14,20 +14,28 @@
 package de.chrfritz.jolokiamunin.api;
 
 import de.chrfritz.jolokiamunin.api.config.Configuration;
+import java.util.List;
 
 /**
  * A controller which handles incoming requests.
- * <p/>
+ * <p>
  * Every request starts with the controller name and may followed by some arguments. The dispatcher decides which
  * controller must be used to handle this request and calls the controllers {@link Controller#execute(String)} method
  * and send the return value to the client.
- * <p/>
+ * <p>
  * Additionally a controller can return a short help message which should contain a short description what are valid
  * arguments and how they influence the controllers work.
  *
  * @author christian.fritz
  */
 public interface Controller {
+
+    /**
+     * Get a list with all command names that the controller is responsible for.
+     *
+     * @return A list with all handled commands.
+     */
+    List<String> getHandledCommands();
 
     /**
      * Process the request.

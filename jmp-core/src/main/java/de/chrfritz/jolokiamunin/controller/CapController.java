@@ -13,6 +13,10 @@
 
 package de.chrfritz.jolokiamunin.controller;
 
+import java.util.List;
+
+import static java.util.Collections.singletonList;
+
 /**
  * @author christian.fritz
  */
@@ -27,6 +31,16 @@ public class CapController extends AbstractController {
     @Override
     protected String handle() throws Exception {
         return "cap multigraph dirtyconfig";
+    }
+
+    /**
+     * Get a list with all command names that the controller is responsible for.
+     *
+     * @return A list with all handled commands.
+     */
+    @Override
+    public List<String> getHandledCommands() {
+        return singletonList("cap");
     }
 
     /**

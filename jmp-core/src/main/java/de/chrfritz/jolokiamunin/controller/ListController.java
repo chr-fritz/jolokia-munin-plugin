@@ -17,6 +17,8 @@ import de.chrfritz.jolokiamunin.api.config.Configuration;
 
 import java.util.List;
 
+import static java.util.Collections.singletonList;
+
 /**
  * List the names of all available graphs.
  *
@@ -39,6 +41,16 @@ public class ListController extends AbstractController {
         else {
             return "jolokia";
         }
+    }
+
+    /**
+     * Get a list with all command names that the controller is responsible for.
+     *
+     * @return A list with all handled commands.
+     */
+    @Override
+    public List<String> getHandledCommands() {
+        return singletonList("list");
     }
 
     @Override

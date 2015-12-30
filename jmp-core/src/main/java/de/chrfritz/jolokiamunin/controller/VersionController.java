@@ -14,7 +14,10 @@
 package de.chrfritz.jolokiamunin.controller;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Properties;
+
+import static java.util.Collections.singletonList;
 
 /**
  * Show the version information of the installed jolokia munin plugin.
@@ -28,19 +31,26 @@ public class VersionController extends AbstractController {
         Properties props = new Properties();
         props.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("version.properties"));
 
-        StringBuilder buffer = new StringBuilder();
-        buffer.append("Jolokia-Munin Plugin by Christian Fritz 2013 - 2014 \n")
-                .append("Version: ")
-                .append(props.getProperty("jmp.version"))
-                .append("\nBuild from git commit ")
-                .append(props.getProperty("jmp.buildNumber"))
-                .append(" on git branch ")
-                .append(props.getProperty("jmp.buildBranch"))
-                .append("\nBuild date: ")
-                .append(props.getProperty("jmp.buildDate"))
-                .append("\n");
+        return "Jolokia-Munin Plugin by Christian Fritz 2013 - 2014 \n" +
+                "Version: " +
+                props.getProperty("jmp.version") +
+                "\nBuild from git commit " +
+                props.getProperty("jmp.buildNumber") +
+                " on git branch " +
+                props.getProperty("jmp.buildBranch") +
+                "\nBuild date: " +
+                props.getProperty("jmp.buildDate") +
+                "\n";
+    }
 
-        return buffer.toString();
+    /**
+     * Get a list with all command names that the controller is responsible for.
+     *
+     * @return A list with all handled commands.
+     */
+    @Override
+    public List<String> getHandledCommands() {
+        return singletonList("version");
     }
 
     @Override
