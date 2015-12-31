@@ -5,7 +5,7 @@
 //             Class: Dispatcher
 //              File: Dispatcher.java
 //        changed by: christian.fritz
-//       change date: 29.12.15 15:42
+//       change date: 30.12.15 19:10
 // ______________________________________________________________________________
 //
 //         Copyright: (c) Christian Fritz, all rights reserved
@@ -13,14 +13,22 @@
 
 package de.chrfritz.jolokiamunin.api;
 
-import de.chrfritz.jolokiamunin.api.config.Configuration;
-
-import java.io.IOException;
+import java.util.List;
 
 /**
+ * The main interface for a dispatcher that redirects calls to the controllers.
+ *
  * @author christian.fritz
  */
 public interface Dispatcher {
+
+    /**
+     * Initialize the dispatcher.
+     *
+     * @param searchTypes The controller interface types to search.
+     */
+    void init(List<Class<? extends Controller>> searchTypes);
+
     /**
      * Handle a unique request.
      * The request begins with the command name followed by zero or more arguments.
@@ -29,15 +37,4 @@ public interface Dispatcher {
      * @return The response.
      */
     String handleRequest(String request);
-
-    /**
-     * Resolve all controllers form classpath.
-     *
-     * @throws IOException In case of the classpath can not be fully read.
-     */
-    void resolveControllers();
-
-    Configuration getConfiguration();
-
-    void setConfiguration(Configuration configuration);
 }

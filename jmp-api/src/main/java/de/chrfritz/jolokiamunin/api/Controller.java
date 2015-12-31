@@ -13,7 +13,6 @@
 
 package de.chrfritz.jolokiamunin.api;
 
-import de.chrfritz.jolokiamunin.api.config.Configuration;
 import java.util.List;
 
 /**
@@ -51,32 +50,4 @@ public interface Controller {
      * @return The help message.
      */
     String getHelpMessage();
-
-    /**
-     * Get the munin provider thats build the response.
-     *
-     * @return The munin porvider instance.
-     */
-    MuninProvider getMuninProvider();
-
-    /**
-     * Set a new munin provider instance.
-     *
-     * @param provider The new instance.
-     */
-    void setMuninProvider(MuninProvider provider);
-
-    /**
-     * Get the configuration thats used to execute the request.
-     *
-     * @return The current configuration.
-     */
-    Configuration getConfiguration();
-
-    /**
-     * Set a new configuration for executing further requests.
-     *
-     * @param configuration the new configuration
-     */
-    void setConfiguration(Configuration configuration);
 }

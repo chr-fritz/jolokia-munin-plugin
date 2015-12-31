@@ -13,17 +13,19 @@
 
 package de.chrfritz.jolokiamunin.controller;
 
-import com.google.common.reflect.ClassPath;
 import de.chrfritz.jolokiamunin.api.Controller;
-import de.chrfritz.jolokiamunin.api.MuninProvider;
-import de.chrfritz.jolokiamunin.api.config.Configuration;
+import de.chrfritz.jolokiamunin.api.DispatcherAwareController;
+import de.chrfritz.jolokiamunin.common.lookup.Lookup;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.lang.reflect.Modifier;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Handles the loading of all command controllers and dispatches the incomming command requests to the controllers.
@@ -33,44 +35,29 @@ import java.util.*;
  */
 public class Dispatcher implements de.chrfritz.jolokiamunin.api.Dispatcher {
 
-    public static final String DEFAULT_SEARCH_PACKAGE = "de.chrfritz.jolokiamunin.controller";
-
     private static final Logger LOGGER = LoggerFactory.getLogger(Dispatcher.class);
 
-    private List<String> searchPackages;
-
     private Map<String, Class<? extends Controller>> controllerClasses;
-
-    private Configuration configuration;
-
-    private MuninProvider proivder;
+    private Map<List<String>, String> helpTexts = new HashMap<>();
 
     /**
      * Initialize the dispatcher.
      *
-     * @param provider Use this provider to generate the munin compatible answers.
+     * @param searchTypes The controller interface types to search.
      */
-    public Dispatcher(MuninProvider provider) {
-        this(Arrays.asList(DEFAULT_SEARCH_PACKAGE), provider);
-    }
-
-    public Dispatcher(List<String> searchPackages, MuninProvider provider) {
-        if (!searchPackages.contains(DEFAULT_SEARCH_PACKAGE)) {
-            searchPackages.add(0, DEFAULT_SEARCH_PACKAGE);
+    @Override
+    public void init(List<Class<? extends Controller>> searchTypes) {
+        if (controllerClasses != null) {
+            throw new IllegalStateException("Dispatcher is already initialized");
         }
-        this.searchPackages = searchPackages;
-        this.proivder = provider;
+        controllerClasses = searchTypes.stream()
+                .flatMap(t -> Lookup.lookupAll(t).stream())
+                .sorted((c1, c2) -> c1.getClass().getSimpleName().compareTo(c2.getClass().getSimpleName()))
+                .peek(c -> helpTexts.put(c.getHandledCommands(), c.getHelpMessage()))
+                .flatMap(c -> c.getHandledCommands().stream().map(cmd -> Pair.of(cmd, (Class) c.getClass())))
+                .collect(Collectors.toMap(Pair::getKey, Pair::getValue));
     }
 
-    @Override
-    public synchronized Configuration getConfiguration() {
-        return configuration;
-    }
-
-    @Override
-    public synchronized void setConfiguration(Configuration configuration) {
-        this.configuration = configuration;
-    }
 
     /**
      * Handle a unique request.
@@ -87,9 +74,6 @@ public class Dispatcher implements de.chrfritz.jolokiamunin.api.Dispatcher {
 
         String arguments = requestArray.length > 1 ? requestArray[1] : "";
         if (controller != null) {
-            controller.setMuninProvider(proivder);
-            controller.setConfiguration(getConfiguration());
-
             String response = controller.execute(arguments);
             LOGGER.info("Finished handling request (command: {})", requestArray[0]);
             return response;
@@ -99,100 +83,83 @@ public class Dispatcher implements de.chrfritz.jolokiamunin.api.Dispatcher {
         }
     }
 
-    /**
-     * Get the controller for a given command name.
-     *
-     * @param command The command name.
-     * @return The controller matching this command.
-     */
-    public Controller getControllerForCommand(String command) {
-        Class controllerClass = controllerClasses.get(command);
-        return initializeController(controllerClass);
-    }
-
-    /**
-     * Get a list of all controlles.
-     *
-     * @return A list of all controllers.
-     */
-    public List<Controller> getControllers() {
-        List<Controller> controllers = new ArrayList<>();
-        for (Class<? extends Controller> controllerClass : controllerClasses.values()) {
-            controllers.add(initializeController(controllerClass));
-        }
-        return controllers;
-    }
-
-    /**
-     * Resolve all controllers form classpath.
-     *
-     * @throws IOException In case of the classpath can not be fully read.
-     */
-    @Override
-    public void resolveControllers() {
-        if (controllerClasses != null) {
-            return;
-        }
-        controllerClasses = new HashMap<>();
-
-        try {
-            ClassPath classPath = ClassPath.from(Thread.currentThread().getContextClassLoader());
-            for (String searchPackage : searchPackages) {
-                for (ClassPath.ClassInfo info : classPath.getTopLevelClassesRecursive(searchPackage)) {
-                    processController(info);
-                }
-            }
-        }
-        catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
-    }
-
-    /**
-     * Process the given class info.
-     * <p>
-     * It checks if the given class info would produce a valid controller and add the class info to the the controller
-     * classes.
-     *
-     * @param info The class information info.
-     */
-    private void processController(ClassPath.ClassInfo info) {
-        String className = info.getSimpleName();
-        if (!className.endsWith("Controller")) {
-            return;
-        }
-        Class<?> clazz = info.load();
-        int modifiers = clazz.getModifiers();
-
-        if (Modifier.isInterface(modifiers) || Modifier.isAbstract(modifiers) ||
-                !Controller.class.isAssignableFrom(clazz)) {
-            return;
-        }
-
-        String command = className.substring(0, className.lastIndexOf("Controller")).toLowerCase();
-        controllerClasses.put(command, (Class<? extends Controller>) clazz);
-    }
-
-    /**
-     * Initialize the a new controller by the given class.
-     *
-     * @param controllerClass Initialize a new controller instance for this class.
-     * @return The fully initialized controller instance.
-     */
-    private Controller initializeController(Class<? extends Controller> controllerClass) {
-        if (controllerClass == null) {
+    private Controller getControllerForCommand(String command) {
+        if (!controllerClasses.containsKey(command)) {
             return null;
         }
-        try {
-            Object controller = controllerClass.newInstance();
-            if (controller instanceof AbstractController) {
-                ((AbstractController) controller).setDispatcher(this);
+        Controller lookup = Lookup.lookup(controllerClasses.get(command));
+        if (lookup instanceof DispatcherAwareController) {
+            ((DispatcherAwareController) lookup).setDispatcher(this);
+        }
+        return lookup;
+    }
+
+    /**
+     * Build a short help message that contains the command name and a short description of all installed controllers.
+     *
+     * @author christian.fritz
+     */
+    public static class HelpController implements DispatcherAwareController {
+        private static final int PREFIX_LENGTH = 25;
+        private Dispatcher dispatcher;
+
+        /**
+         * Get a list with all command names that the controller is responsible for.
+         *
+         * @return A list with all handled commands.
+         */
+        @Override
+        public List<String> getHandledCommands() {
+            return Arrays.asList("help", "h");
+        }
+
+        /**
+         * Process the request.
+         *
+         * @param arguments The arguments to execute the request processing.
+         * @return The response.
+         */
+        @Override
+        public String execute(String arguments) {
+            StringBuilder builder = new StringBuilder();
+            builder.append("Usage: jolokia [command]\n")
+                    .append("Available Commands:\n");
+
+            Integer prefixLength = dispatcher.helpTexts.keySet()
+                    .stream()
+                    .map(strings -> strings.stream()
+                            .map((s) -> s.length() + 2)
+                            .collect(Collectors.summingInt(i -> i)) - 2
+                        )
+                    .max(Integer::compare)
+                    .orElse(PREFIX_LENGTH);
+
+            for (Map.Entry<List<String>, String> entry : dispatcher.helpTexts.entrySet()) {
+                String command = entry.getKey().stream().collect(Collectors.joining(", "));
+                builder.append(StringUtils.leftPad(command, prefixLength))
+                        .append(" : ")
+                        .append(entry.getValue())
+                        .append('\n');
             }
-            return (Controller) controller;
+            builder.append("------------------------------------------------------------\n")
+                    .append(dispatcher.handleRequest("version"))
+                    .append('\n');
+            return builder.toString();
         }
-        catch (InstantiationException | IllegalAccessException e) {
-            LOGGER.error("Can not init controller class", e);
+
+        /**
+         * Get a short help message.
+         *
+         * @return The help message.
+         */
+        @Override
+        public String getHelpMessage() {
+            return "Print this help message";
         }
-        return null;
+
+        @Override
+        public void setDispatcher(de.chrfritz.jolokiamunin.api.Dispatcher dispatcher) {
+            this.dispatcher = (Dispatcher) dispatcher;
+        }
     }
 }

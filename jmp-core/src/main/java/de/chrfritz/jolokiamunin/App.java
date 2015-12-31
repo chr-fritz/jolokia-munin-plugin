@@ -15,10 +15,14 @@
 package de.chrfritz.jolokiamunin;
 
 import com.google.common.base.Strings;
+import de.chrfritz.jolokiamunin.api.CliController;
+import de.chrfritz.jolokiamunin.api.Controller;
 import de.chrfritz.jolokiamunin.api.MuninProvider;
 import de.chrfritz.jolokiamunin.api.config.Configuration;
 import de.chrfritz.jolokiamunin.api.config.ConfigurationException;
 import de.chrfritz.jolokiamunin.api.config.ConfigurationLoader;
+import de.chrfritz.jolokiamunin.common.lookup.Lookup;
+import de.chrfritz.jolokiamunin.common.lookup.impl.ServiceLoaderLookupStrategy;
 import de.chrfritz.jolokiamunin.config.FileEndingConfigurationLoader;
 import de.chrfritz.jolokiamunin.controller.Dispatcher;
 import de.chrfritz.jolokiamunin.daemon.Server;
@@ -35,6 +39,7 @@ import java.net.MalformedURLException;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 
 /**
  * The Main Application Class
@@ -52,6 +57,7 @@ public class App {
      * @throws ConfigurationException
      */
     public static void main(String[] args) throws IOException, ConfigurationException {
+        Lookup.init(new ServiceLoaderLookupStrategy());
         MuninProvider provider = new MuninProviderImpl(new JolokiaFetcherFactory());
         ConfigurationLoader configurationFactory = new FileEndingConfigurationLoader();
         System.out.print(new App(provider, configurationFactory).run(args));
@@ -98,10 +104,10 @@ public class App {
         Server server;
         SocketAddress bindTo = getBindAddress();
         if (bindTo == null) {
-            server = new Server(new Dispatcher(muninProvider), configLoader);
+            server = new Server(new Dispatcher(), configLoader);
         }
         else {
-            server = new Server(new Dispatcher(muninProvider), configLoader, bindTo);
+            server = new Server(new Dispatcher(), configLoader, bindTo);
         }
         new Thread(server).start();
         return "Daemon successfully started\n";
@@ -154,9 +160,8 @@ public class App {
      * @throws ConfigurationException In case of the configuration contains errors.
      */
     private String dispatch(String[] args) throws IOException, ConfigurationException {
-        Dispatcher dispatcher = new Dispatcher(muninProvider);
-        dispatcher.resolveControllers();
-        dispatcher.setConfiguration(getConfiguration());
+        Dispatcher dispatcher = new Dispatcher();
+        dispatcher.init(Arrays.asList(CliController.class, Controller.class));
         return dispatcher.handleRequest(StringUtils.join(args, ' '));
     }
 
