@@ -136,6 +136,13 @@ public class ServiceLoaderLookupStrategyTest {
     }
 
     @Test
+    public void testRegisterBothInterfaceClass() throws Exception {
+        TestService service1 = lookupStrategy.lookup(TestService.class);
+        TestService service2 = lookupStrategy.lookup(TestServiceImpl.class);
+        assertThat(service1, is(sameInstance(service2)));
+    }
+
+    @Test
     public void testInitArray() throws Exception {
         lookupStrategy.init(new Object[][]{
                 {TestService.class, new TestServiceImpl()},

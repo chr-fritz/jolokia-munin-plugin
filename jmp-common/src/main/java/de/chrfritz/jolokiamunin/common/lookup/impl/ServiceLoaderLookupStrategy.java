@@ -129,6 +129,7 @@ public class ServiceLoaderLookupStrategy implements LookupStrategy {
         ServiceLoader<T> load = ServiceLoader.load(clazz);
         for (T instance : load) {
             lookupCache.put(clazz, instance);
+            lookupCache.put(instance.getClass(), instance);
         }
     }
 
