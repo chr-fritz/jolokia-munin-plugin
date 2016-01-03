@@ -14,31 +14,20 @@
 
 package de.chrfritz.jolokiamunin;
 
-import com.google.common.base.Strings;
 import de.chrfritz.jolokiamunin.api.CliController;
 import de.chrfritz.jolokiamunin.api.Controller;
-import de.chrfritz.jolokiamunin.api.MuninProvider;
+import de.chrfritz.jolokiamunin.api.Dispatcher;
 import de.chrfritz.jolokiamunin.api.config.Configuration;
 import de.chrfritz.jolokiamunin.api.config.ConfigurationException;
 import de.chrfritz.jolokiamunin.api.config.ConfigurationLoader;
 import de.chrfritz.jolokiamunin.common.lookup.Lookup;
 import de.chrfritz.jolokiamunin.common.lookup.impl.ServiceLoaderLookupStrategy;
-import de.chrfritz.jolokiamunin.config.FileEndingConfigurationLoader;
-import de.chrfritz.jolokiamunin.controller.Dispatcher;
-import de.chrfritz.jolokiamunin.daemon.Server;
-import de.chrfritz.jolokiamunin.daemon.ShutdownMonitor;
-import de.chrfritz.jolokiamunin.jolokia.impl.JolokiaFetcherFactory;
-import de.chrfritz.jolokiamunin.munin.impl.MuninProviderImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
-import java.net.InetSocketAddress;
+import java.io.File;
 import java.net.MalformedURLException;
-import java.net.Socket;
-import java.net.SocketAddress;
-import java.nio.charset.Charset;
 import java.util.Arrays;
 
 /**
@@ -46,108 +35,46 @@ import java.util.Arrays;
  */
 public class App {
     private static final Logger LOGGER = LoggerFactory.getLogger(App.class);
-    private MuninProvider muninProvider;
-    private ConfigurationLoader configLoader;
+    private ServiceLoaderLookupStrategy lookupStrategy;
 
     /**
      * Main Entry Point to run the application.
      *
      * @param args The commandline arguments
-     * @throws IOException
-     * @throws ConfigurationException
      */
-    public static void main(String[] args) throws IOException, ConfigurationException {
-        Lookup.init(new ServiceLoaderLookupStrategy());
-        MuninProvider provider = new MuninProviderImpl(new JolokiaFetcherFactory());
-        ConfigurationLoader configurationFactory = new FileEndingConfigurationLoader();
-        System.out.print(new App(provider, configurationFactory).run(args));
+    public static void main(String[] args) {
+        System.out.print(new App(new ServiceLoaderLookupStrategy()).run(args));
     }
 
-    /**
-     * Initialize a new application instance
-     *
-     * @param muninProvider The MuninProvider for fetching and configuring the application.
-     */
-    public App(MuninProvider muninProvider, ConfigurationLoader configLoader) {
-        this.muninProvider = muninProvider;
-        this.configLoader = configLoader;
+    public App(ServiceLoaderLookupStrategy lookupStrategy) {
+        this.lookupStrategy = lookupStrategy;
+        Lookup.init(lookupStrategy);
     }
 
-    /**
-     * Run the application.
-     *
-     * @param args The commandline arguments.
-     */
-    protected String run(String[] args) throws IOException, ConfigurationException {
-        // Fetch the values
-        if (args.length == 0) {
-            return dispatch(new String[]{"fetch"});
+    protected String run(String[] args) {
+        try {
+            loadConfiguration();
+            String[] arguments = args.length != 0 ? args : new String[]{"fetch"};
+            return dispatch(arguments);
         }
-        else {
-            String command = args[0];
-            switch (command) {
-                case "daemon":
-                    return daemon();
-                case "stop":
-                    return stop();
-                default:
-                    return dispatch(args);
-            }
+        catch (MalformedURLException | ConfigurationException e) {
+            LOGGER.error("Unable to load configuration", e);
+            return "ERROR: Can not load configuration.";
+        }
+        catch (Exception e) {
+            LOGGER.error("Can not execute command", e);
+            return "ERROR: " + e.getMessage();
         }
     }
 
-    /**
-     * Run the Jolokia Munin Plugin as Munin-Deamon.
-     */
-    private String daemon() throws IOException, ConfigurationException {
-        ShutdownMonitor.getInstance().start();
-        Server server;
-        SocketAddress bindTo = getBindAddress();
-        if (bindTo == null) {
-            server = new Server(new Dispatcher(), configLoader);
+    private Dispatcher getDispatcher() {
+        try {
+            Dispatcher dispatcher = Lookup.lookup(Dispatcher.class);
+            lookupStrategy.initInstance(Dispatcher.class, dispatcher.getClass().newInstance(), true);
+            return dispatcher;
         }
-        else {
-            server = new Server(new Dispatcher(), configLoader, bindTo);
-        }
-        new Thread(server).start();
-        return "Daemon successfully started\n";
-    }
-
-    private static SocketAddress getBindAddress() {
-        String bindIp = System.getProperty("de.chrfritz.jolokiamunin.bindIp");
-        int bindPort = Integer.parseInt(System.getProperty("de.chrfritz.jolokiamunin.bindPort", "0"));
-        if (StringUtils.isNotBlank(bindIp) && bindPort > 0) {
-            return new InetSocketAddress(bindIp, bindPort);
-        }
-        else if (StringUtils.isNotBlank(bindIp) && bindPort == 0) {
-            return new InetSocketAddress(bindIp, Server.DEFAULT_PORT);
-        }
-        else if (StringUtils.isBlank(bindIp) && bindPort > 0) {
-            return new InetSocketAddress(Server.DEFAULT_PORT);
-        }
-        else {
-            return null;
-        }
-    }
-
-    /**
-     * Stop the daemon.
-     *
-     * @return The answer from the daemon
-     * @throws IOException In case of some connection errors.
-     */
-    private String stop() throws IOException {
-        LOGGER.info("Stop daemon");
-        Socket socket = new Socket("127.0.0.1", Integer.parseInt(System.getProperty("STOP.PORT", "49049")));
-        Charset charset = Charset.forName("UTF-8");
-        try (Writer writer = new OutputStreamWriter(socket.getOutputStream(), charset);
-             BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), charset))) {
-            LOGGER.debug("Send stop command");
-            writer.write(System.getProperty("STOP.KEY"));
-            writer.write("\n");
-            writer.write("stop\n");
-            writer.flush();
-            return reader.readLine();
+        catch (InstantiationException | IllegalAccessException e) {
+            throw new IllegalStateException(e);
         }
     }
 
@@ -156,11 +83,9 @@ public class App {
      *
      * @param args The request args
      * @return The response for the dispatched request
-     * @throws IOException            In case of the configuration or values can not be read.
-     * @throws ConfigurationException In case of the configuration contains errors.
      */
-    private String dispatch(String[] args) throws IOException, ConfigurationException {
-        Dispatcher dispatcher = new Dispatcher();
+    private String dispatch(String[] args) {
+        Dispatcher dispatcher = getDispatcher();
         dispatcher.init(Arrays.asList(CliController.class, Controller.class));
         return dispatcher.handleRequest(StringUtils.join(args, ' '));
     }
@@ -171,20 +96,20 @@ public class App {
      * <ul>
      * <li>System-Property "configFile"</li>
      * <li>Enviorment Variable "JOLOKIAMUNIN_CONFIG"</li>
-     * <li>In the current working directory a file named "jolokiamunin.xml"</li>
+     * <li>In the current working directory a file named "jolokiamunin.groovy"</li>
      * </ul>
      *
-     * @return The loaded configuration.
      * @throws MalformedURLException
      * @throws ConfigurationException
      */
-    protected Configuration getConfiguration() throws MalformedURLException, ConfigurationException {
+    protected void loadConfiguration() throws MalformedURLException, ConfigurationException {
         String configName;
         configName = System.getProperty("configFile", System.getenv("JOLOKIAMUNIN_CONFIG"));
-        if (Strings.isNullOrEmpty(configName)) {
-            configName = System.getenv("PWD") + "/jolokiamunin.xml";
+        if (StringUtils.isBlank(configName)) {
+            configName = System.getenv("PWD") + "/jolokiamunin.groovy";
         }
-        return configLoader.loadConfig(new File(configName));
+        Configuration configuration = Lookup.lookup(ConfigurationLoader.class).loadConfig(new File(configName));
+        lookupStrategy.initInstance(Configuration.class, configuration);
     }
 }
 

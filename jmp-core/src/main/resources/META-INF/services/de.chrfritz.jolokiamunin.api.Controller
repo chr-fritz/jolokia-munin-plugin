@@ -1,0 +1,6 @@
+de.chrfritz.jolokiamunin.controller.CapController
+de.chrfritz.jolokiamunin.controller.ConfigController
+de.chrfritz.jolokiamunin.controller.FetchController
+de.chrfritz.jolokiamunin.controller.Dispatcher$HelpController
+de.chrfritz.jolokiamunin.controller.ListController
+de.chrfritz.jolokiamunin.controller.VersionController
