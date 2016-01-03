@@ -21,6 +21,7 @@ import de.chrfritz.jolokiamunin.api.fetcher.Fetcher;
 import de.chrfritz.jolokiamunin.api.fetcher.FetcherException;
 import de.chrfritz.jolokiamunin.api.fetcher.FetcherFactory;
 import de.chrfritz.jolokiamunin.api.fetcher.Request;
+import de.chrfritz.jolokiamunin.common.lookup.Lookup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,19 +41,10 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
  */
 public class MuninProviderImpl implements MuninProvider {
 
-    private FetcherFactory fetcherFactory;
-
     private static final String LINE_SEPARATOR = System.lineSeparator();
     private static final Logger LOGGER = LoggerFactory.getLogger(MuninProviderImpl.class);
 
-    /**
-     * Create a new instance with the given fetcher factory.
-     *
-     * @param fetcherFactory The fetcher factory.
-     */
-    public MuninProviderImpl(FetcherFactory fetcherFactory) {
-        this.fetcherFactory = fetcherFactory;
-    }
+    private FetcherFactory fetcherFactory = Lookup.lookup(FetcherFactory.class);
 
     /**
      * Get a list with all graph names which are contained in the given categories.

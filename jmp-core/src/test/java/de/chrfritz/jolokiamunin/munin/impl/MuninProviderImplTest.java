@@ -21,6 +21,8 @@ import de.chrfritz.jolokiamunin.api.config.ConfigurationException;
 import de.chrfritz.jolokiamunin.api.fetcher.Fetcher;
 import de.chrfritz.jolokiamunin.api.fetcher.FetcherFactory;
 import de.chrfritz.jolokiamunin.api.fetcher.Request;
+import de.chrfritz.jolokiamunin.common.lookup.Lookup;
+import de.chrfritz.jolokiamunin.common.lookup.LookupStrategy;
 import de.chrfritz.jolokiamunin.config.xml.XMLConfiguration;
 import org.junit.After;
 import org.junit.Before;
@@ -46,19 +48,21 @@ public class MuninProviderImplTest {
 
     @Mock
     private Fetcher fetcher;
-
     @Mock
     private FetcherFactory factory;
+    @Mock
+    private LookupStrategy strategy;
 
     private MuninProvider provider;
-
 
     @Before
     public void setUp() throws Exception {
         when(factory.getInstance((URL) any())).thenReturn(fetcher);
         when(factory.getInstance(anyString())).thenReturn(fetcher);
+        when(strategy.lookup(FetcherFactory.class)).thenReturn(factory);
+        Lookup.init(strategy);
 
-        provider = new MuninProviderImpl(factory);
+        provider = new MuninProviderImpl();
     }
 
     @After
