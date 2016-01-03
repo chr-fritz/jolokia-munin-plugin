@@ -25,6 +25,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>jmp-core</artifactId>
+    <name>Jolokia Munin Plugin: Core</name>
 
     <dependencies>
         <dependency>
@@ -34,10 +35,6 @@
         <dependency>
             <groupId>de.chrfritz</groupId>
             <artifactId>jmp-common</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>de.chrfritz</groupId>
-            <artifactId>jmp-daemon</artifactId>
         </dependency>
 
         <dependency>

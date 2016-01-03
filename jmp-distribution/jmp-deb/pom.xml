@@ -31,6 +31,14 @@
             <groupId>de.chrfritz</groupId>
             <artifactId>jmp-core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>de.chrfritz</groupId>
+            <artifactId>jmp-config-xml</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.chrfritz</groupId>
+            <artifactId>jmp-daemon</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -54,6 +62,13 @@
                         </configuration>
                     </execution>
                 </executions>
+                <configuration>
+                    <usedDependencies>
+                        <usedDependency>de.chrfritz:jmp-core</usedDependency>
+                        <usedDependency>de.chrfritz:jmp-daemon</usedDependency>
+                        <usedDependency>de.chrfritz:jmp-config-xml</usedDependency>
+                    </usedDependencies>
+                </configuration>
             </plugin>
 
             <plugin>
