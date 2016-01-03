@@ -63,9 +63,9 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <sources>
-                        <source>src/main/xsd/</source>
-                    </sources>
+                    <xjbSources>
+                        <source>src/main/xsd</source>
+                    </xjbSources>
                     <packageName>de.chrfritz.jolokiamunin.config.xml</packageName>
                 </configuration>
             </plugin>
