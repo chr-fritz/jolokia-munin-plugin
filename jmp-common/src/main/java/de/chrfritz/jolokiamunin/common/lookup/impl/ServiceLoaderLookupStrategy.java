@@ -3,9 +3,10 @@ package de.chrfritz.jolokiamunin.common.lookup.impl;
 import com.google.common.collect.ArrayListMultimap;
 import de.chrfritz.jolokiamunin.common.lookup.LookupStrategy;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ServiceLoader;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 /**
  * Use the javas {@link java.util.ServiceLoader} to lookup the actual instances.
@@ -14,7 +15,7 @@ import java.util.ServiceLoader;
  */
 public class ServiceLoaderLookupStrategy implements LookupStrategy {
 
-    private ArrayListMultimap<Class, Object> lookupCache = ArrayListMultimap.create();
+    private ArrayListMultimap<Class, Supplier> lookupCache = ArrayListMultimap.create();
 
     /**
      * Initializes the internal structure to be able to lookup services.
@@ -22,11 +23,16 @@ public class ServiceLoaderLookupStrategy implements LookupStrategy {
      * @param o the 2d-Array with the classes mapped to services
      */
     @SuppressWarnings("unchecked")
-    public void init(Object[][] o) {
+    public void initInstance(Object[][] o) {
         for (Object[] objects : o) {
             Class clazz = (Class) objects[0];
             Object value = objects[1];
-            init(clazz, value);
+            if (value instanceof Supplier) {
+                init(clazz, (Supplier) value);
+            }
+            else {
+                initInstance(clazz, value);
+            }
         }
     }
 
@@ -37,8 +43,8 @@ public class ServiceLoaderLookupStrategy implements LookupStrategy {
      * @param instance The added instance.
      * @param <T>      Type of the target instance.
      */
-    public <T> void init(Class<T> clazz, T instance) {
-        init(clazz, instance, false);
+    public <T> void initInstance(Class<T> clazz, T instance) {
+        initInstance(clazz, instance, false);
     }
 
     /**
@@ -49,11 +55,8 @@ public class ServiceLoaderLookupStrategy implements LookupStrategy {
      * @param override True if existing instances should be removed previous.
      * @param <T>      Type of the target instance.
      */
-    public <T> void init(Class<T> clazz, T instance, boolean override) {
-        if (override) {
-            lookupCache.removeAll(clazz);
-        }
-        lookupCache.put(clazz, instance);
+    public <T> void initInstance(Class<T> clazz, T instance, boolean override) {
+        init(clazz, () -> instance, override);
     }
 
     /**
@@ -63,7 +66,7 @@ public class ServiceLoaderLookupStrategy implements LookupStrategy {
      * @param producer The producer instance.
      * @param <T>      Type of the target instance.
      */
-    public <T> void init(Class<T> clazz, Producer<T> producer) {
+    public <T> void init(Class<T> clazz, Supplier<T> producer) {
         init(clazz, producer, false);
     }
 
@@ -75,7 +78,7 @@ public class ServiceLoaderLookupStrategy implements LookupStrategy {
      * @param override True if existing instances should be removed previous.
      * @param <T>      Type of the target instance.
      */
-    public <T> void init(Class<T> clazz, Producer<T> producer, boolean override) {
+    public <T> void init(Class<T> clazz, Supplier<T> producer, boolean override) {
         if (override) {
             lookupCache.removeAll(clazz);
         }
@@ -88,15 +91,11 @@ public class ServiceLoaderLookupStrategy implements LookupStrategy {
         if (!lookupCache.containsKey(clazz)) {
             loadInstances(clazz);
         }
-        List<T> objects = (List<T>) lookupCache.get(clazz);
+        List<Supplier> objects = lookupCache.get(clazz);
         if (objects.size() <= 0) {
             return null;
         }
-        if (objects.get(0) instanceof Producer) {
-            return ((Producer<T>) objects.get(0)).getInstance();
-        }
-        return objects.get(0);
-
+        return (T) objects.get(0).get();
     }
 
     @Override
@@ -105,18 +104,10 @@ public class ServiceLoaderLookupStrategy implements LookupStrategy {
         if (!lookupCache.containsKey(clazz)) {
             loadInstances(clazz);
         }
-        List<T> instances = new ArrayList<>();
-        for (Object object : lookupCache.get(clazz)) {
-            T instance;
-            if (object instanceof Producer) {
-                instance = ((Producer<T>) object).getInstance();
-            }
-            else {
-                instance = (T) object;
-            }
-            instances.add(instance);
-        }
-        return instances;
+        return lookupCache.get(clazz)
+                .stream()
+                .map(object -> (T) object.get())
+                .collect(Collectors.toList());
     }
 
     /**
@@ -128,25 +119,9 @@ public class ServiceLoaderLookupStrategy implements LookupStrategy {
     private <T> void loadInstances(Class<T> clazz) {
         ServiceLoader<T> load = ServiceLoader.load(clazz);
         for (T instance : load) {
-            lookupCache.put(clazz, instance);
-            lookupCache.put(instance.getClass(), instance);
+            Supplier<T> producer = () -> instance;
+            lookupCache.put(clazz, producer);
+            lookupCache.put(instance.getClass(), producer);
         }
-    }
-
-    /**
-     * Producer to create the instance created by the lookup strategy.
-     * <p>
-     * This producers can only be used with the {@link ServiceLoaderLookupStrategy}.
-     *
-     * @param <T> The type of the created instance.
-     */
-    public interface Producer<T> {
-
-        /**
-         * Produces the instance.
-         *
-         * @return The created instance.
-         */
-        T getInstance();
     }
 }

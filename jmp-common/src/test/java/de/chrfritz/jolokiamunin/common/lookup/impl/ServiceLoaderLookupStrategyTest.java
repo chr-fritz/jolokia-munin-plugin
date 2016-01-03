@@ -1,7 +1,6 @@
 package de.chrfritz.jolokiamunin.common.lookup.impl;
 
 import de.chrfritz.jolokiamunin.common.lookup.TestService;
-import de.chrfritz.jolokiamunin.common.lookup.impl.ServiceLoaderLookupStrategy.Producer;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -67,7 +66,7 @@ public class ServiceLoaderLookupStrategyTest {
 
     @Test
     public void testLookupProducer() throws Exception {
-        lookupStrategy.init(TestService.class, (Producer<TestService>) TestServiceImpl::new);
+        lookupStrategy.init(TestService.class, TestServiceImpl::new);
         TestService actual = lookupStrategy.lookup(TestService.class);
         assertThat(actual, is(notNullValue()));
         assertThat(actual, instanceOf(TestServiceImpl.class));
@@ -75,7 +74,7 @@ public class ServiceLoaderLookupStrategyTest {
 
     @Test
     public void testLookupProducerTwice() throws Exception {
-        lookupStrategy.init(TestService.class, (Producer<TestService>) TestServiceImpl::new);
+        lookupStrategy.init(TestService.class, TestServiceImpl::new);
 
         TestService actual1 = lookupStrategy.lookup(TestService.class);
         TestService actual2 = lookupStrategy.lookup(TestService.class);
@@ -89,7 +88,7 @@ public class ServiceLoaderLookupStrategyTest {
     @Test
     public void testLookupAllProducer() throws Exception {
         lookupStrategy.lookup(TestService.class);
-        lookupStrategy.init(TestService.class, (Producer<TestService>) TestServiceImpl::new);
+        lookupStrategy.init(TestService.class, TestServiceImpl::new);
         List<TestService> actual = lookupStrategy.lookupAll(TestService.class);
         assertThat(actual, hasSize(3));
         assertThat(actual.get(0), instanceOf(TestServiceImpl.class));
@@ -100,7 +99,7 @@ public class ServiceLoaderLookupStrategyTest {
     @Test
     public void testLookupAllProducerTwice() throws Exception {
         lookupStrategy.lookup(TestService.class);
-        lookupStrategy.init(TestService.class, (Producer<TestService>) TestServiceImpl::new);
+        lookupStrategy.init(TestService.class, TestServiceImpl::new);
         List<TestService> actual1 = lookupStrategy.lookupAll(TestService.class);
         List<TestService> actual2 = lookupStrategy.lookupAll(TestService.class);
         assertThat(actual1, hasSize(3));
@@ -119,19 +118,19 @@ public class ServiceLoaderLookupStrategyTest {
 
     @Test
     public void testInit() throws Exception {
-        lookupStrategy.init(TestService.class, new TestServiceImpl());
-        lookupStrategy.init(TestService.class, new TestServiceImpl());
+        lookupStrategy.initInstance(TestService.class, new TestServiceImpl());
+        lookupStrategy.initInstance(TestService.class, new TestServiceImpl());
         assertThat(lookupStrategy.lookupAll(TestService.class), hasSize(2));
-        lookupStrategy.init(TestService.class, new TestServiceImpl(), true);
+        lookupStrategy.initInstance(TestService.class, new TestServiceImpl(), true);
         assertThat(lookupStrategy.lookupAll(TestService.class), hasSize(1));
     }
 
     @Test
     public void testInitProducer() throws Exception {
-        lookupStrategy.init(TestService.class, new TestServiceImpl());
-        lookupStrategy.init(TestService.class, new TestServiceImpl());
+        lookupStrategy.initInstance(TestService.class, new TestServiceImpl());
+        lookupStrategy.initInstance(TestService.class, new TestServiceImpl());
         assertThat(lookupStrategy.lookupAll(TestService.class), hasSize(2));
-        lookupStrategy.init(TestService.class, (Producer<TestService>) TestServiceImpl::new, true);
+        lookupStrategy.init(TestService.class, TestServiceImpl::new, true);
         assertThat(lookupStrategy.lookupAll(TestService.class), hasSize(1));
     }
 
@@ -144,7 +143,7 @@ public class ServiceLoaderLookupStrategyTest {
 
     @Test
     public void testInitArray() throws Exception {
-        lookupStrategy.init(new Object[][]{
+        lookupStrategy.initInstance(new Object[][]{
                 {TestService.class, new TestServiceImpl()},
                 {TestService.class, new TestServiceImpl2()},
         });
