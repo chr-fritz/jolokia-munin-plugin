@@ -18,6 +18,8 @@ import de.chrfritz.jolokiamunin.api.Controller;
 import de.chrfritz.jolokiamunin.api.MuninProvider;
 import de.chrfritz.jolokiamunin.api.config.Category;
 import de.chrfritz.jolokiamunin.api.config.Configuration;
+import de.chrfritz.jolokiamunin.common.lookup.Lookup;
+import de.chrfritz.jolokiamunin.common.lookup.LookupStrategy;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,8 +34,9 @@ import static org.mockito.Mockito.when;
 public class ConfigControllerTest {
 
     @Mock
+    private LookupStrategy strategy;
+    @Mock
     private MuninProvider provider;
-
     @Mock
     private Configuration configuration;
 
@@ -41,8 +44,9 @@ public class ConfigControllerTest {
 
     @Before
     public void setUp() throws Exception {
-        controller.setMuninProvider(provider);
-        controller.setConfiguration(configuration);
+        Lookup.init(strategy);
+        when(strategy.lookup(Configuration.class)).thenReturn(configuration);
+        when(strategy.lookup(MuninProvider.class)).thenReturn(provider);
     }
 
     @Test

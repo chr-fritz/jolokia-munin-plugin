@@ -16,6 +16,7 @@ package de.chrfritz.jolokiamunin.controller;
 import de.chrfritz.jolokiamunin.api.Controller;
 import de.chrfritz.jolokiamunin.api.MuninProvider;
 import de.chrfritz.jolokiamunin.api.config.Configuration;
+import de.chrfritz.jolokiamunin.common.lookup.Lookup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,12 +34,6 @@ public abstract class AbstractController implements Controller {
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractController.class);
 
     private List<String> arguments;
-
-    private Configuration configuration;
-
-    private MuninProvider provider;
-
-    private Dispatcher dispatcher;
 
     /**
      * Process the request.
@@ -62,32 +57,12 @@ public abstract class AbstractController implements Controller {
         return arguments;
     }
 
-    @Override
-    public MuninProvider getMuninProvider() {
-        return provider;
+    protected MuninProvider getMuninProvider() {
+        return Lookup.lookup(MuninProvider.class);
     }
 
-    @Override
-    public void setMuninProvider(MuninProvider provider) {
-        this.provider = provider;
-    }
-
-    @Override
-    public Configuration getConfiguration() {
-        return configuration;
-    }
-
-    @Override
-    public void setConfiguration(Configuration configuration) {
-        this.configuration = configuration;
-    }
-
-    protected final Dispatcher getDispatcher() {
-        return dispatcher;
-    }
-
-    public final void setDispatcher(Dispatcher dispatcher) {
-        this.dispatcher = dispatcher;
+    protected Configuration getConfiguration() {
+        return Lookup.lookup(Configuration.class);
     }
 
     /**
