@@ -1,29 +1,3 @@
 language: java
 jdk:
   - oraclejdk8
-
-env:
-  global:
-   # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
-   #   via the "travis encrypt" command using the project repo's public key
-   - secure: "D/nqx7dwo72ekpojSFzIJjabgR29BoT2smZM14BBtXGx2ZuhTtUTv+MFOfOtQ5dNFpbxY2IbS+bSSwfd3DHJk62HSzfHwZsmfK7G2Ls4IcL1IlY1gRP67ExA51vu6aK5td7gcDr/gdc+tXkywBAs+JUN318LNSiJd5rf6bJEBlA="
-
-addons:
-  coverity_scan:
-    project:
-      name: "chr-fritz/jolokia-munin-plugin"
-      description: "The Jolokia Munin Plugin is a plugin for the Munin monitoring software which helps you to monitor every JVM thats loaded with the Jolokia agent."
-    notification_email: mail@chr-fritz.de
-    build_command_prepend:
-    build_command: mvn clean install -DskipTests
-    branch_pattern: coverity_scan
-
-branches:
-  except:
-    - coverity_scan
-
-
-matrix:
-  include:
-    - jdk: oraclejdk8
-      branch: coverity_scan
