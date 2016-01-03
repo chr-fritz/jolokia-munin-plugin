@@ -13,6 +13,8 @@
 package de.chrfritz.jolokiamunin.daemon;
 
 import de.chrfritz.jolokiamunin.api.Dispatcher;
+import de.chrfritz.jolokiamunin.api.config.Configuration;
+import de.chrfritz.jolokiamunin.common.lookup.Lookup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,8 +73,9 @@ public class Client implements Runnable {
     }
 
     private void sendHelloBanner(BufferedWriter writer) throws IOException {
-        LOGGER.debug("Send hello banner with hostname {}", dispatcher.getConfiguration().getBannerHostname());
-        writer.write("# munin node at " + dispatcher.getConfiguration().getBannerHostname() + "\n");
+        Configuration config = Lookup.lookup(Configuration.class);
+        LOGGER.debug("Send hello banner with hostname {}", config.getBannerHostname());
+        writer.write("# munin node at " + config.getBannerHostname() + "\n");
         writer.flush();
     }
 

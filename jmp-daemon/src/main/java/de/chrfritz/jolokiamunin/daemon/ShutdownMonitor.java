@@ -31,6 +31,8 @@ public final class ShutdownMonitor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ShutdownMonitor.class);
     public static final int MIN_PORT_NUMBER = 1024;
+    public static final String STOP_KEY_PROPERTY = "STOP.KEY";
+    public static final String STOP_PORT_POPERTY = "STOP.PORT";
     private ShutdownMonitorThread thread;
     private ServerSocket serverSocket;
     private int port;
@@ -46,8 +48,8 @@ public final class ShutdownMonitor {
     }
 
     private ShutdownMonitor() {
-        port = Integer.parseInt(System.getProperty("STOP.PORT", "49049"));
-        key = System.getProperty("STOP.KEY");
+        port = Integer.parseInt(System.getProperty(STOP_PORT_POPERTY, "49049"));
+        key = System.getProperty(STOP_KEY_PROPERTY);
     }
 
     /**

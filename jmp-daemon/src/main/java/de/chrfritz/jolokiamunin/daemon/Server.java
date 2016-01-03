@@ -13,8 +13,9 @@
 package de.chrfritz.jolokiamunin.daemon;
 
 
+import de.chrfritz.jolokiamunin.api.Controller;
 import de.chrfritz.jolokiamunin.api.Dispatcher;
-import de.chrfritz.jolokiamunin.api.config.ConfigurationLoader;
+import de.chrfritz.jolokiamunin.common.lookup.Lookup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,6 +27,8 @@ import java.net.SocketAddress;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import static java.util.Collections.singletonList;
+
 public class Server implements Runnable, AutoCloseable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Server.class);
@@ -36,25 +39,24 @@ public class Server implements Runnable, AutoCloseable {
 
     private Thread serverThread;
     private Thread configurationWatchService;
-    private Dispatcher dispatcher;
+    private Dispatcher dispatcher = Lookup.lookup(Dispatcher.class);
 
     private ExecutorService threadPool = Executors.newCachedThreadPool();
     private SocketAddress socketAddress;
 
-    public Server(Dispatcher dispatcher, ConfigurationLoader configLoader) throws IOException {
-        this(dispatcher, configLoader, new InetSocketAddress(DEFAULT_PORT));
+    public Server() throws IOException {
+        this(new InetSocketAddress(DEFAULT_PORT));
     }
 
-    public Server(Dispatcher dispatcher, ConfigurationLoader configLoader,
-            SocketAddress socketAddress) throws IOException {
+    public Server(SocketAddress socketAddress) throws IOException {
         server = new ServerSocket();
-        this.dispatcher = dispatcher;
-        configurationWatchService = new Thread(new ConfigurationWatchService(configLoader, dispatcher));
-        configurationWatchService.setName("configurationWatchService");
+        configurationWatchService = new Thread(new ConfigurationWatchService());
+        configurationWatchService.setName("configuration-watch-thread");
         configurationWatchService.setDaemon(true);
         ShutdownThread.register(this);
         this.socketAddress = socketAddress;
     }
+
 
     /**
      * @see Thread#run()
@@ -62,13 +64,7 @@ public class Server implements Runnable, AutoCloseable {
     @Override
     public void run() {
         configurationWatchService.start();
-        try {
-            dispatcher.resolveControllers();
-        }
-        catch (Exception e) {
-            LOGGER.error("Can not resolve controllers.", e);
-            return;
-        }
+        dispatcher.init(singletonList(Controller.class));
 
         serverThread = Thread.currentThread();
         serverThread.setName("Munin-Node-Server-Thread");
