@@ -14,13 +14,14 @@
 package de.chrfritz.jolokiamunin.daemon;
 
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.internal.util.reflection.Whitebox;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.lang.reflect.Field;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -32,15 +33,25 @@ import static org.hamcrest.Matchers.*;
  * @author christian.fritz
  */
 @RunWith(MockitoJUnitRunner.class)
+@SuppressWarnings("unchecked")
 public class ShutdownThreadTest {
 
     private ShutdownThread thread = ShutdownThread.getInstance();
     @Mock
     private Server server;
 
+    @Before
+    public void setUp() throws Exception {
+        cleanUp();
+    }
+
     @After
     public void tearDown() throws Exception {
-        List<Server> servers = getHiddenServerList();
+        cleanUp();
+    }
+
+    private void cleanUp() {
+        List<Server> servers = (List<Server>) Whitebox.getInternalState(thread, "servers");
         for (int i = servers.size() - 1; i > 0; i--) {
             servers.remove(i);
         }
@@ -51,33 +62,21 @@ public class ShutdownThreadTest {
 
     @Test
     public void testUnRegister() throws Exception {
-        assertThat(getHiddenServerList(), hasSize(0));
-        assertThat(getHiddenHooked(), is(false));
+        assertThat((List<Server>) Whitebox.getInternalState(thread, "servers"), hasSize(0));
+        assertThat(Whitebox.getInternalState(thread, "hooked"), is(false));
         ShutdownThread.register(server);
-        assertThat(getHiddenServerList(), hasSize(1));
-        assertThat(getHiddenHooked(), is(true));
+        assertThat((List<Server>) Whitebox.getInternalState(thread, "servers"), hasSize(1));
+        assertThat(Whitebox.getInternalState(thread, "hooked"), is(true));
         ShutdownThread.unregister(server);
-        assertThat(getHiddenServerList(), hasSize(0));
-        assertThat(getHiddenHooked(), is(false));
+        assertThat((List<Server>) Whitebox.getInternalState(thread, "servers"), hasSize(0));
+        assertThat(Whitebox.getInternalState(thread, "hooked"), is(false));
     }
 
     @Test
     public void testRun() throws Exception {
         ShutdownThread.register(server);
-        assertThat(getHiddenServerList(), contains(server));
+        assertThat((List<Server>) Whitebox.getInternalState(thread, "servers"), contains(server));
         thread.run();
         Mockito.verify(server).close();
-    }
-
-    private List<Server> getHiddenServerList() throws IllegalAccessException, NoSuchFieldException {
-        Field serversField = ShutdownThread.class.getDeclaredField("servers");
-        serversField.setAccessible(true);
-        return (List<Server>) serversField.get(thread);
-    }
-
-    private boolean getHiddenHooked() throws IllegalAccessException, NoSuchFieldException {
-        Field serversField = ShutdownThread.class.getDeclaredField("hooked");
-        serversField.setAccessible(true);
-        return (boolean) serversField.get(thread);
     }
 }
