@@ -13,6 +13,7 @@
 package de.chrfritz.jolokiamunin.daemon;
 
 
+import com.google.common.util.concurrent.SettableFuture;
 import de.chrfritz.jolokiamunin.api.Controller;
 import de.chrfritz.jolokiamunin.api.Dispatcher;
 import de.chrfritz.jolokiamunin.common.lookup.Lookup;
@@ -24,12 +25,11 @@ import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketAddress;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 
 import static java.util.Collections.singletonList;
 
-public class Server implements Runnable, AutoCloseable {
+public class Server implements RunnableFuture<Integer>, AutoCloseable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Server.class);
 
@@ -43,6 +43,7 @@ public class Server implements Runnable, AutoCloseable {
 
     private ExecutorService threadPool = Executors.newCachedThreadPool();
     private SocketAddress socketAddress;
+    private SettableFuture<Integer> started = SettableFuture.create();
 
     public Server() throws IOException {
         this(new InetSocketAddress(DEFAULT_PORT));
@@ -71,6 +72,7 @@ public class Server implements Runnable, AutoCloseable {
         LOGGER.info("Server successfully started at {}", server.getLocalSocketAddress());
         try {
             server.bind(socketAddress);
+            started.set(server.getLocalPort());
             while (!Thread.interrupted()) {
                 Socket clientSocket = server.accept();
                 threadPool.execute(new Client(clientSocket, dispatcher));
@@ -78,6 +80,7 @@ public class Server implements Runnable, AutoCloseable {
         }
         catch (IOException e) {
             LOGGER.debug("Can not handle client connection", e);
+            started.setException(e);
         }
     }
 
@@ -90,5 +93,30 @@ public class Server implements Runnable, AutoCloseable {
         synchronized (server) {
             server.close();
         }
+    }
+
+    @Override
+    public boolean cancel(boolean mayInterruptIfRunning) {
+        return false;
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return false;
+    }
+
+    @Override
+    public boolean isDone() {
+        return started.isDone();
+    }
+
+    @Override
+    public Integer get() throws InterruptedException, ExecutionException {
+        return started.get();
+    }
+
+    @Override
+    public Integer get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+        return started.get(timeout, unit);
     }
 }
