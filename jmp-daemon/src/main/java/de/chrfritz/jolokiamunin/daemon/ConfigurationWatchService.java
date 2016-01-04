@@ -50,7 +50,7 @@ public class ConfigurationWatchService implements Runnable {
         init();
     }
 
-    @SuppressWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
+    @SuppressWarnings("findbugs:NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
     private void init() throws IOException {
         String configName = System.getProperty("configFile", System.getenv("JOLOKIAMUNIN_CONFIG"));
         if (StringUtils.isBlank(configName)) {
