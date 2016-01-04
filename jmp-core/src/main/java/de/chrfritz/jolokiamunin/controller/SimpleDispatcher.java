@@ -69,7 +69,7 @@ public class SimpleDispatcher implements Dispatcher {
      */
     @Override
     public String handleRequest(String request) {
-        LOGGER.info("Handle request: {}", request);
+        LOGGER.info("Start handling request: {}", request);
         String[] requestArray = request.split("\\s+", 2);
         Controller controller = getControllerForCommand(requestArray[0]);
 
@@ -80,6 +80,7 @@ public class SimpleDispatcher implements Dispatcher {
             return response;
         }
         else {
+            LOGGER.error("Unable to handle request: Controller not found.");
             return "ERROR: Can not handle request. Invalid command";
         }
     }
