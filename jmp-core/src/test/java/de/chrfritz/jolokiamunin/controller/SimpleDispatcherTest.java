@@ -20,7 +20,7 @@ import static org.mockito.Mockito.when;
  * Dispatcher test.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class DispatcherTest {
+public class SimpleDispatcherTest {
 
     @Mock
     private LookupStrategy strategy;
@@ -31,12 +31,12 @@ public class DispatcherTest {
     public void setUp() throws Exception {
         Lookup.init(strategy);
 
-        dispatcher = new Dispatcher();
-        Dispatcher.HelpController helpController = new Dispatcher.HelpController();
+        dispatcher = new SimpleDispatcher();
+        SimpleDispatcher.HelpController helpController = new SimpleDispatcher.HelpController();
         helpController.setDispatcher(dispatcher);
         VersionController versionController = new VersionController();
         when(strategy.lookupAll(Controller.class)).thenReturn(Arrays.asList(helpController, versionController));
-        when(strategy.lookup(Dispatcher.HelpController.class)).thenReturn(helpController);
+        when(strategy.lookup(SimpleDispatcher.HelpController.class)).thenReturn(helpController);
         when(strategy.lookup(VersionController.class)).thenReturn(versionController);
         dispatcher.init(Collections.singletonList(Controller.class));
     }

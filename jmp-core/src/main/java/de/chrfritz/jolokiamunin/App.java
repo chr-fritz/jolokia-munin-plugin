@@ -42,7 +42,7 @@ public class App {
      *
      * @param args The commandline arguments
      */
-    @SuppressWarnings("pmd.SystemPrintln")
+    @SuppressWarnings("PMD.SystemPrintln")
     public static void main(String[] args) {
         System.out.print(new App(new ServiceLoaderLookupStrategy()).run(args));
     }

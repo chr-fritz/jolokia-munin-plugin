@@ -14,6 +14,7 @@
 package de.chrfritz.jolokiamunin.controller;
 
 import de.chrfritz.jolokiamunin.api.Controller;
+import de.chrfritz.jolokiamunin.api.Dispatcher;
 import de.chrfritz.jolokiamunin.api.DispatcherAwareController;
 import de.chrfritz.jolokiamunin.common.lookup.Lookup;
 import org.apache.commons.lang3.StringUtils;
@@ -33,9 +34,9 @@ import java.util.stream.Collectors;
  *
  * @author christian.fritz
  */
-public class Dispatcher implements de.chrfritz.jolokiamunin.api.Dispatcher {
+public class SimpleDispatcher implements Dispatcher {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(Dispatcher.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SimpleDispatcher.class);
 
     private Map<String, Class<? extends Controller>> controllerClasses;
     private Map<List<String>, String> helpTexts = new HashMap<>();
@@ -101,7 +102,7 @@ public class Dispatcher implements de.chrfritz.jolokiamunin.api.Dispatcher {
      */
     public static class HelpController implements DispatcherAwareController {
         private static final int PREFIX_LENGTH = 25;
-        private Dispatcher dispatcher;
+        private SimpleDispatcher dispatcher;
 
         /**
          * Get a list with all command names that the controller is responsible for.
@@ -130,7 +131,7 @@ public class Dispatcher implements de.chrfritz.jolokiamunin.api.Dispatcher {
                     .map(strings -> strings.stream()
                             .map((s) -> s.length() + 2)
                             .collect(Collectors.summingInt(i -> i)) - 2
-                        )
+                    )
                     .max(Integer::compare)
                     .orElse(PREFIX_LENGTH);
 
@@ -158,8 +159,8 @@ public class Dispatcher implements de.chrfritz.jolokiamunin.api.Dispatcher {
         }
 
         @Override
-        public void setDispatcher(de.chrfritz.jolokiamunin.api.Dispatcher dispatcher) {
-            this.dispatcher = (Dispatcher) dispatcher;
+        public void setDispatcher(Dispatcher dispatcher) {
+            this.dispatcher = (SimpleDispatcher) dispatcher;
         }
     }
 }

@@ -28,6 +28,8 @@ import java.nio.file.*;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static java.util.Objects.requireNonNull;
+
 /**
  * This is a watch service for the current configuration file. It is notified when the configuration file is changed and
  * reload it automatically.
@@ -57,13 +59,15 @@ public class ConfigurationWatchService implements Runnable {
         }
         configFilePath = Paths.get(configName).toAbsolutePath();
         Path configPath = configFilePath.getParent();
-        watchService = configPath.getFileSystem().newWatchService();
+        FileSystem fileSystem = requireNonNull(configPath.getFileSystem(), "FileSystem of configpath must not be null");
+        watchService = fileSystem.newWatchService();
         configPath.register(watchService, StandardWatchEventKinds.ENTRY_MODIFY);
         loadConfiguration();
         initLookup();
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void run() {
         try {
             while (!Thread.interrupted()) {
