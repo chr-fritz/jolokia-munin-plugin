@@ -71,5 +71,6 @@ public abstract class AbstractController implements Controller {
      * @return The response thats fullfill the request.
      * @throws Exception In case of any error executing the request.
      */
+    @SuppressWarnings("pmd.SignatureDeclareThrowsException")
     protected abstract String handle() throws Exception;
 }

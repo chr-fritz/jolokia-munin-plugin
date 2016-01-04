@@ -135,7 +135,7 @@ public class MuninProviderImpl implements MuninProvider {
         for (Field field : graph.getFields()) {
             String fieldName = graph.getName() + "_" + field.getName();
             LOGGER.debug("Build config string for field {}", fieldName);
-            fieldOrder.append(fieldName).append(" ");
+            fieldOrder.append(fieldName).append(' ');
             addFieldAttribute(fields, fieldName, "label", field.getLabel());
             addFieldAttribute(fields, fieldName, "draw", field.getDraw());
             addFieldAttribute(fields, fieldName, "info", field.getInfo());
@@ -236,7 +236,7 @@ public class MuninProviderImpl implements MuninProvider {
      */
     private static void addAttribute(StringBuilder buffer, String name, String value) {
         if (!isBlank(name) && !isBlank(value)) {
-            buffer.append(name).append(" ").append(value.trim()).append(LINE_SEPARATOR);
+            buffer.append(name).append(' ').append(value.trim()).append(LINE_SEPARATOR);
         }
     }
 
@@ -261,6 +261,6 @@ public class MuninProviderImpl implements MuninProvider {
      * @param value     The value of the attribute.
      */
     private static void addFieldAttribute(StringBuilder buffer, String fieldName, String attribute, Number value) {
-        buffer.append(fieldName).append(".").append(attribute).append(" ").append(value).append(LINE_SEPARATOR);
+        buffer.append(fieldName).append('.').append(attribute).append(' ').append(value).append(LINE_SEPARATOR);
     }
 }

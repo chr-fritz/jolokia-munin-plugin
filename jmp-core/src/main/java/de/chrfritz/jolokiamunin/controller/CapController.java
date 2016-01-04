@@ -26,10 +26,9 @@ public class CapController extends AbstractController {
      * Handles the request processing.
      *
      * @return The response thats fullfill the request.
-     * @throws Exception In case of any error executing the request.
      */
     @Override
-    protected String handle() throws Exception {
+    protected String handle() {
         return "cap multigraph dirtyconfig";
     }
 

@@ -13,7 +13,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * @author christian.fritz
  */
 public final class Lookup {
-    private final static AtomicReference<LookupStrategy> lookupStrategy = new AtomicReference<>();
+    private static final AtomicReference<LookupStrategy> lookupStrategy = new AtomicReference<>();
 
     private Lookup() {
     }

@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.file.*;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -68,8 +69,8 @@ public class ConfigurationWatchService implements Runnable {
             while (!Thread.interrupted()) {
                 WatchKey watchKey = watchService.take();
                 WatchEvent<Path> watchEvent = (WatchEvent<Path>) watchKey.pollEvents().get(0);
-                if (watchEvent.kind() == StandardWatchEventKinds.ENTRY_MODIFY
-                        && configFilePath.getFileName().equals(watchEvent.context())) {
+                if (Objects.equals(watchEvent.kind(), StandardWatchEventKinds.ENTRY_MODIFY)
+                        && Objects.equals(configFilePath.getFileName(), watchEvent.context())) {
 
                     LOGGER.warn("Configuration changed");
                     loadConfiguration();

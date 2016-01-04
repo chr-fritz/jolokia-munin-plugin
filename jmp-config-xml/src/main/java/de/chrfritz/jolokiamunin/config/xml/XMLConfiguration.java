@@ -26,9 +26,11 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.List;
+
+import static java.util.Collections.singletonList;
 
 /**
  * The xml configuration handler. It helps you to load a configuration form a xml file.
@@ -81,7 +83,7 @@ public class XMLConfiguration implements ConfigurationLoader {
      */
     @Override
     public List<String> getAssignedFileExtensions() {
-        return Arrays.asList("xml");
+        return singletonList("xml");
     }
 
     /**
@@ -89,12 +91,16 @@ public class XMLConfiguration implements ConfigurationLoader {
      *
      * @return The bean mapper
      */
-    protected Mapper getMapper() {
+    protected Mapper getMapper() throws ConfigurationException {
 
-        InputStream mapping = getClass().getResourceAsStream("mapping-config.xml");
-        DozerBeanMapper mapper = new DozerBeanMapper();
-        mapper.addMapping(mapping);
-
-        return mapper;
+        DozerBeanMapper mapper;
+        try (InputStream mapping = getClass().getResourceAsStream("mapping-config.xml")) {
+            mapper = new DozerBeanMapper();
+            mapper.addMapping(mapping);
+            return mapper;
+        }
+        catch (IOException e) {
+            throw new ConfigurationException("Unable to read mapping.", e);
+        }
     }
 }

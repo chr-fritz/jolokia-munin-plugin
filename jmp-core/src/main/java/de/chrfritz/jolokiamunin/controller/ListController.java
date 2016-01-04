@@ -34,7 +34,7 @@ public class ListController extends AbstractController {
             List<String> graphNames = getMuninProvider().getGraphNames(configuration.getConfiguration());
             StringBuilder sb = new StringBuilder();
             for (String name : graphNames) {
-                sb.append(name).append(" ");
+                sb.append(name).append(' ');
             }
             return sb.toString().trim();
         }
