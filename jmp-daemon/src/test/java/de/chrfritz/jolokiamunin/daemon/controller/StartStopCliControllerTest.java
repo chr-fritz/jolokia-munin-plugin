@@ -25,8 +25,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -46,12 +45,14 @@ public class StartStopCliControllerTest {
         when(strategy.lookup(Dispatcher.class)).thenReturn(mock(Dispatcher.class));
         when(strategy.lookup(ConfigurationLoader.class)).thenReturn(mock(ConfigurationLoader.class));
         System.setProperty(ShutdownMonitor.STOP_KEY_PROPERTY, "testStopKey");
+        System.setProperty(StartCliController.BIND_PORT_PROPERTY, "0");
+        Thread.interrupted(); // clear interrupted
     }
 
     @Test
     public void testExecute() throws Exception {
         String start = new StartCliController().execute("");
-        assertThat(start, is(equalTo("Daemon successfully started\n")));
+        assertThat(start, startsWith("Daemon successfully started on port"));
 
         String stop = new StopCliController().execute("");
         assertThat(stop, is(equalTo("Stopping successful")));

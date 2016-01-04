@@ -26,6 +26,9 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * CLI Controller to start the daemon.
@@ -36,6 +39,7 @@ public class StartCliController implements CliController {
     public static final String BIND_IP_PROPERTY = "de.chrfritz.jolokiamunin.bindIp";
     public static final String BIND_PORT_PROPERTY = "de.chrfritz.jolokiamunin.bindPort";
     private static final Logger LOGGER = LoggerFactory.getLogger(StartCliController.class);
+    public static final int TIMEOUT = 25;
 
     /**
      * Get a list with all command names that the controller is responsible for.
@@ -58,7 +62,7 @@ public class StartCliController implements CliController {
         try {
             return daemon();
         }
-        catch (IOException | ConfigurationException e) {
+        catch (IOException | ConfigurationException | InterruptedException | ExecutionException | TimeoutException e) {
             LOGGER.error("Can not start jolokia munin plugin as daemon.", e);
             return "ERROR: Can not start jolokia munin plugin as daemon. Take a look into the Logfile for more details.";
         }
@@ -77,7 +81,8 @@ public class StartCliController implements CliController {
     /**
      * Run the Jolokia Munin Plugin as Munin-Deamon.
      */
-    private String daemon() throws IOException, ConfigurationException {
+    private String daemon() throws IOException, ConfigurationException, InterruptedException, ExecutionException,
+            TimeoutException {
         ShutdownMonitor.getInstance().start();
         Server server;
         SocketAddress bindTo = getBindAddress();
@@ -88,20 +93,21 @@ public class StartCliController implements CliController {
             server = new Server(bindTo);
         }
         new Thread(server).start();
-        return "Daemon successfully started\n";
+        Integer port = server.get(TIMEOUT, TimeUnit.SECONDS);
+        return "Daemon successfully started on port " + port + "\n";
     }
 
     private static SocketAddress getBindAddress() {
         String bindIp = System.getProperty(BIND_IP_PROPERTY);
-        int bindPort = Integer.parseInt(System.getProperty(BIND_PORT_PROPERTY, "0"));
-        if (StringUtils.isNotBlank(bindIp) && bindPort > 0) {
+        int bindPort = Integer.parseInt(System.getProperty(BIND_PORT_PROPERTY, "-1"));
+        if (StringUtils.isNotBlank(bindIp) && bindPort >= 0) {
             return new InetSocketAddress(bindIp, bindPort);
         }
-        else if (StringUtils.isNotBlank(bindIp) && bindPort == 0) {
-            return new InetSocketAddress(bindIp, Server.DEFAULT_PORT);
+        else if (StringUtils.isBlank(bindIp) && bindPort >= 0) {
+            return new InetSocketAddress(bindPort);
         }
-        else if (StringUtils.isBlank(bindIp) && bindPort > 0) {
-            return new InetSocketAddress(Server.DEFAULT_PORT);
+        else if (StringUtils.isNotBlank(bindIp) && bindPort < 0) {
+            return new InetSocketAddress(bindIp, Server.DEFAULT_PORT);
         }
         else {
             return null;
