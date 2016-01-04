@@ -27,6 +27,7 @@ import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.*;
@@ -37,12 +38,14 @@ import static org.mockito.Mockito.*;
  * @author christian.fritz
  */
 public class FileEndingConfigurationLoaderTest {
-    private FileConfigurationLoader loader;
+    private FileEndingConfigurationLoader loader;
+    private FileConfigurationLoader xmlLoader = mockLoader("xml");
+    private FileConfigurationLoader groovyLoader = mockLoader("groovy");
 
     @Before
     public void setUp() throws Exception {
         LookupStrategy strategy = mock(LookupStrategy.class);
-        List<FileConfigurationLoader> configurationLoaders = Arrays.asList(mockLoader("xml"), mockLoader("groovy"));
+        List<FileConfigurationLoader> configurationLoaders = Arrays.asList(xmlLoader, groovyLoader);
         when(strategy.lookupAll(FileConfigurationLoader.class)).thenReturn(configurationLoaders);
         Lookup.init(strategy);
 
@@ -68,10 +71,33 @@ public class FileEndingConfigurationLoaderTest {
         assertThat(actual, contains("groovy", "xml"));
     }
 
-    private FileConfigurationLoader mockLoader(String... extensions) throws ConfigurationException {
-        FileConfigurationLoader configurationLoader = mock(FileConfigurationLoader.class);
-        when(configurationLoader.loadConfig(any())).thenReturn(mock(Configuration.class));
-        when(configurationLoader.getAssignedFileExtensions()).thenReturn(Arrays.asList(extensions));
-        return configurationLoader;
+    @Test
+    public void testAutoLoadXmlConfig() throws Exception {
+        String configPath = "configfile.xml";
+        System.setProperty("configFile", configPath);
+        loader.loadConfig();
+        verify(xmlLoader).loadConfig(any());
+        assertThat(loader.getLoadedUri().getPath(), endsWith(configPath));
+    }
+
+    @Test
+    public void testAutoLoadGroovyConfig() throws Exception {
+        String configPath = "jolokiamunin.groovy";
+        System.getProperties().remove("configFile");
+        loader.loadConfig();
+        verify(groovyLoader).loadConfig(any());
+        assertThat(loader.getLoadedUri().getPath(), endsWith(configPath));
+    }
+
+    private FileConfigurationLoader mockLoader(String... extensions) {
+        try {
+            FileConfigurationLoader configurationLoader = mock(FileConfigurationLoader.class);
+            when(configurationLoader.loadConfig(any())).thenReturn(mock(Configuration.class));
+            when(configurationLoader.getAssignedFileExtensions()).thenReturn(Arrays.asList(extensions));
+            return configurationLoader;
+        }
+        catch (ConfigurationException e) {
+            throw new IllegalStateException(e);
+        }
     }
 }

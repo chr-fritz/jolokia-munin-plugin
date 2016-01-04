@@ -43,6 +43,7 @@ import java.util.Map;
 public class FileEndingConfigurationLoader implements ConfigurationLoader, FileConfigurationLoader {
     private static final Logger LOGGER = LoggerFactory.getLogger(FileEndingConfigurationLoader.class);
     private Map<String, FileConfigurationLoader> configurationLoaderMap = new HashMap<>();
+    private File configFile;
 
     /**
      * Initialize the configuraton loader.
@@ -70,7 +71,7 @@ public class FileEndingConfigurationLoader implements ConfigurationLoader, FileC
         String extension = fileName.substring(fileName.lastIndexOf('.') + 1);
         if (!configurationLoaderMap.containsKey(extension)) {
             throw new ConfigurationException("Can not load configuration file '" + configFile +
-                            "'. There is no matching configuration loader available.\n" +
+                    "'. There is no matching configuration loader available.\n" +
                     "The file extensions can be loaded:\n" + StringUtils.join(getAssignedFileExtensions(), "\n  - ")
             );
         }
@@ -97,6 +98,15 @@ public class FileEndingConfigurationLoader implements ConfigurationLoader, FileC
      */
     @Override
     public Configuration loadConfig() throws ConfigurationException {
+        if (configFile == null) {
+            String configName;
+            configName = System.getProperty("configFile", System.getenv("JOLOKIAMUNIN_CONFIG"));
+            if (StringUtils.isBlank(configName)) {
+                configName = System.getenv("PWD") + "/jolokiamunin.groovy";
+            }
+            this.configFile = new File(configName);
+        }
+        return loadConfig(configFile);
     }
 
     /**
@@ -106,5 +116,6 @@ public class FileEndingConfigurationLoader implements ConfigurationLoader, FileC
      */
     @Override
     public URI getLoadedUri() {
+        return configFile.toURI();
     }
 }
