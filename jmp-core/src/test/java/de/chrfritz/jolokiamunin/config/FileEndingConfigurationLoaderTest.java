@@ -15,7 +15,7 @@ package de.chrfritz.jolokiamunin.config;
 
 import de.chrfritz.jolokiamunin.api.config.Configuration;
 import de.chrfritz.jolokiamunin.api.config.ConfigurationException;
-import de.chrfritz.jolokiamunin.api.config.ConfigurationLoader;
+import de.chrfritz.jolokiamunin.api.config.FileConfigurationLoader;
 import de.chrfritz.jolokiamunin.common.lookup.Lookup;
 import de.chrfritz.jolokiamunin.common.lookup.LookupStrategy;
 import org.junit.Before;
@@ -37,13 +37,13 @@ import static org.mockito.Mockito.*;
  * @author christian.fritz
  */
 public class FileEndingConfigurationLoaderTest {
-    private ConfigurationLoader loader;
+    private FileConfigurationLoader loader;
 
     @Before
     public void setUp() throws Exception {
         LookupStrategy strategy = mock(LookupStrategy.class);
-        List<ConfigurationLoader> configurationLoaders = Arrays.asList(mockLoader("xml"), mockLoader("groovy"));
-        when(strategy.lookupAll(ConfigurationLoader.class)).thenReturn(configurationLoaders);
+        List<FileConfigurationLoader> configurationLoaders = Arrays.asList(mockLoader("xml"), mockLoader("groovy"));
+        when(strategy.lookupAll(FileConfigurationLoader.class)).thenReturn(configurationLoaders);
         Lookup.init(strategy);
 
         loader = new FileEndingConfigurationLoader();
@@ -68,8 +68,8 @@ public class FileEndingConfigurationLoaderTest {
         assertThat(actual, contains("groovy", "xml"));
     }
 
-    private ConfigurationLoader mockLoader(String... extensions) throws ConfigurationException {
-        ConfigurationLoader configurationLoader = mock(ConfigurationLoader.class);
+    private FileConfigurationLoader mockLoader(String... extensions) throws ConfigurationException {
+        FileConfigurationLoader configurationLoader = mock(FileConfigurationLoader.class);
         when(configurationLoader.loadConfig(any())).thenReturn(mock(Configuration.class));
         when(configurationLoader.getAssignedFileExtensions()).thenReturn(Arrays.asList(extensions));
         return configurationLoader;

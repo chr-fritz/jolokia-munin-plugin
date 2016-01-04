@@ -17,8 +17,11 @@ import com.google.common.collect.Lists;
 import de.chrfritz.jolokiamunin.api.config.Configuration;
 import de.chrfritz.jolokiamunin.api.config.ConfigurationException;
 import de.chrfritz.jolokiamunin.api.config.ConfigurationLoader;
+import de.chrfritz.jolokiamunin.api.config.FileConfigurationLoader;
 import de.chrfritz.jolokiamunin.common.lookup.Lookup;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.HashMap;
@@ -29,23 +32,23 @@ import java.util.Map;
  * Load a configuration using a configuration loader based by the file ending of the given config file.
  * <p>
  * It uses the {@link java.util.ServiceLoader} to find the available configuration loader. If you want to implement your
- * own configuration loader just implement the {@link ConfigurationLoader} interface and
+ * own configuration loader just implement the {@link FileConfigurationLoader} interface and
  * register it through the {@code /META-INF/services/de.chrfritz.jolokiamunin.config.ConfigurationLoader} in your own jar
  * within the classpath.
  *
  * @author christian.fritz
  * @see java.util.ServiceLoader
  */
-public class FileEndingConfigurationLoader implements ConfigurationLoader {
-
-    private Map<String, ConfigurationLoader> configurationLoaderMap = new HashMap<>();
+public class FileEndingConfigurationLoader implements FileConfigurationLoader {
+    private static final Logger LOGGER = LoggerFactory.getLogger(FileEndingConfigurationLoader.class);
+    private Map<String, FileConfigurationLoader> configurationLoaderMap = new HashMap<>();
 
     /**
      * Initialize the configuraton loader.
      */
     public FileEndingConfigurationLoader() {
-        List<ConfigurationLoader> serviceLoader = Lookup.lookupAll(ConfigurationLoader.class);
-        for (ConfigurationLoader configurationLoader : serviceLoader) {
+        List<FileConfigurationLoader> serviceLoader = Lookup.lookupAll(FileConfigurationLoader.class);
+        for (FileConfigurationLoader configurationLoader : serviceLoader) {
             configurationLoader.getAssignedFileExtensions()
                     .stream()
                     .filter(fileEnding -> !configurationLoaderMap.containsKey(fileEnding))
@@ -65,14 +68,14 @@ public class FileEndingConfigurationLoader implements ConfigurationLoader {
         String fileName = configFile.getName();
         String extension = fileName.substring(fileName.lastIndexOf('.') + 1);
         if (!configurationLoaderMap.containsKey(extension)) {
-            throw new ConfigurationException(
-                    "Can not load configuration file '" + configFile +
+            throw new ConfigurationException("Can not load configuration file '" + configFile +
                             "'. There is no matching configuration loader available.\n" +
-                            "The file extensions can be loaded:\n" +
-                            StringUtils.join(getAssignedFileExtensions(), "\n  - ")
+                    "The file extensions can be loaded:\n" + StringUtils.join(getAssignedFileExtensions(), "\n  - ")
             );
         }
-        return configurationLoaderMap.get(extension).loadConfig(configFile);
+        FileConfigurationLoader configurationLoader = configurationLoaderMap.get(extension);
+        LOGGER.debug("Start loading config file {} using {}", configFile, configurationLoader.getClass().getSimpleName());
+        return configurationLoader.loadConfig(configFile);
     }
 
     /**

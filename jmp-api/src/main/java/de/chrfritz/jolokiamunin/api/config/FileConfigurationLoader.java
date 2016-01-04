@@ -21,7 +21,7 @@ import java.util.List;
  *
  * @author christian.fritz
  */
-public interface ConfigurationLoader {
+public interface FileConfigurationLoader {
 
     /**
      * Load a configuration from a specific file.

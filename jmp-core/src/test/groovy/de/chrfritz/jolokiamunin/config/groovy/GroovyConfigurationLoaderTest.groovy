@@ -19,12 +19,12 @@ import spock.lang.Specification
  *
  * @author christian.fritz
  */
-class ConfigurationLoaderTest extends Specification {
+class GroovyConfigurationLoaderTest extends Specification {
     def "LoadConfig"() {
         given:
         def configFile = new File(getClass().getResource("/de/chrfritz/jolokiamunin/config/testConfig.groovy").toURI())
         when:
-        def configuration = new ConfigurationLoader().loadConfig(configFile)
+        def configuration = new GroovyConfigurationLoader().loadConfig(configFile)
         then:
         assert configuration.bannerHostname == 'localhost.localdomain'
         assert configuration.bindAddress == '127.0.0.1'

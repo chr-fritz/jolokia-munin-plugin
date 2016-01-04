@@ -16,7 +16,7 @@ package de.chrfritz.jolokiamunin;
 import de.chrfritz.jolokiamunin.api.Dispatcher;
 import de.chrfritz.jolokiamunin.api.MuninProvider;
 import de.chrfritz.jolokiamunin.api.config.Configuration;
-import de.chrfritz.jolokiamunin.api.config.ConfigurationLoader;
+import de.chrfritz.jolokiamunin.api.config.FileConfigurationLoader;
 import de.chrfritz.jolokiamunin.common.lookup.impl.ServiceLoaderLookupStrategy;
 import org.junit.Before;
 import org.junit.Test;
@@ -43,7 +43,7 @@ public class AppTest {
     @Mock
     private MuninProvider provider;
     @Mock
-    private ConfigurationLoader configLoader;
+    private FileConfigurationLoader configLoader;
     @Mock
     private Configuration configuration;
     @Mock
@@ -56,7 +56,7 @@ public class AppTest {
     @Before
     public void setUp() throws Exception {
         application = new App(strategy);
-        when(strategy.lookup(ConfigurationLoader.class)).thenReturn(configLoader);
+        when(strategy.lookup(FileConfigurationLoader.class)).thenReturn(configLoader);
         when(strategy.lookup(Dispatcher.class)).thenReturn(dispatcher);
         when(configLoader.loadConfig(any())).thenReturn(configuration);
         when(dispatcher.handleRequest("help")).thenReturn("help");

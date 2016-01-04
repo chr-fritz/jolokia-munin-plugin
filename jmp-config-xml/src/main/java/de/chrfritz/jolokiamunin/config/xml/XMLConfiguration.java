@@ -16,7 +16,7 @@ package de.chrfritz.jolokiamunin.config.xml;
 import de.chrfritz.jolokiamunin.api.config.Category;
 import de.chrfritz.jolokiamunin.api.config.Configuration;
 import de.chrfritz.jolokiamunin.api.config.ConfigurationException;
-import de.chrfritz.jolokiamunin.api.config.ConfigurationLoader;
+import de.chrfritz.jolokiamunin.api.config.FileConfigurationLoader;
 import org.dozer.DozerBeanMapper;
 import org.dozer.Mapper;
 import org.slf4j.Logger;
@@ -35,7 +35,7 @@ import static java.util.Collections.singletonList;
 /**
  * The xml configuration handler. It helps you to load a configuration form a xml file.
  */
-public class XMLConfiguration implements ConfigurationLoader {
+public class XMLConfiguration implements FileConfigurationLoader {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(XMLConfiguration.class);
 
