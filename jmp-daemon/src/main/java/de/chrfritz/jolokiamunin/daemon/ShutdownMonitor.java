@@ -88,6 +88,7 @@ public final class ShutdownMonitor {
         }
 
         @Override
+        @SuppressWarnings("RU_INVOKE_RUN")
         public void run() {
             if (serverSocket == null) {
                 return;

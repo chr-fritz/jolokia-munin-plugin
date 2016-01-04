@@ -28,8 +28,6 @@ import java.nio.file.*;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static java.util.Objects.requireNonNull;
-
 /**
  * This is a watch service for the current configuration file. It is notified when the configuration file is changed and
  * reload it automatically.
@@ -52,6 +50,7 @@ public class ConfigurationWatchService implements Runnable {
         init();
     }
 
+    @SuppressWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
     private void init() throws IOException {
         String configName = System.getProperty("configFile", System.getenv("JOLOKIAMUNIN_CONFIG"));
         if (StringUtils.isBlank(configName)) {
@@ -59,8 +58,7 @@ public class ConfigurationWatchService implements Runnable {
         }
         configFilePath = Paths.get(configName).toAbsolutePath();
         Path configPath = configFilePath.getParent();
-        FileSystem fileSystem = requireNonNull(configPath.getFileSystem(), "FileSystem of configpath must not be null");
-        watchService = fileSystem.newWatchService();
+        watchService = configPath.getFileSystem().newWatchService();
         configPath.register(watchService, StandardWatchEventKinds.ENTRY_MODIFY);
         loadConfiguration();
         initLookup();
