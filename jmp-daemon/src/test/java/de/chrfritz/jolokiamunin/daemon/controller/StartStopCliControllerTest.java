@@ -14,6 +14,7 @@
 package de.chrfritz.jolokiamunin.daemon.controller;
 
 import de.chrfritz.jolokiamunin.api.Dispatcher;
+import de.chrfritz.jolokiamunin.api.config.Configuration;
 import de.chrfritz.jolokiamunin.api.config.ConfigurationLoader;
 import de.chrfritz.jolokiamunin.common.lookup.Lookup;
 import de.chrfritz.jolokiamunin.common.lookup.LookupStrategy;
@@ -23,6 +24,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import java.io.File;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -38,12 +41,16 @@ import static org.mockito.Mockito.when;
 public class StartStopCliControllerTest {
     @Mock
     private LookupStrategy strategy;
+    @Mock
+    private ConfigurationLoader loader;
 
     @Before
     public void setUp() throws Exception {
         Lookup.init(strategy);
         when(strategy.lookup(Dispatcher.class)).thenReturn(mock(Dispatcher.class));
-        when(strategy.lookup(ConfigurationLoader.class)).thenReturn(mock(ConfigurationLoader.class));
+        when(strategy.lookup(ConfigurationLoader.class)).thenReturn(loader);
+        when(loader.loadConfig()).thenReturn(mock(Configuration.class));
+        when(loader.getLoadedUri()).thenReturn(new File("abc.txt").toURI());
         System.setProperty(ShutdownMonitor.STOP_KEY_PROPERTY, "testStopKey");
         System.setProperty(StartCliController.BIND_PORT_PROPERTY, "0");
         Thread.interrupted(); // clear interrupted

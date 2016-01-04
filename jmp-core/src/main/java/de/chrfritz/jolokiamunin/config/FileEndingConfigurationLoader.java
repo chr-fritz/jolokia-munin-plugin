@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +40,7 @@ import java.util.Map;
  * @author christian.fritz
  * @see java.util.ServiceLoader
  */
-public class FileEndingConfigurationLoader implements FileConfigurationLoader {
+public class FileEndingConfigurationLoader implements ConfigurationLoader, FileConfigurationLoader {
     private static final Logger LOGGER = LoggerFactory.getLogger(FileEndingConfigurationLoader.class);
     private Map<String, FileConfigurationLoader> configurationLoaderMap = new HashMap<>();
 
@@ -86,5 +87,24 @@ public class FileEndingConfigurationLoader implements FileConfigurationLoader {
     @Override
     public List<String> getAssignedFileExtensions() {
         return Lists.newArrayList(configurationLoaderMap.keySet());
+    }
+
+    /**
+     * Load a configuration.
+     *
+     * @return A configuration instance.
+     * @throws ConfigurationException In case of the configuration can not loaded.
+     */
+    @Override
+    public Configuration loadConfig() throws ConfigurationException {
+    }
+
+    /**
+     * Get the loaded configuration uri.
+     *
+     * @return the loaded configuration uri.
+     */
+    @Override
+    public URI getLoadedUri() {
     }
 }

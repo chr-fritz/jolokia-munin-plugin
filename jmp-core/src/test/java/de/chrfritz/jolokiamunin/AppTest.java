@@ -16,7 +16,7 @@ package de.chrfritz.jolokiamunin;
 import de.chrfritz.jolokiamunin.api.Dispatcher;
 import de.chrfritz.jolokiamunin.api.MuninProvider;
 import de.chrfritz.jolokiamunin.api.config.Configuration;
-import de.chrfritz.jolokiamunin.api.config.FileConfigurationLoader;
+import de.chrfritz.jolokiamunin.api.config.ConfigurationLoader;
 import de.chrfritz.jolokiamunin.common.lookup.impl.ServiceLoaderLookupStrategy;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,12 +24,9 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.io.File;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyList;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -43,7 +40,7 @@ public class AppTest {
     @Mock
     private MuninProvider provider;
     @Mock
-    private FileConfigurationLoader configLoader;
+    private ConfigurationLoader configLoader;
     @Mock
     private Configuration configuration;
     @Mock
@@ -56,9 +53,9 @@ public class AppTest {
     @Before
     public void setUp() throws Exception {
         application = new App(strategy);
-        when(strategy.lookup(FileConfigurationLoader.class)).thenReturn(configLoader);
+        when(strategy.lookup(ConfigurationLoader.class)).thenReturn(configLoader);
         when(strategy.lookup(Dispatcher.class)).thenReturn(dispatcher);
-        when(configLoader.loadConfig(any())).thenReturn(configuration);
+        when(configLoader.loadConfig()).thenReturn(configuration);
         when(dispatcher.handleRequest("help")).thenReturn("help");
         when(dispatcher.handleRequest("fetch")).thenReturn("init: 1");
     }
@@ -85,6 +82,6 @@ public class AppTest {
         String configPath = "configfile.xml";
         System.setProperty("configFile", configPath);
         application.loadConfiguration();
-        verify(configLoader).loadConfig(new File(configPath));
+        verify(configLoader).loadConfig();
     }
 }

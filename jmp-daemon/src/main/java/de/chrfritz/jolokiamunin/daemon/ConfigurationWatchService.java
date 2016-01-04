@@ -19,10 +19,10 @@ import de.chrfritz.jolokiamunin.api.config.ConfigurationLoader;
 import de.chrfritz.jolokiamunin.common.lookup.Lookup;
 import de.chrfritz.jolokiamunin.common.lookup.LookupStrategy;
 import de.chrfritz.jolokiamunin.common.lookup.impl.ServiceLoaderLookupStrategy;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.Objects;
@@ -52,15 +52,10 @@ public class ConfigurationWatchService implements Runnable {
 
     @SuppressWarnings("findbugs:NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
     private void init() throws IOException {
-        String configName = System.getProperty("configFile", System.getenv("JOLOKIAMUNIN_CONFIG"));
-        if (StringUtils.isBlank(configName)) {
-            configName = System.getenv("PWD") + "jolokiamunin.groovy";
-        }
-        configFilePath = Paths.get(configName).toAbsolutePath();
+        loadConfiguration();
         Path configPath = configFilePath.getParent();
         watchService = configPath.getFileSystem().newWatchService();
         configPath.register(watchService, StandardWatchEventKinds.ENTRY_MODIFY);
-        loadConfiguration();
         initLookup();
     }
 
@@ -87,7 +82,10 @@ public class ConfigurationWatchService implements Runnable {
 
     private void loadConfiguration() {
         try {
-            config.set(configurationLoader.loadConfig(configFilePath.toFile()));
+            config.set(configurationLoader.loadConfig());
+            if (configFilePath == null) {
+                configFilePath = new File(configurationLoader.getLoadedUri()).toPath();
+            }
             LOGGER.info("Configuration successfully loaded");
         }
         catch (ConfigurationException e) {

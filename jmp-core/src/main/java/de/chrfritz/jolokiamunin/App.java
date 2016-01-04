@@ -26,7 +26,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.net.MalformedURLException;
 import java.util.Arrays;
 
@@ -104,12 +103,7 @@ public class App {
      * @throws ConfigurationException
      */
     protected void loadConfiguration() throws MalformedURLException, ConfigurationException {
-        String configName;
-        configName = System.getProperty("configFile", System.getenv("JOLOKIAMUNIN_CONFIG"));
-        if (StringUtils.isBlank(configName)) {
-            configName = System.getenv("PWD") + "/jolokiamunin.groovy";
-        }
-        Configuration configuration = Lookup.lookup(ConfigurationLoader.class).loadConfig(new File(configName));
+        Configuration configuration = Lookup.lookup(ConfigurationLoader.class).loadConfig();
         lookupStrategy.initInstance(Configuration.class, configuration);
     }
 }
