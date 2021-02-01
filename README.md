@@ -1,3 +1,6 @@
+**WARNING: This repository is not actively maintained anymore. Use it at your own risk!**
+
+
 # Jolokia Munin Plugin
 The Jolokia Munin Plugin is a plugin for the [Munin](http://munin-monitoring.org/) monitoring software which helps you to monitor every JVM thats loaded with the [Jolokia](http://jolokia.org/) agent. 
 ## Features
